@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image
 import scipy
 np.set_printoptions(threshold=np.nan)
-
+#ciao bella
 def evalUneImage(imgRef,imgTest):
     """
     Evaluation de la qualité d'une segmentation 
