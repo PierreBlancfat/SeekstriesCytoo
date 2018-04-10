@@ -1,8 +1,10 @@
 import cv2
 import math
 import os
-
-
+import numpy as np
+from PIL import Image
+import scipy
+np.set_printoptions(threshold=np.nan)
 
 def evalUneImage(imgRef,imgTest):
     """
@@ -18,16 +20,31 @@ def evalUneImage(imgRef,imgTest):
     nbvrai = math.fsum(vrai)
     pourcentagePositif = nbFaux/imgTest.length
     pourcentageNegatif= nbvrai / imgRef.length
-    return (pourcentagePositif,pourcentageNegatif)
+    return [pourcentagePositif,pourcentageNegatif]
 
 
-def evalDesImage(srcRef,srcTest):
+def evalDesImage(srcRef,masqueTest):
     cheminImagesRef = os.listdir(srcRef)
-    cheminImagesTest = os.listdir(srcTest)
+    #cheminImagesTest = os.listdir(srcTest)
+    nbImage = cheminImagesRef.__sizeof__()
+    result = np.zeros([nbImage,2])
+    for i in range(0,nbImage):
+        imageRef = conversionBinaire(cheminImagesRef[i])
+        result[i] = evalUneImage(imageRef)
+    return result
 
-    for i in range(0,cheminImagesRef.__sizeof__()):
-        result = evalUneImage
-
+def conversionBinaire(srcImageRef):
+     """
+     Convertie une image en binaire
+     :param srcImageRef: Le chemin de l'image 
+     :return: Une matrice binaire de même taille que l'image source. Les 1 représentent le "noir" ( zone positive), le 0 le "blanc" ( zone négative)
+     """
+     img = Image.open(srcImageRef)
+     img = img.convert('L') # niveau de gris
+     imarray = np.array(img) # image to nparray
+     imarray = scipy.sign(imarray)  # binarise
+     imarray = (imarray -1) * -1 #inverse 0=1 et 1=0
+     return  imarray
 
 
 #main  test
