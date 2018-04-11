@@ -4,7 +4,6 @@ import os
 import numpy as np
 from PIL import Image
 import scipy
-np.set_printoptions(threshold=np.nan)
 
 def evalUneImage(imgRef,imgTest):
     """
@@ -14,12 +13,14 @@ def evalUneImage(imgRef,imgTest):
     :return: recouv : pourcentage de recouvrement
              erreur : pourcentage d'erreur
     """
-    faux = imgRef - imgTest #
-    vrai = imgTest - imgRef
-    nbFaux = math.fsum(faux)
-    nbvrai = math.fsum(vrai)
-    pourcentagePositif = nbFaux/imgTest.length
-    pourcentageNegatif= nbvrai / imgRef.length
+    nbPixelAtrouver = np.sum(imgRef)
+    ok = (imgRef & imgTest)
+    nonTest = (abs(imgRef - np.ones(imgRef.shape))).astype(int) # inverse de test
+    erreur = nonTest & imgTest
+    nbOk = np.sum(abs(ok))
+    nbErreur = np.sum(erreur)
+    pourcentagePositif =  nbOk/nbPixelAtrouver
+    pourcentageNegatif = nbErreur/np.sum(nonTest)
     return [pourcentagePositif,pourcentageNegatif]
 
 
@@ -33,18 +34,24 @@ def evalDesImage(srcRef,masqueTest):
         result[i] = evalUneImage(imageRef)
     return result
 
-def conversionBinaire(srcImageRef):
+def conversionBinaire(img):
      """
      Convertie une image en binaire
      :param srcImageRef: Le chemin de l'image 
      :return: Une matrice binaire de même taille que l'image source. Les 1 représentent le "noir" ( zone positive), le 0 le "blanc" ( zone négative)
      """
-     img = Image.open(srcImageRef)
-     img = img.convert('L') # niveau de gris
      imarray = np.array(img) # image to nparray
      imarray = scipy.sign(imarray)  # binarise
-     imarray = (imarray -1) * -1 #inverse 0=1 et 1=0
+     imarray = np.floor(abs(imarray - np.ones(imarray.shape))) #inversion 1 -> 0, 0-> 1
+     imarray = imarray.astype(int)
      return  imarray
 
 
 #main  test
+imgTest = Image.open("D:/L3MI/2nd_Annee/Cytoo/Fibres/Stries_C2  (2)_fibre.tif")
+imgTest = np.array(imgTest)
+imgTest = conversionBinaire(imgTest)
+imaRef = Image.open("D:/L3MI/2nd_Annee/Cytoo/Fibres/Stries_C2  (2)_fibre.tif")
+imaRef = np.array(imaRef)
+imaRef = conversionBinaire(imaRef)
+print(evalUneImage(imgTest,imaRef))
