@@ -13,24 +13,42 @@ def evalUneImage(imgRef,imgTest):
     :return: recouv : pourcentage de recouvrement
              erreur : pourcentage d'erreur
     """
-    nbPixelAtrouver = np.sum(imgRef)
-    ok = (imgRef & imgTest)
-    nonTest = (abs(imgRef - np.ones(imgRef.shape))).astype(int) # inverse de test
-    erreur = nonTest & imgTest
-    nbOk = np.sum(abs(ok))
-    nbErreur = np.sum(erreur)
-    pourcentagePositif =  nbOk/nbPixelAtrouver
-    pourcentageNegatif = nbErreur/np.sum(nonTest)
-    return [pourcentagePositif,pourcentageNegatif]
+    nbTotal = imgRef.size
+    vraiPositif = (imgRef & imgTest)
+    inverseRef = inverseMatBin(imgRef)
+    fauxPositif = inverseRef & imgTest
+    vraiNegatif = imgRef & inverseMatBin(vraiPositif)
+    fauxNegatif= inverseMatBin(imgTest | imgRef)
+    CP = np.sum(vraiPositif) + np.sum(fauxNegatif)
+    CN = np.sum(fauxPositif) + np.sum(vraiNegatif)
+    PCP = np.sum(abs(vraiPositif)) + np.sum(fauxPositif) # predicted condition positiv
+    PCN = np.sum(abs(vraiNegatif)) + np.sum(fauxNegatif) # predicted condition negative
+    precision = (CP)/nbTotal
+    prevalence = (CN)/ nbTotal
+    PPV = np.sum(vraiPositif)/PCP # positive predicted value
+    FDR = np.sum(fauxPositif) / PCP #false discovery rate
+    FOR = np.sum(fauxNegatif) / PCN# false omission rate
+    NPV = np.sum(vraiNegatif) / PCN # negative predictive value
+    return [precision,prevalence,PPV,FDR,FOR,NPV]
 
 
-def evalDesImage(srcRef,masqueTest):
+def inverseMatBin(mat):
+    return (abs(mat - np.ones(mat.shape))).astype(int)
+
+def evalDesImage(srcRef,srcTest):
+    """
+    
+    :param srcRef: 
+    :param srcTest: 
+    :return: 
+    """
     cheminImagesRef = os.listdir(srcRef)
-    #cheminImagesTest = os.listdir(srcTest)
+    cheminImagesTest = os.listdir(srcTest)
     nbImage = cheminImagesRef.__sizeof__()
     result = np.zeros([nbImage,2])
     for i in range(0,nbImage):
         imageRef = conversionBinaire(cheminImagesRef[i])
+        #imgTest = cheminImagesRef   # faire tourner les algo de segmentation sur cette image
         result[i] = evalUneImage(imageRef)
     return result
 
@@ -48,10 +66,11 @@ def conversionBinaire(img):
 
 
 #main  test
-imgTest = Image.open("D:/L3MI/2nd_Annee/Cytoo/Fibres/Stries_C2  (2)_fibre.tif")
+imgTest = Image.open("D:/L3MI/2nd_Annee/Cytoo/Fibres/Stries_C2  (15)_fibre.tif")
 imgTest = np.array(imgTest)
+print(imgTest.shape)
 imgTest = conversionBinaire(imgTest)
-imaRef = Image.open("D:/L3MI/2nd_Annee/Cytoo/Fibres/Stries_C2  (2)_fibre.tif")
+imaRef = Image.open("D:/L3MI/2nd_Annee/Cytoo/Fibres/Stries_C2  (16)_fibre.tif")
 imaRef = np.array(imaRef)
 imaRef = conversionBinaire(imaRef)
 print(evalUneImage(imgTest,imaRef))
