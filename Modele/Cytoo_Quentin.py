@@ -2,7 +2,7 @@
 ===============================================
 Local Binary Pattern for texture classification
 ===============================================
-
+#test
 In this example, we will see how to classify textures based on LBP (Local
 Binary Pattern). LBP looks at points surrounding a central point and tests
 whether the surrounding points are greater than or less than the central point
