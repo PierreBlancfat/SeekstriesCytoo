@@ -1,0 +1,2 @@
+from Controler import *
+Controler()
