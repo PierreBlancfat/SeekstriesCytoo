@@ -66,6 +66,7 @@ def conversionBinaire(img):
 
 
 #main  test
+"""
 imgTest = Image.open("D:/L3MI/2nd_Annee/Cytoo/Fibres/Stries_C2  (15)_fibre.tif")
 imgTest = np.array(imgTest)
 print(imgTest.shape)
@@ -73,4 +74,4 @@ imgTest = conversionBinaire(imgTest)
 imaRef = Image.open("D:/L3MI/2nd_Annee/Cytoo/Fibres/Stries_C2  (16)_fibre.tif")
 imaRef = np.array(imaRef)
 imaRef = conversionBinaire(imaRef)
-print(evalUneImage(imgTest,imaRef))
+print(evalUneImage(imgTest,imaRef)) """
