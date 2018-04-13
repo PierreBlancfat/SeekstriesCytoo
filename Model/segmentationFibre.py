@@ -10,24 +10,10 @@ import preTraitementImg
 import time
 import scipy
 
-def fibreSegmentation(path):
-    res = cv2.imread(path,0) # Image nuances de gris
-    #res = preTraitementImg.HPF(res,98)
-    res = preTraitementImg.GB(res,1)
-    res = preTraitementImg.BLF(res,1)
-    res = preTraitementImg.contrastAndBrightness(res,1.1,0)
-    for i in range(len(res)):
-        for j in range(len(res[0])):
-            if(res[i][j]>11):
-                res[i][j] = 0
-            else:
-                res[i][j] = 255
-
-    return res
 
 def kMeans(img,k):
     '''
-    Applique la méthode des k-means sur une image
+    Applique la méthode des k-means sur une image pour la segmenter
     @param img: image à traiter (créer précédemment grâce à "imread()")
     @param k: nombre de clusters
     @return: l'image après traitement
@@ -60,7 +46,7 @@ def main(): # Fonction de test
     plt.imshow(img)
     plt.subplot(122)
     #imgSeg = fibreSegmentation('Stries_C2  (22).TIF')
-    imgSeg = kMeans(cv2.imread('Stries_C2  (11).TIF',0),10)
+    imgSeg = kMeans(cv2.imread('Stries_C2  (11).TIF',0),5)
     plt.imshow(imgSeg)
 
     plt.figure(2)
@@ -70,4 +56,4 @@ def main(): # Fonction de test
     print("--- %s seconds ---" % (time.time() - start_time))
     plt.show()
 
-main()
+# main()
