@@ -6,7 +6,7 @@ class Model():
     def __init__(self, repSource, repDestination):
         self.repSource = repSource
         self.repDestination = repDestination
-
+"""
     def next(self, direction):
         if(direction==[0,1]):
             return [1,0]
@@ -36,7 +36,7 @@ class Model():
             #tabPixelContour[i][j]=1
             primaryDirection = [0, 1]
 
-            """
+            
             while initialPoint!=currentPoint:
                 if(matrix[i][j-1][0]==1):
                     currentPoint=[i,j-1]
@@ -55,7 +55,7 @@ class Model():
                     tabPixelContour[i][j+1][0]=1
                 else:
                     currentPoint=[i,j]
-            """
+            
 
             while initialPoint != currentPoint:
                 if(matrix[currentPoint[0]+primaryDirection[0]][currentPoint[1]+primaryDirection[1]]==1):
@@ -76,4 +76,4 @@ class Model():
 
         areas.append(Area(1, 2, 3, 4))
         return areas
-
+"""
