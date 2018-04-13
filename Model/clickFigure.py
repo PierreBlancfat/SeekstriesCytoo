@@ -39,25 +39,5 @@ cid = fig.canvas.mpl_connect('button_press_event', onclick) # crée un event cid
 
 plt.show()
 
-##########################
-# Clique to Matrix_index #
-##########################
-
-print(coords)
-
-def clicksToIndex(coords):
-    res = []
-    # l = 1344
-    # h = 1024
-    # nb lignes = 32
-    # nb colonnes = 24
-    for i in range(len(coords)):
-        res.append(( int(coords[i][0] % 32), int(coords[i][1] % 24) ))
-    return res
-
-print(int(17/32))
-print(int(17/24))
-print(clicksToIndex(coords))
-
 
 
