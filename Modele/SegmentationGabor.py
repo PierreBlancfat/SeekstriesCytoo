@@ -5,22 +5,18 @@ import cv2
 from matplotlib import pyplot as plt
 from PIL import Image
 import scipy
-import random
+import time
 
 
-thetaBase = 0
-amplitude = 1
-
-def build_filters(theta,sigma):
+def build_filters(csize,lsize,thetaMin,ThetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
     filters = []
-    ksize = 36
-    amp = 1.5
-    pas = 0.2
-    for sigma in np.arange(sigma-amp,sigma+amp,pas):
-         kern = cv2.getGaborKernel((ksize, ksize), sigma, theta, 7.8, 1, 0, ktype=cv2.CV_32F)
-         kern /= 1.5 * kern.sum()
-    cv2.imshow("kern",kern)
-    filters.append(kern)
+    for theta in np.arange(thetaMin,ThetaMax,pasTheta):
+        for lambd in np.arange(lambdaMin,lambdaMax,pasLambda):
+             kern = cv2.getGaborKernel((lsize, csize), sigma, theta, lambd, gamma, psi, ktype=cv2.CV_32F)
+             if theta == thetaMin:
+                 # Image.fromarray(kern*255).show()
+                 Image.fromarray(kern).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/kern/"+str([sigma, theta, lambd, gamma, psi]).replace(".","-")+".tif")
+             filters.append(kern)
     return filters
 
 
@@ -33,13 +29,9 @@ def process(img, filters):
 
 
 
-def gabor(theta,sigma,imgG):
-    filters = build_filters(theta,sigma)
-
+def gabor(imgG,csize,lsize,thetaMin,ThetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
+    filters = build_filters(csize,lsize,thetaMin,ThetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
     res1 = process(imgG, filters)
-    plt.subplot(3,1,2)
-    #plt.imshow(res1, cmap='gray', interpolation='bicubic')
-
     return res1
 
 
@@ -88,49 +80,38 @@ imgchemin = "D:/L3MI/2nd_Annee/Cytoo/Images_stage - Copie/Stries_C2  (44).tif"
 
 
 #Segmentation
-def segmentaionGabor(matImg):
+def segmentationGabor(matImg,csize,lsize,thetaMin,thetaMAx,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
     """
     Segmente une image avec les filtres de Gabor
     :param matImg: un emtrice représentant une image
     :return: Le masque représentant la segmentation 
     """
     #gabor segmentation
-    matImg2 = matImg[:,:,1]
-    theta = 3.3
-    sigma = 3.6
-    imgSeg = gabor(theta, sigma,matImg2)
+    matImg2 = matImg[:,:,0]
+    matImg2 = cv2.blur(matImg2,(3,3))
+    imgSeg = gabor(matImg2,csize,lsize,thetaMin,thetaMAx,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
     ret, imgSeg = cv2.threshold(imgSeg, 254, 255, cv2.THRESH_BINARY)
     matImg[:,:,2] = imgSeg
-    Image.fromarray(matImg).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/"+str(random.randint(1,999999))+".png")
+    Image.fromarray(matImg).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/"+str(time.time())+".png")
+    # Image.fromarray(matImg).show()
     #application de flou
-    imgSeg = cv2.blur(imgSeg, (20, 20), 5)
     imgSeg = cv2.blur(imgSeg, (20, 20), 5)
     return conversionBinaire(imgSeg)
 
 
 
+#main
+matImg = cv2.imread(imgchemin)
+csize = 40
+lsize = 40
+thetaMin = -0.8
+thetaMAx = 0.8
+pasTheta = 0.8
+sigma = 5
+gamma = 1
+lambdaMin = 4
+lambdaMax = 12
+pasLambda = 0.5
+psi = 0
 
-
-
-
-
-    # # active contour model
-# img = Image.fromarray(imgSeg)
-# img = data.astronaut()
-# img = rgb2gray(img)
-# s = np.linspace(0, 2*np.pi, 400)
-# x = 220 + 100*np.cos(s)
-# y = 100 + 100*np.sin(s)
-# init = np.array([x, y]).T
-#
-# img = imgSeg
-# snake = active_contour(gaussian(img, 3), init, alpha=0.015, beta=10, gamma=0.001)
-#
-# fig, ax = plt.subplots(figsize=(7, 7))
-# ax.imshow(img, cmap=plt.cm.gray)
-# ax.plot(init[:, 0], init[:, 1], '--r', lw=3)
-# ax.plot(snake[:, 0], snake[:, 1], '-b', lw=3)
-# ax.set_xticks([]), ax.set_yticks([])
-# ax.axis([0, img.shape[1], img.shape[0], 0])
-# Image.fromarray(imgSeg).show()
-# imgSeg = kMeans(imgSeg,4)
+img = segmentationGabor(matImg, csize, lsize, thetaMin, thetaMAx, pasTheta, sigma, gamma, lambdaMin,lambdaMax,pasLambda, psi)
