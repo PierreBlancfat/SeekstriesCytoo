@@ -6,7 +6,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
-import preTraitementImg
 import time
 import scipy
 
@@ -35,6 +34,9 @@ def kMeans(img,k):
     res = res * 255 # pour afficher en noir blanc
     res2 = res.reshape((img.shape))
 
+    # Enlever les bout "seuls"
+    kernel = np.ones((30, 30), np.uint8)
+    res2 = cv2.morphologyEx(res2, cv2.MORPH_OPEN, kernel)
     return res2
 
 def main(): # Fonction de test
@@ -42,11 +44,11 @@ def main(): # Fonction de test
 
     plt.figure(1)
     plt.subplot(121)
-    img = cv2.imread('Stries_C2  (11).TIF', 0)
+    img = cv2.imread('ImagesTests/Quentin/Stries_C2  (144).tif', 0)
     plt.imshow(img)
     plt.subplot(122)
     #imgSeg = fibreSegmentation('Stries_C2  (22).TIF')
-    imgSeg = kMeans(cv2.imread('Stries_C2  (11).TIF',0),5)
+    imgSeg = kMeans(cv2.imread('ImagesTests/Quentin/Stries_C2  (144).tif',0),5)
     plt.imshow(imgSeg)
 
     plt.figure(2)
@@ -56,4 +58,4 @@ def main(): # Fonction de test
     print("--- %s seconds ---" % (time.time() - start_time))
     plt.show()
 
-# main()
+main()
