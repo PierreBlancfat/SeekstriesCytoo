@@ -6,17 +6,20 @@ from matplotlib import pyplot as plt
 from PIL import Image
 import scipy
 import time
+import skimage.exposure as exposure
 
 
-def build_filters(csize,lsize,thetaMin,ThetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
+def build_filters(csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
     filters = []
-    for theta in np.arange(thetaMin,ThetaMax,pasTheta):
-        for lambd in np.arange(lambdaMin,lambdaMax,pasLambda):
-             kern = cv2.getGaborKernel((lsize, csize), sigma, theta, lambd, gamma, psi, ktype=cv2.CV_32F)
-             if theta == thetaMin:
-                 # Image.fromarray(kern*255).show()
-                 Image.fromarray(kern).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/kern/"+str([sigma, theta, lambd, gamma, psi]).replace(".","-")+".tif")
-             filters.append(kern)
+    print(thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
+    for lambd in np.arange(lambdaMin,lambdaMax,pasLambda):
+        for theta in np.arange(thetaMin, thetaMax, pasTheta):
+            print(theta,lambd)
+            kern = cv2.getGaborKernel((lsize, csize), sigma*(lambd/3), theta, lambd, gamma, psi, ktype=cv2.CV_64F)
+            filters.append(kern/1.5)
+            if theta == thetaMin:
+                # Image.fromarray(kern*255).show()
+                Image.fromarray(kern).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/kern/"+str(time.time())+" "+str([sigma, theta, lambd, gamma, psi]).replace(".","-")+".tif")
     return filters
 
 
@@ -29,8 +32,8 @@ def process(img, filters):
 
 
 
-def gabor(imgG,csize,lsize,thetaMin,ThetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
-    filters = build_filters(csize,lsize,thetaMin,ThetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
+def gabor(imgG,csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
+    filters = build_filters(csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
     res1 = process(imgG, filters)
     return res1
 
@@ -75,12 +78,12 @@ def conversionBinaire(img):
      return  imarray
 
 
-imgchemin = "D:/L3MI/2nd_Annee/Cytoo/Images_stage - Copie/Stries_C2  (44).tif"
+
 
 
 
 #Segmentation
-def segmentationGabor(matImg,csize,lsize,thetaMin,thetaMAx,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
+def segmentationGabor(matImg,csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
     """
     Segmente une image avec les filtres de Gabor
     :param matImg: un emtrice représentant une image
@@ -88,30 +91,34 @@ def segmentationGabor(matImg,csize,lsize,thetaMin,thetaMAx,pasTheta,sigma,gamma,
     """
     #gabor segmentation
     matImg2 = matImg[:,:,0]
-    matImg2 = cv2.blur(matImg2,(3,3))
-    imgSeg = gabor(matImg2,csize,lsize,thetaMin,thetaMAx,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
+    #matImg2 = cv2.blur(matImg2,(3,3))
+    matImg2 = exposure.equalize_adapthist(matImg2)*255
+    #Image.fromarray(matImg2).show()
+    #Image.fromarray(matImg2).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/" + str(time.time()) + ".tif")
+    imgSeg = gabor(matImg2,csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
     ret, imgSeg = cv2.threshold(imgSeg, 254, 255, cv2.THRESH_BINARY)
     matImg[:,:,2] = imgSeg
-    Image.fromarray(matImg).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/"+str(time.time())+".png")
+    Image.fromarray(matImg).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/seg/"+str(time.time())+".png")
     # Image.fromarray(matImg).show()
     #application de flou
     imgSeg = cv2.blur(imgSeg, (20, 20), 5)
     return conversionBinaire(imgSeg)
 
 
-
-#main
+#
+# # main
+imgchemin = "D:/L3MI/2nd_Annee/Cytoo/Images_stage - Copie/Stries_C2  (55).tif"
 matImg = cv2.imread(imgchemin)
-csize = 40
-lsize = 40
-thetaMin = -0.8
-thetaMAx = 0.8
-pasTheta = 0.8
-sigma = 5
-gamma = 1
-lambdaMin = 4
-lambdaMax = 12
-pasLambda = 0.5
+csize = 50
+lsize = 50
+thetaMin = -0.4
+thetaMAx = 0.35
+pasTheta = 0.2
+sigma = 2
+gamma = 5
+lambdaMin = 6
+lambdaMax = 15
+pasLambda = 1
 psi = 0
 
 img = segmentationGabor(matImg, csize, lsize, thetaMin, thetaMAx, pasTheta, sigma, gamma, lambdaMin,lambdaMax,pasLambda, psi)

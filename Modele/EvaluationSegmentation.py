@@ -13,7 +13,7 @@ def evalUneImage(imgRef,imgTest):
     Evaluation de la qualité d'une segmentation 
     :param imgRef: une matrice binaire
     :param imgTest: une matrice binaire
-    :return: [precision,prevalence,PPV,FDR,FOR,NPV]
+    :return: [precision,prevalence,PPV,FDR,FOR,NPV,TPR,FPR,FNR,TNR,LRplus,LRmoins,vraivrai]
     """
     if len(imgRef.shape)== 3: # si l'image à plusieurs composantes
       imgRef = imgRef[:,:,0]
@@ -78,20 +78,21 @@ def evalDesImages(srcRef,srcTest,algoSegmentation,csize,lsize,thetaMin,thetaMax,
     for imgTest in nomsImagesTest: # pour chaque image à tester
         imgTest = imgTest[:-4]
         if any(imgTest in s for s in nomsImagesRef): #si le masque existe
-            indexMasque = nomsImagesRef.index(imgTest+"_s.tif") #recupérer l'index du masque dand la liste
+            indexMasqueS = nomsImagesRef.index(imgTest+"_s.tif") #recupérer l'index du masque dand la liste
+            indexMasqueP = nomsImagesRef.index(imgTest + "_p.tif")  # recupérer l'index du masque dand la liste
             cheminImageTest = srcTest+"/"+imgTest+".tif"        # construit le chemin de l'image à tester
-            cheminImageRef = srcRef+"/"+nomsImagesRef[indexMasque] #construit le chemin du masque
+            cheminImageRef1 = srcRef+"/"+nomsImagesRef[indexMasqueS] #construit le chemin du masque1
+            cheminImageRef2 = srcRef+"/"+nomsImagesRef[indexMasqueP] #construit le chemin du masque2
             imgTest = cv2.imread(cheminImageTest)     #lecture de l'image
-            imgRef = np.array(Image.open(cheminImageRef))
             imgTestSeg = inverseMatBin(algoSegmentation(imgTest,csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi))
-            imgRef = conversionBinaire(imgRef)
-            # if len(imgRef.shape) == 3:  # si l'image à plusieurs composantes
-            #     imgRefS = imgRef[:, :, 0]
-            #     # Image.fromarray(imgRefS*100+imgTestSeg*200).show()
-            #     # print("hic")
-            # else:
-                # Image.fromarray(imgRef * 100 + imgTestSeg * 200).show()
-            #Image.fromarray((imgTestSeg)).show()
+            imgRef = conversionBinaire(np.array(Image.open(cheminImageRef1))) |  conversionBinaire(np.array(Image.open(cheminImageRef2)))
+            if len(imgRef.shape) == 3:  # si l'image à plusieurs composantes
+                 imgRefS = imgRef[:, :, 0]
+                 Image.fromarray(imgRefS*100+imgTestSeg*200).show()
+                # print("hic")
+            else:
+                Image.fromarray(imgRef * 100 + imgTestSeg * 200).show()
+                Image.fromarray((imgTestSeg)).show()
             result[indice] = evalUneImage(imgRef,imgTestSeg)
             indice+=1
     return np.sum(result,axis=0)/indice
@@ -110,6 +111,14 @@ def conversionBinaire(img):
 
 
 
+def concatMasque(masque1,masque2):
+    """
+    Concatène des masques binaires
+    :param masque1: une matrice binaire
+    :param masque2: une matrice binaire
+    :return: (masque1 & masque2)
+    """
+    return masque1 & masque2
 
 def evaluationParametreGabor(srcDossierImageRef,srcDossiertest,thetaMin,thetaMax,pasTheta,sigmaMin,sigmaMax,pasSigma,gamaMin,GamaMax,pasGama,lambdaMin,lambdaMax,pasLambda,psiMin,psiMax,pasPsi):
     """
@@ -117,16 +126,16 @@ def evaluationParametreGabor(srcDossierImageRef,srcDossiertest,thetaMin,thetaMax
     :return: Une liste donnant les paramètres données et le résulat de l'évaluation 
     """
     stat= list()
-    csize = 54
-    lsize = 54
+    csize = 50
+    lsize = 50
     for sigma in np.arange(sigmaMin,sigmaMax, pasSigma):
-            for psi in np.arange(psiMin,psiMax,pasPsi):
-                for gamma in np.arange(gamaMin,GamaMax,pasGama):
-                    print(thetaMin.__str__()+" "+thetaMAx.__str__()+" "+pasTheta.__str__()+" "+sigma.__str__()+" "+gamma.__str__()+" "+lambdaMin.__str__()+" "+lambdaMax.__str__()+" "+pasLambda.__str__()+" "+psi.__str__())
-                    reslt = evalDesImages(srcDossierImageRef,srcDossiertest,Modele.SegmentationGabor.segmentationGabor,csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
-                    listReturn = [thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi,reslt.tolist()]
-                    print(reslt)
-                    stat.append(listReturn)
+        for psi in np.arange(psiMin,psiMax,pasPsi):
+            for gamma in np.arange(gamaMin,GamaMax,pasGama):
+                print(thetaMin.__str__()+" "+thetaMax.__str__()+" "+pasTheta.__str__()+" "+sigma.__str__()+" "+gamma.__str__()+" "+lambdaMin.__str__()+" "+lambdaMax.__str__()+" "+pasLambda.__str__()+" "+psi.__str__())
+                reslt = evalDesImages(srcDossierImageRef,srcDossiertest,Modele.SegmentationGabor.segmentationGabor,csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
+                listReturn = [thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi,reslt.tolist()]
+                print(reslt)
+                stat.append(listReturn)
     return stat
 
 
@@ -135,32 +144,38 @@ def evaluationParametreGabor(srcDossierImageRef,srcDossiertest,thetaMin,thetaMax
 
 #Pour boucle de création de kernel*
 #angle
-thetaMin = -0.9
-thetaMAx = 0.9
+thetaMin = -0.4
+thetaMax = 0.35
 pasTheta = 0.3
 #frequence
-lambdaMin = 5
-lambdaMax = 12
-pasLambda = 0.5
+lambdaMin = 6
+lambdaMax = 15
+pasLambda = 1
 
 # pour variation des paramètres
 #ecart type gaussienne
-sigmaMin = 6.2
-sigmaMax = 7
-pasSigma = 2
+sigmaMin = 2
+sigmaMax = 3
+pasSigma = 1
 
 #spacial aspect ration
-gamaMin = 1.5
-GamaMax = 2
-pasGama = 2
+gamaMin = 5
+GamaMax = 6
+pasGama = 1
 
 #décalage
 psiMin = 0
 psiMax = 1
 pasPsi = 2
 
+# pour chaque angle à une fréquence donné, taille fixé assez grande, faire varier la largeur
+# avec la frequence trouvé, faire varier la taille
+# idée : adapté le filtre en elipsoïde
+# -> coupler les méthodes de gabor et LBP aux méthodes statistique
+# -> faire des coupes réctangulaires
+
 srcDossierImageRef= "D:/L3MI/2nd_Annee/Cytoo/Stries"
 srcDossiertest=  "D:/L3MI/2nd_Annee/Cytoo/StriesTestPetit"
 
-resultEval = evaluationParametreGabor(srcDossierImageRef,srcDossiertest,thetaMin,thetaMAx,pasTheta,sigmaMin,sigmaMax,pasSigma,gamaMin,GamaMax,pasGama,lambdaMin,lambdaMax,pasLambda,psiMin,psiMax,pasPsi)
+resultEval = evaluationParametreGabor(srcDossierImageRef,srcDossiertest,thetaMin,thetaMax,pasTheta,sigmaMin,sigmaMax,pasSigma,gamaMin,GamaMax,pasGama,lambdaMin,lambdaMax,pasLambda,psiMin,psiMax,pasPsi)
 print(resultEval)
