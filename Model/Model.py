@@ -1,5 +1,5 @@
 from Model.Area import *
-
+from numpy import *
 
 class Model():
 
@@ -55,40 +55,103 @@ class Model():
         #return [newt border point, next primary direction]
         return [[x, y], [dx, dy]]
 
-    #return the list of all areas
-    def getCoordStriedArea(self, matrix):
-        areas = []
-
-        #find the first not null pixel of the image/matrix
-        i=0
-        j=0
-        while i < len(matrix) and j < len(matrix[0]) and matrix[i][j][0] != 1:
+    # find the first not null pixel of the image/matrix
+    def seekPixel(self, matrix, i, j):
+        while i < len(matrix) and j < len(matrix[0]) and (matrix[i][j][0] != 1 or not self.leftHighPixel(matrix, i, j)):
             j += 1
             if(j == len(matrix[0])):
                 i += 1
                 j=0
 
-        #check if theree is a not null pixel in the image/matrix
-        if(i < len(matrix)):
-            #point and direction initialisation
+        if (i != len(matrix) and j != len(matrix[0])):
+            k=0
+            while k<len(Area.border) and [i, j]!=Area.border[k]:
+                k+=1
+
+            if k!=len(Area.border):
+                return [-1, -1]
+
+        return [i, j]
+
+    # make a matrix with a empty row and column around the main matrix
+    def rebuildMatrix (self, matrixBase):
+        matrix = zeros([len(matrixBase)+2, len(matrixBase[0])+2, 2])
+
+        for i in range(0, len(matrixBase)):
+            for j in range(0, len(matrixBase[0])):
+                matrix[i+1][j+1][0] = matrixBase[i][j][0]
+        return matrix
+
+
+    def leftHighPixel (self, matrix, i, j):
+        return matrix[i-1][j][0]==0 and matrix[i][j-1][0]==0
+
+
+    # seeking the border of a stries begging at position i,j in main matrix
+    def seekBorderStries (self, matrix, i, j):
+        if (i < len(matrix)) :
+            # point and direction initialisation
             initialPoint = [j, i]
             currentPoint = [j, i]
-            primaryDirection = [1, 0] #right
+            primaryDirection = [1, 0]  # right
 
-            #initialise the area whith the first not null point
+            # initialise the area with the first not null point
             currentArea = Area(j, i, j, i)
 
-            #get the first next border point
+            # get the first next border point
             [currentPoint, primaryDirection] = self.movment(matrix, currentPoint[0], currentPoint[1], primaryDirection[0], primaryDirection[1])
-            #expend the area if the new point is out of the actual area
+            if self.leftHighPixel(matrix, currentPoint[1], currentPoint[0]):
+                Area.border.append(currentPoint)  # check next pixel is a top left pixel of the stries
+
+            # expend the area if the new point is out of the actual area
             currentArea.expend(currentPoint[0], currentPoint[1])
 
             #browse every border point next by next
             while initialPoint != currentPoint and (currentPoint[0]!=0 or currentPoint[1]!=0):
-                #get the first next border point
+                # get the first next border point
                 [currentPoint, primaryDirection] = self.movment(matrix, currentPoint[0], currentPoint[1], primaryDirection[0], primaryDirection[1])
-                #expend the area if the new point is out of the actual area
+                if self.leftHighPixel(matrix, currentPoint[1], currentPoint[0]):
+                    Area.border.append(currentPoint)  # check next pixel is a top left pixel of the stries
+                # expend the area if the new point is out of the actual area
                 currentArea.expend(currentPoint[0], currentPoint[1])
 
-        areas.append(currentArea)
+            #replace the area cause of the use of rebuildMatrix
+            currentArea.move(-1, -1)
+            return currentArea
+        return None
+
+    # return the list of all areas
+    def getCoordStriedArea(self, matrixBase):
+        matrix = self.rebuildMatrix(matrixBase)
+        areas = []
+
+        coordonneInit = [0, 0]
+        coordonneNext = coordonneInit
+
+        print(len(matrix))
+        print(len(matrix[0]))
+        while coordonneInit[0]<len(matrix) and coordonneInit[1]<len(matrix[0]):
+
+            coordonneNext = self.seekPixel(matrix, coordonneInit[0], coordonneInit[1])
+            print("i :" + str(coordonneNext[0]))
+            print("j : " + str(coordonneNext[1]))
+            if coordonneNext != [-1, -1]:
+                coordonneInit = coordonneNext
+                area = self.seekBorderStries(matrix, coordonneInit[0], coordonneInit[1])
+                if area != None:
+                    k=0
+                    while k<len(areas) and not area.equals(areas[k]):
+                        k+=1
+                    if k==len(areas):
+                        print("yoo")
+                        areas.append(area)
+                    else:
+                        print("yaa")
+
+            if(coordonneInit[1]+1==len(matrix[0]) and coordonneInit[0]+1<len(matrix)):
+                coordonneInit[1] = 0
+                coordonneInit[0] = coordonneInit[0]+1
+            else:
+                coordonneInit[1] = coordonneInit[1]+1
+
         return areas

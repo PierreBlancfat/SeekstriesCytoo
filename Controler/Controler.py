@@ -13,7 +13,9 @@ class Controler():
         image = Image.open("C:/Users/Vincent/PycharmProjects/SeekstriesCytoo/test.TIF")
         matrix = EvaluationSegmentation.conversionBinaire(image)
         areas = self.model.getCoordStriedArea(matrix)
-        print(str(areas[0].xTopLeft) + " " + str(areas[0].yTopLeft) + " " + str(areas[0].xBotRight) + " " + str(areas[0].yBotRight))
+        for i in range(0,len(areas)):
+            print(i)
+            print(str(areas[i].xTopLeft) + " " + str(areas[i].yTopLeft) + " " + str(areas[i].xBotRight) + " " + str(areas[i].yBotRight))
 
         self.interface = Interface(frame)
         self.interface.mainloop()
