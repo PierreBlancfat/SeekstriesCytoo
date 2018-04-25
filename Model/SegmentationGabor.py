@@ -2,7 +2,6 @@
 
 import numpy as np
 import cv2
-from matplotlib import pyplot as plt
 from PIL import Image
 import scipy
 import time
@@ -11,7 +10,9 @@ import skimage.exposure as exposure
 
 class SegmentationGabor:
 
-    def __init__(self,matImg, csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin,lambdaMax,pasLambda, psi,dossierSaveImgSeg = None,dossierSaveKernel=None):
+    def __init__(self,matImg,csize=50, lsize=50, thetaMin=-0.4, thetaMax=0.45, pasTheta=0.2, sigma=2, gamma=5, lambdaMin=6,lambdaMax=15,pasLambda=1, psi=0,dossierSaveImgSeg = None,dossierSaveKernel=None):
+
+
         self.matImg = matImg
         self.csize = csize
         self.lsize = lsize
