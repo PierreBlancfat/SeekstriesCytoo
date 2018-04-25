@@ -55,7 +55,7 @@ class Model():
         #return [newt border point, next primary direction]
         return [[x, y], [dx, dy]]
 
-    # find the first not null pixel of the image/matrix
+    # find the first not null pixel of the images/matrix
     def seekPixel(self, matrix, i, j):
         while i < len(matrix) and j < len(matrix[0]) and (matrix[i][j][0] != 1 or not self.leftHighPixel(matrix, i, j)):
             j += 1

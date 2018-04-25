@@ -23,7 +23,7 @@ class EvaluatationSegmentation:
         :param nomImgTest: une matrice binaire
         :return: [precision,prevalence,PPV,FDR,FOR,NPV,TPR,FPR,FNR,TNR,LRplus,LRmoins,vraivrai]
         """
-        if len(imgRef.shape)== 3: # si l'image à plusieurs composantes
+        if len(imgRef.shape)== 3: # si l'images à plusieurs composantes
           imgRef = imgRef[:,:,0]
         nbTotal = imgRef.size
         vraiPositifMat = (imgRef & nomImgTest)
@@ -83,19 +83,19 @@ class EvaluatationSegmentation:
         nomsImagesTest = os.listdir(self.srcDossiertest)
         indice = 0
         result = np.zeros((150,13))
-        for nomImgTest in nomsImagesTest: # pour chaque image à tester
+        for nomImgTest in nomsImagesTest: # pour chaque images à tester
             nomImgTest = nomImgTest[:-4]
             if any(nomImgTest in s for s in nomsImagesRef): #si le masque existe
                 indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.tif") #recupérer l'index du masque dand la liste
                 indexMasqueP = nomsImagesRef.index(nomImgTest + "_p.tif")  # recupérer l'index du masque dand la liste
-                cheminImageTest = self.srcDossiertest+"/"+nomImgTest+".tif"        # construit le chemin de l'image à tester
+                cheminImageTest = self.srcDossiertest+"/"+nomImgTest+".tif"        # construit le chemin de l'images à tester
                 cheminImageRef1 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueS] #construit le chemin du masque1
                 cheminImageRef2 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueP] #construit le chemin du masque2
-                nomImgTest = cv2.imread(cheminImageTest)   #lecture de l'image
+                nomImgTest = cv2.imread(cheminImageTest)   #lecture de l'images
                 algoSegmentation.matImg = nomImgTest      #donne la matrice à l'algo Segmentation
                 imgTestSeg = self.inverseMatBin(algoSegmentation.segmentation())
                 imgRef = self.conversionBinaire(np.array(Image.open(cheminImageRef1))) |  self.conversionBinaire(np.array(Image.open(cheminImageRef2)))
-                # if len(imgRef.shape) == 3:  # si l'image à plusieurs composantes
+                # if len(imgRef.shape) == 3:  # si l'images à plusieurs composantes
                 #      imgRefS = imgRef[:, :, 0]
                 #      Image.fromarray(imgRefS*100+imgTestSeg*200).show()
                 #     # print("hic")
@@ -108,11 +108,11 @@ class EvaluatationSegmentation:
 
     def conversionBinaire(self,img):
          """
-         Convertie une image en binaire
-         :param srcImageRef: Le chemin de l'image 
-         :return: Une matrice binaire de même taille que l'image source. Les 1 représentent le "noir" ( zone positive), le 0 le "blanc" ( zone négative)
+         Convertie une images en binaire
+         :param srcImageRef: Le chemin de l'images
+         :return: Une matrice binaire de même taille que l'images source. Les 1 représentent le "noir" ( zone positive), le 0 le "blanc" ( zone négative)
          """
-         imarray = np.array(img) # image to nparray
+         imarray = np.array(img) # images to nparray
          imarray = scipy.sign(imarray)  # binarise
          imarray = np.floor(abs(imarray - np.ones(imarray.shape))) #inversion 1 -> 0, 0-> 1
          imarray = imarray.astype(int) # converti en int

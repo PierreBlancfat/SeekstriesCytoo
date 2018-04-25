@@ -15,9 +15,9 @@ class SegmentationFibre:
 
     def segmenter(img,k):
         '''
-        Applique la méthode des k-means sur une image pour la segmenter
-        @param img: image à traiter (créer précédemment grâce à "imread()")
-        @return: l'image après traitement
+        Applique la méthode des k-means sur une images pour la segmenter
+        @param img: images à traiter (créer précédemment grâce à "imread()")
+        @return: l'images après traitement
         '''
 
         # k = 5, nombre de clusters optimal
@@ -31,7 +31,7 @@ class SegmentationFibre:
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
         ret, label, center = cv2.kmeans(res, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
 
-        # Now convert back into uint8, and make original image
+        # Now convert back into uint8, and make original images
         center = np.uint8(center)
         res = center[label.flatten()]
         res = (res/np.min(res))-1 # normaliser à 0

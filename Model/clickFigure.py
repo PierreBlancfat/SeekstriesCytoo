@@ -1,7 +1,7 @@
 
 
 ##############################################################################
-# Fonction de click sur une image utilisant Matplotlib et Numpy uniquement ###
+# Fonction de click sur une images utilisant Matplotlib et Numpy uniquement ###
 ##############################################################################
 
 
@@ -14,7 +14,7 @@ image = plt.imread('test.TIF') # Image to Array
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.imshow(image) # Affiche l'image sur le subplot
+ax.imshow(image) # Affiche l'images sur le subplot
 
 coords = []
 

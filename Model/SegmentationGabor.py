@@ -56,10 +56,10 @@ class SegmentationGabor:
 
     def kMeans(img,k):
         '''
-        Applique la méthode des k-means sur une image pour la segmenter
-        @param img: image à traiter (créer précédemment grâce à "imread()")
+        Applique la méthode des k-means sur une images pour la segmenter
+        @param img: images à traiter (créer précédemment grâce à "imread()")
         @param k: nombre de clusters
-        @return: l'image après traitement
+        @return: l'images après traitement
         '''
         # convert to np.float32
         res = img.reshape((-1, 3))
@@ -69,7 +69,7 @@ class SegmentationGabor:
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
         ret, label, center = cv2.kmeans(res, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
 
-        # Now convert back into uint8, and make original image
+        # Now convert back into uint8, and make original images
         center = np.uint8(center)
         res = center[label.flatten()]
         res = (res/np.min(res))-1 # normaliser à 0
@@ -82,11 +82,11 @@ class SegmentationGabor:
 
     def conversionBinaire(selg,img):
          """
-         Convertie une image en binaire
-         :param srcImageRef: Le chemin de l'image 
-         :return: Une matrice binaire de même taille que l'image source. Les 1 représentent le "noir" ( zone positive), le 0 le "blanc" ( zone négative)
+         Convertie une images en binaire
+         :param srcImageRef: Le chemin de l'images
+         :return: Une matrice binaire de même taille que l'images source. Les 1 représentent le "noir" ( zone positive), le 0 le "blanc" ( zone négative)
          """
-         imarray = np.array(img) # image to nparray
+         imarray = np.array(img) # images to nparray
          imarray = scipy.sign(imarray)  # binarise
          imarray = np.floor(abs(imarray - np.ones(imarray.shape))) #inversion 1 -> 0, 0-> 1
          imarray = imarray.astype(int) # converti en int
@@ -100,8 +100,8 @@ class SegmentationGabor:
     #Segmentation
     def segmentation(self):
         """
-        Segmente une image avec les filtres de Gabor
-        :param matImg: un emtrice représentant une image
+        Segmente une images avec les filtres de Gabor
+        :param matImg: un emtrice représentant une images
         :return: Le masque représentant la segmentation 
         """
         #gabor segmentation

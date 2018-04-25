@@ -9,8 +9,8 @@ class Controler():
         frame = Tk()
         self.model = Model("a", "b")
 
-        #Test Vincent entourage
-        image = Image.open("C:/Users/Vincent/PycharmProjects/SeekstriesCytoo/test.TIF")
+        #Test Vincent Yara entourage
+        image = Image.open("../data/images/test.TIF")
         matrix = EvaluationSegmentation.conversionBinaire(image)
         areas = self.model.getCoordStriedArea(matrix)
         for i in range(0,len(areas)):
