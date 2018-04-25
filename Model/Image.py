@@ -103,8 +103,30 @@ class Image:
                             if(self.img[i*self.hRec*antiscall+k][j*self.lRec*antiscall+l]>6000):
                                 self.img[i*self.hRec*antiscall+k][j*self.lRec*antiscall+l] += 8000
 
-      
-        
+    def returnMask(self, setOut, scall):
+        '''
+        code pour renvoyer le masque des sous rectangles striés.
+        '''
+        mask = np.zeros(self.img.shape)
+        x = np.shape(setOut)[1]
+        y = np.shape(setOut)[0]
+
+        if (self.scall == 1):
+            antiscall = 1
+        else:
+            antiscall = int(1 / scall)
+
+        for i in range(y):
+            for j in range(x):
+                if (setOut[i][j] == 1):
+                    for k in range(0, self.hRec * antiscall):
+                        for l in range(0, self.lRec * antiscall):
+                            if (self.img[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] > 6000):
+                                mask[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] = 0
+                            else :
+                                mask[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] = 255
+        return mask
+
     def display(self):
         return ImageViewer(self.img)
 

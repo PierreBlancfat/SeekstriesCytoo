@@ -14,6 +14,8 @@ command:
 import numpy as np
 import cv2
 import scipy
+import time
+import matplotlib.pyplot as plt
 
 class SegmentationFibre:
     """
@@ -25,7 +27,7 @@ class SegmentationFibre:
         self.matImg = matImg
         self.maskFibre = 0
 
-    def segmenter(self, img,k):
+    def segmenter(self, img):
         """
         Applique la methode des k-means sur une image pour la segmenter
         @param img: image a traiter (creer precedemment grace a "imread()")
@@ -52,23 +54,12 @@ class SegmentationFibre:
         self.maskFibre = maskFibre
         return maskFibre
 
-    '''
-    def main(): # Fonction de test
-        start_time = time.time()
-    
-        plt.figure(1)
-        plt.subplot(121)
-        img = cv2.imread('Stries_C2  (11).TIF', 0)
-        plt.imshow(img)
-        plt.subplot(122)
-        #imgSeg = fibreSegmentation('Stries_C2  (22).TIF')
-        imgSeg = kMeans(cv2.imread('Stries_C2  (11).TIF',0),5)
-        plt.imshow(imgSeg)
-    
-        plt.figure(2)
-        plt.hist(img.ravel(),bins='auto')
-    
-    
-        print("--- %s seconds ---" % (time.time() - start_time))
-        plt.show()
-    '''
+
+def main(): # Fonction de test
+    img = cv2.imread('Images/Stries_C2  (22).TIF', 0)  #  Image de test
+    seg = SegmentationFibre(img)
+    res = seg.segmenter(img)
+    plt.imshow(res*255)
+    print(res)
+
+main()
