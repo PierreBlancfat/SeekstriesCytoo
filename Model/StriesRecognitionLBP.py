@@ -157,14 +157,14 @@ def main():
     print(m)
 
 
-debutMain = time.time()
-main()
-print("temps execution : "+str(time.time()-debutMain))
 
-imageAffichee.colorResult(testSetOut, scall)
 
-viewer = imageAffichee.display()
-viewer.show() 
+def segmenterStriesLBP():
+    debutMain = time.time()
+    main()
+    print("temps execution : "+str(time.time()-debutMain))
+    return imageAffichee.returnMask(testSetOut, scall)
+
 
 
 
