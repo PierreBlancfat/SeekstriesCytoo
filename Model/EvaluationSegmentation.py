@@ -5,7 +5,7 @@ from PIL import Image
 import scipy
 
 
-class EvaluatationSegmentation:
+class EvaluationSegmentation:
 
 
     def __init__(self,srcDossierImageRef,srcDossiertest,algoSegmentation):    #Choix de la plage de paramètre à tester pour gabor
@@ -112,10 +112,10 @@ class EvaluatationSegmentation:
          :param srcImageRef: Le chemin de l'image 
          :return: Une matrice binaire de même taille que l'image source. Les 1 représentent le "noir" ( zone positive), le 0 le "blanc" ( zone négative)
          """
-         imarray = np.array(img) # image to nparray
-         imarray = scipy.sign(imarray)  # binarise
+         imarray = np.array(img) # image to np array
+         imarray = scipy.sign(imarray)  # binarize
          imarray = np.floor(abs(imarray - np.ones(imarray.shape))) #inversion 1 -> 0, 0-> 1
-         imarray = imarray.astype(int) # converti en int
+         imarray = imarray.astype(int) # convertie en int
          return  imarray
 
 

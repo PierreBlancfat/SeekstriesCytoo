@@ -1,5 +1,5 @@
-from Modele.EvaluationSegmentation import  EvaluatationSegmentation
-from Modele.SegmentationGabor import SegmentationGabor
+from Model.EvaluationSegmentation import EvaluationSegmentation
+from Model.SegmentationGabor import SegmentationGabor
 import numpy as np
 
 class ControlerEvaluationSegmentation:
@@ -57,7 +57,7 @@ class ControlerEvaluationSegmentation:
                 for gamma in np.arange(gamaMin,GamaMax,pasGama):
                     segGabor = SegmentationGabor(None,csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin,lambdaMax,pasLambda, psi,dossierSaveImgSeg,dossierSaveKernel)
                     print(segGabor.paramToString())
-                    evaluateur = EvaluatationSegmentation(srcDossierImageRef,srcDossiertest,segGabor)
+                    evaluateur = EvaluationSegmentation(srcDossierImageRef,srcDossiertest,segGabor)
                     reslt = evaluateur.evalDesImages(segGabor)
                     listReturn = [csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin,lambdaMax,pasLambda, psi,reslt.tolist()]
                     print(reslt)

@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 from PIL import Image
-from Modele.SegmentationGabor import SegmentationGabor
+from Model.SegmentationGabor import SegmentationGabor
 
 class ControlerSegmentationGabor:
 
