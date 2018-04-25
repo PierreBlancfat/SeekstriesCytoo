@@ -7,7 +7,7 @@ Created on Fri Apr 13 10:20:57 2018
 from skimage.feature import local_binary_pattern
 from skimage.transform import resize
 from skimage import io
-from skimage.viewer import ImageViewer
+# from skimage.viewer import ImageViewer
 import numpy as np
 
 class Image:
@@ -129,15 +129,16 @@ class Image:
                 if (setOut[i][j] == 1):
                     for k in range(0, self.hRec * antiscall):
                         for l in range(0, self.lRec * antiscall):
-                            if (self.img[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] > 6000):
+                            print(self.img[i*self.hRec*antiscall+k][j*self.lRec*antiscall+l])
+                            if (self.img[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] > 25):
                                 mask[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] = 1
                             else :
                                 mask[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] = 0
         return mask
-
+    '''
     def display(self):
         return ImageViewer(self.img)
-
+    '''
 
 
 

@@ -7,8 +7,8 @@ https://machinelearningmastery.com/tutorial-to-implement-k-nearest-neighbors-in-
 from __future__ import print_function
 import numpy as np
 import matplotlib.pyplot as plt
-from Knn import Knn
-from Image import Image
+from Model.Knn import Knn
+from Model.Image import Image
 import csv
 from skimage import exposure
 
