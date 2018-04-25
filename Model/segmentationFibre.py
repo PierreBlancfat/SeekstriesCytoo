@@ -1,3 +1,11 @@
+"""
+This example module shows various types of documentation available for use
+with pydoc.  To generate HTML documentation for this module issue the
+command:
+
+    pydoc -w foo
+
+"""
 
 ###########################
 # SEGMENTATION DES FIBRES #
@@ -8,17 +16,21 @@ import cv2
 import scipy
 
 class SegmentationFibre:
+    """
+    Classe permettant de segment la fibre
+    """
 
     def __init__(self, matImg):
 
         self.matImg = matImg
+        self.maskFibre = 0
 
-    def segmenter(img,k):
-        '''
-        Applique la méthode des k-means sur une image pour la segmenter
-        @param img: image à traiter (créer précédemment grâce à "imread()")
-        @return: l'image après traitement
-        '''
+    def segmenter(self, img,k):
+        """
+        Applique la methode des k-means sur une image pour la segmenter
+        @param img: image a traiter (creer precedemment grace a "imread()")
+        @return: l'image apres traitement
+        """
 
         # k = 5, nombre de clusters optimal
         k = 5
@@ -34,11 +46,10 @@ class SegmentationFibre:
         # Now convert back into uint8, and make original image
         center = np.uint8(center)
         res = center[label.flatten()]
-        res = (res/np.min(res))-1 # normaliser à 0
-        res = scipy.sign(res) # Binarisation
-        # res = res * 255 # pour afficher en noir blanc
+        res = (res/np.min(res))-1 # normaliser a 0
+        res = scipy.sign(res)
         maskFibre = res.reshape((img.shape))
-
+        self.maskFibre = maskFibre
         return maskFibre
 
     '''
