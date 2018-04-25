@@ -10,7 +10,7 @@ class Controler():
         self.model = Model("a", "b")
 
         #Test Vincent Yara entourage
-        image = Image.open("../data/images/test.TIF")
+        image = Image.open("../Data/training_masks/Stries_C2 (6)_p.tif")
         matrix = EvaluationSegmentation.conversionBinaire(image)
         areas = self.model.getCoordStriedArea(matrix)
         for i in range(0,len(areas)):

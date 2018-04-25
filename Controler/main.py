@@ -1,2 +1,2 @@
-from Controler.controler import *
+from Controler.Controler import *
 Controler()
