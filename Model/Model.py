@@ -132,13 +132,9 @@ class Model():
         coordonneInit = [0, 0]
         coordonneNext = coordonneInit
 
-        print(len(matrix))
-        print(len(matrix[0]))
         while coordonneInit[0]<len(matrix) and coordonneInit[1]<len(matrix[0]):
 
             coordonneNext = self.seekPixel(matrix, coordonneInit[0], coordonneInit[1])
-            print("i :" + str(coordonneNext[0]))
-            print("j : " + str(coordonneNext[1]))
             if coordonneNext != [-1, -1]:
                 coordonneInit = coordonneNext
                 area = self.seekBorderStries(matrix, coordonneInit[0], coordonneInit[1])
@@ -147,10 +143,8 @@ class Model():
                     while k<len(areas) and not area.equals(areas[k]):
                         k+=1
                     if k==len(areas):
-                        print("yoo")
                         areas.append(area)
-                    else:
-                        print("yaa")
+
 
             if(coordonneInit[1]+1==len(matrix[0]) and coordonneInit[0]+1<len(matrix)):
                 coordonneInit[1] = 0

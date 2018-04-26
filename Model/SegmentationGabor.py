@@ -97,7 +97,7 @@ class SegmentationGabor:
     def paramToString(self):
        return self.thetaMin.__str__() + " " + self.thetaMax.__str__() + " " + self.pasTheta.__str__() + " " + self.sigma.__str__() + " " + self.gamma.__str__() + " " + self.lambdaMin.__str__() + " " + self.lambdaMax.__str__() + " " + self.pasLambda.__str__() + " " + self.psi.__str__()
 
-    #Segmentation
+    #Segmentation.py
     def segmentation(self):
         """
         Segmente une images avec les filtres de Gabor

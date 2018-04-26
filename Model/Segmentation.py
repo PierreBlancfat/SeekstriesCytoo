@@ -1,9 +1,7 @@
 import cv2
 import os
 from PIL import Image
-from Model.segmentationFibre import SegmentationFibre
 from Model.SegmentationGabor import SegmentationGabor
-from Model.Entourage import Entourage
 
 class Segmentation:
 
