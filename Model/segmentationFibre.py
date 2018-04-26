@@ -1,11 +1,3 @@
-"""
-This example module shows various types of documentation available for use
-with pydoc.  To generate HTML documentation for this module issue the
-command:
-
-    pydoc -w foo
-
-"""
 
 ###########################
 # SEGMENTATION DES FIBRES #
@@ -14,7 +6,6 @@ command:
 import numpy as np
 import cv2
 import scipy
-import time
 import matplotlib.pyplot as plt
 
 class SegmentationFibre:
@@ -62,4 +53,4 @@ def main(): # Fonction de test
     plt.imshow(res*255)
     print(res)
 
-main()
+#main()

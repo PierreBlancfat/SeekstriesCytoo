@@ -1,4 +1,3 @@
-from pylint.testutils import INFO_TEST_RGX
 from View.View import *
 from Model.Segmentation import Segmentation
 
