@@ -9,6 +9,7 @@ from skimage.transform import resize
 from skimage import io
 # from skimage.viewer import ImageViewer
 import numpy as np
+import cv2
 
 class Image:
 
@@ -92,24 +93,24 @@ class Image:
         
     
     
-    def colorResult(self, setOut, scall):
+    def superposeMask(self, imgPath, segMask):
         '''
-        code pour coloriser les sous rectangles striés.
+        Allows to superpose a mask on top of an Image
+        :param imgPath: Path to the source image (ex: "../Data/images/Stries_C2  (44).TIF")
+        :param segMask: Mask computed using segLBP / segGabor / etc...
+        :return: RGB image with a mask
         '''
 
-        x = np.shape(setOut)[1]
-        y = np.shape(setOut)[0]
-        
-        if(self.scall == 1): antiscall = 1
-        else : antiscall = int(1/scall)
-        
-        for i in range(y) :
-            for j in range(x) :
-                if(setOut[i][j]==1):
-                    for k in range(0,self.hRec*antiscall):
-                        for l in range(0,self.lRec*antiscall):
-                            if(self.img[i*self.hRec*antiscall+k][j*self.lRec*antiscall+l]>6000):
-                                self.img[i*self.hRec*antiscall+k][j*self.lRec*antiscall+l] += 8000
+        #img = cv2.imread(imgPath, 0)
+        imgRGB = cv2.imread(imgPath, 1)
+        # sLBP = SegmentationLBP(img)
+        # mask = sLBP.segmenterStriesLBP()
+        segMask = segMask*255
+        imgRGB[:,:,2] = segMask
+
+        return imgRGB
+        # plt.imshow(imgRGB)
+        # plt.show()
 
     def returnMask(self, setOut, scall):
         '''
