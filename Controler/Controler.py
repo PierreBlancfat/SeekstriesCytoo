@@ -18,7 +18,5 @@ class Controler():
         matrix = s.conversionBinaire(image)
         areas = self.model.getCoordStriedArea(matrix)
 
-
-
 if __name__ == '__main__':
     Controler()
