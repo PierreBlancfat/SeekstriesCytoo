@@ -92,7 +92,7 @@ class EvaluationSegmentation:
                 cheminImageRef1 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueS] #construit le chemin du masque1
                 cheminImageRef2 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueP] #construit le chemin du masque2
                 nomImgTest = cv2.imread(cheminImageTest)   #lecture de l'image
-                algoSegmentation.matImg = nomImgTest      #donne la matrice à l'algo Segmentation
+                algoSegmentation.matImg = nomImgTest      #donne la matrice à l'algo Segmentation.py
                 imgTestSeg = self.inverseMatBin(algoSegmentation.segmentation())
                 imgRef = self.conversionBinaire(np.array(Image.open(cheminImageRef1))) |  self.conversionBinaire(np.array(Image.open(cheminImageRef2)))
                 # if len(imgRef.shape) == 3:  # si l'image à plusieurs composantes
