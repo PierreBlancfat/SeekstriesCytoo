@@ -77,6 +77,7 @@ class Image:
         elif (not 'path' in keys) and (not 'matrix' in keys) :
             print("ERREUR : l'un des parametres suivant est necessaire : path, matrix")
         elif ('path' in keys) :
+            self.path = keys['path']
             self.img = io.imread(keys['path'])
         else :
             self.img = keys['matrix']
@@ -93,24 +94,25 @@ class Image:
         
     
     
-    def superposeMask(self, imgPath, segMask):
+    def superposeMask(self, segMask):
         '''
         Allows to superpose a mask on top of an Image
-        :param imgPath: Path to the source image (ex: "../Data/images/Stries_C2  (44).TIF")
         :param segMask: Mask computed using segLBP / segGabor / etc...
         :return: RGB image with a mask
         '''
 
-        #img = cv2.imread(imgPath, 0)
-        imgRGB = cv2.imread(imgPath, 1)
-        # sLBP = SegmentationLBP(img)
-        # mask = sLBP.segmenterStriesLBP()
-        segMask = segMask*255
-        imgRGB[:,:,2] = segMask
+        segMask = segMask * 255
+        try:
+            imgRGB = cv2.imread(self.path, 1)
+            imgRGB[:, :, 2] = segMask
+            return imgRGB
 
-        return imgRGB
-        # plt.imshow(imgRGB)
-        # plt.show()
+        except AttributeError:
+            imgRGB = cv2.cvtColor(self.img, cv2.COLOR_GRAY2RGB)
+            imgRGB[:, :, 2] = segMask
+            return imgRGB
+
+
 
     def returnMask(self, setOut, scall):
         '''
