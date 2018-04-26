@@ -1,0 +1,39 @@
+{
+    "docs": [
+        {
+            "location": "/",
+            "text": "SeekStries\n\n\nIntroduction to SeekStries\n\n\nAuthors\n\n\nQuentin Rospars\n\n\nInstallation\n\n\nUsage\n\n\nfor i in range(0,100):\nprint(\"Hello World!\")\n\n\n\n\nReleases",
+            "title": "Home"
+        },
+        {
+            "location": "/#seekstries",
+            "text": "Introduction to SeekStries",
+            "title": "SeekStries"
+        },
+        {
+            "location": "/#authors",
+            "text": "Quentin Rospars",
+            "title": "Authors"
+        },
+        {
+            "location": "/#installation",
+            "text": "",
+            "title": "Installation"
+        },
+        {
+            "location": "/#usage",
+            "text": "for i in range(0,100):\nprint(\"Hello World!\")",
+            "title": "Usage"
+        },
+        {
+            "location": "/#releases",
+            "text": "",
+            "title": "Releases"
+        },
+        {
+            "location": "/SegmentationFibre/",
+            "text": "SegmentationFibre\n\n\n\nSegmentationFibre(self, matImg)\n\n\n\n\nClasse permettant de segment la fibre\n\n\nsegmenter\n\n\n\nSegmentationFibre.segmenter(self, img)\n\n\n\n\nApplique la methode des k-means sur une image pour la segmenter\n@param img: image a traiter (creer precedemment grace a \"imread()\")\n@return: l'image apres traitement",
+            "title": "SegmentationFibre"
+        }
+    ]
+}

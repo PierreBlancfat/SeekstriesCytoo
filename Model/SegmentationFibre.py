@@ -47,7 +47,7 @@ class SegmentationFibre:
 
 
 def main(): # Fonction de test
-    img = cv2.imread('Images/Stries_C2  (22).TIF', 0)  #  Image de test
+    img = cv2.imread('../Data/images/Stries_C2  (44).TIF', 0)  #  Image de test
     seg = SegmentationFibre(img)
     res = seg.segmenter(img)
     plt.imshow(res*255)
