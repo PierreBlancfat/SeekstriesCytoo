@@ -5,8 +5,9 @@ from Model.Segmentation import Segmentation
 
 class Interface(Frame):
 
-    def __init__(self, fenetre, **kwargs):
+    def __init__(self, fenetre, controler, **kwargs):
         Frame.__init__(self, fenetre, width=768, height=576, **kwargs)
+        self.controler = controler
         self.pack(fill=BOTH)
 
 
@@ -36,11 +37,11 @@ class Interface(Frame):
         self.bouton_browse.grid(row=1, column=2)
 
 
-
-        #Row 3
         self.bouton_cliquer = Button(self, text="Start", fg="red",command=self.cliquer)
         self.bouton_cliquer.pack()
 
+        self.bouton_cliquer = Button(self, text="YaraBG", fg="red",command=self.yaraPerformed)
+        self.bouton_cliquer.pack()
 
         self.bouton_quitter = Button(self, text="Quitter", command=self.quit)
         self.bouton_quitter.pack()
@@ -54,6 +55,9 @@ class Interface(Frame):
     def cliquer(self,cheminScr=None,cheminDest=None):
         seg = Segmentation(cheminScr,cheminDest)
         seg.segmenterDesImages()
+
+    def yaraPerformed(self):
+        self.controler.testEntourage()
 
 
 

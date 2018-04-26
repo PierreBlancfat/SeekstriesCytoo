@@ -86,9 +86,9 @@ class EvaluationSegmentation:
         for nomImgTest in nomsImagesTest: # pour chaque image à tester
             nomImgTest = nomImgTest[:-4]
             if any(nomImgTest in s for s in nomsImagesRef): #si le masque existe
-                indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.tif") #recupérer l'index du masque dand la liste
-                indexMasqueP = nomsImagesRef.index(nomImgTest + "_p.tif")  # recupérer l'index du masque dand la liste
-                cheminImageTest = self.srcDossiertest+"/"+nomImgTest+".tif"        # construit le chemin de l'image à tester
+                indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.TIF") #recupérer l'index du masque dand la liste
+                indexMasqueP = nomsImagesRef.index(nomImgTest + "_p.TIF")  # recupérer l'index du masque dand la liste
+                cheminImageTest = self.srcDossiertest+"/"+nomImgTest+".TIF"        # construit le chemin de l'image à tester
                 cheminImageRef1 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueS] #construit le chemin du masque1
                 cheminImageRef2 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueP] #construit le chemin du masque2
                 nomImgTest = cv2.imread(cheminImageTest)   #lecture de l'image

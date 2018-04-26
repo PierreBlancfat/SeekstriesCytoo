@@ -16,10 +16,10 @@ img = cv2.imread('test.TIF',0) # Image de test
 
 def LPF(img,n):
     '''
-    Low-pass filters aide à réduire le bruit dans une image
-    @param img: image à traiter (créer précédemment grâce à "imread()")
+    Low-pass filters aide à réduire le bruit dans une images
+    @param img: images à traiter (créer précédemment grâce à "imread()")
     @param n:  numéro du filtre appliqué (1 = soft, 2 = rough)
-    @return: -1 si il y a eu une erreur, sinon l'image après filtrage
+    @return: -1 si il y a eu une erreur, sinon l'images après filtrage
     '''
     if (n==1):
         LPF1 = np.ones((3,3),np.float32)/9
@@ -34,10 +34,10 @@ def LPF(img,n):
 
 def HPF(img,n):
     '''
-    High-pass filters aide à trouver les edges dans une image
-    @param img: image à traiter (créer précédemment grâce à "imread()")
+    High-pass filters aide à trouver les edges dans une images
+    @param img: images à traiter (créer précédemment grâce à "imread()")
     @param n:  Pourcentage (0 < n < 100) du filtre
-    @return: -1 si il y a eu une erreur, sinon l'image après filtrage
+    @return: -1 si il y a eu une erreur, sinon l'images après filtrage
     '''
     if (n>=0 and n<=100):
         HPF1 = -1 * np.ones((5, 5))
@@ -50,10 +50,10 @@ def HPF(img,n):
 
 def GB(img,n):
     '''
-    Gaussian Blur (floute l'image)
-    @param img: image à traiter (créer précédemment grâce à "imread()")
+    Gaussian Blur (floute l'images)
+    @param img: images à traiter (créer précédemment grâce à "imread()")
     @param n:  numéro du filtre appliqué (1 = basique)
-    @return: -1 si il y a eu une erreur, sinon l'image après filtrage
+    @return: -1 si il y a eu une erreur, sinon l'images après filtrage
     '''
     if (n==1):
         return cv2.GaussianBlur(img,(5,5),0)
@@ -65,9 +65,9 @@ def GB(img,n):
 def BLF(img,n):
     '''
     Bilateral filters is highly effective in noise removal while keeping edges sharp
-    @param img: image à traiter (créer précédemment grâce à "imread()")
+    @param img: images à traiter (créer précédemment grâce à "imread()")
     @param n:  numéro du filtre appliqué (1 = basique)
-    @return: -1 si il y a eu une erreur, sinon l'image après filtrage
+    @return: -1 si il y a eu une erreur, sinon l'images après filtrage
     '''
     if (n==1):
         return cv2.bilateralFilter(img,5,75,75)
@@ -77,11 +77,11 @@ def BLF(img,n):
 
 def contrastAndBrightness(img,alpha,beta):
     '''
-    Augmente / Diminue le contrast et le brightness de l'image
-    @param img: image à traiter (créer précédemment grâce à "imread()")
+    Augmente / Diminue le contrast et le brightness de l'images
+    @param img: images à traiter (créer précédemment grâce à "imread()")
     @param alpha: appartient à [1.0 ; 3.0] représente l'augementation du contraste
     @param beta: appartient à [0 ; 100] représente l'augmentation du brightness
-    @return: -1 si erreur, l'image traité sinon
+    @return: -1 si erreur, l'images traité sinon
     '''
 
     if (alpha>=0.0 and alpha<=3.0 and beta>=0 and beta<=100):

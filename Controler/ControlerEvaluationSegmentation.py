@@ -41,11 +41,11 @@ class ControlerEvaluationSegmentation:
         # idée : adapté le filtre en elipsoïde
         # -> coupler les méthodes de gabor et LBP aux méthodes statistique
         # -> faire des coupes réctangulaires
-        dossierSaveImgSeg = "D:/L3MI/2nd_Annee/Cytoo/testSegGabor/seg/"
-        dossierSaveKernel = "D:/L3MI/2nd_Annee/Cytoo/testSegGabor/kern/"
+        dossierSaveImgSeg = "../Data/testSegGabor/seg/"
+        dossierSaveKernel = "../Data/testSegGabor/kern/"
 
-        srcDossierImageRef = "D:/L3MI/2nd_Annee/Cytoo/Stries"
-        srcDossiertest = "D:/L3MI/2nd_Annee/Cytoo/StriesTestPetit"
+        srcDossierImageRef = "../Data/training_masks"
+        srcDossiertest = "../Data/images"
 
         """
         Evalue une plage de paramètres données à la fonction de segmentation de Gabor
