@@ -9,6 +9,7 @@ from skimage.transform import resize
 from skimage import io
 # from skimage.viewer import ImageViewer
 import numpy as np
+import cv2
 
 class Image:
 
@@ -76,6 +77,7 @@ class Image:
         elif (not 'path' in keys) and (not 'matrix' in keys) :
             print("ERREUR : l'un des parametres suivant est necessaire : path, matrix")
         elif ('path' in keys) :
+            self.path = keys['path']
             self.img = io.imread(keys['path'])
         else :
             self.img = keys['matrix']
@@ -92,24 +94,25 @@ class Image:
         
     
     
-    def colorResult(self, setOut, scall):
+    def superposeMask(self, segMask):
         '''
-        code pour coloriser les sous rectangles striés.
+        Allows to superpose a mask on top of an Image
+        :param segMask: Mask computed using segLBP / segGabor / etc...
+        :return: RGB image with a mask
         '''
 
-        x = np.shape(setOut)[1]
-        y = np.shape(setOut)[0]
-        
-        if(self.scall == 1): antiscall = 1
-        else : antiscall = int(1/scall)
-        
-        for i in range(y) :
-            for j in range(x) :
-                if(setOut[i][j]==1):
-                    for k in range(0,self.hRec*antiscall):
-                        for l in range(0,self.lRec*antiscall):
-                            if(self.img[i*self.hRec*antiscall+k][j*self.lRec*antiscall+l]>6000):
-                                self.img[i*self.hRec*antiscall+k][j*self.lRec*antiscall+l] += 8000
+        segMask = segMask * 255
+        try:
+            imgRGB = cv2.imread(self.path, 1)
+            imgRGB[:, :, 2] = segMask
+            return imgRGB
+
+        except AttributeError:
+            imgRGB = cv2.cvtColor(self.img, cv2.COLOR_GRAY2RGB)
+            imgRGB[:, :, 2] = segMask
+            return imgRGB
+
+
 
     def returnMask(self, setOut, scall):
         '''
@@ -129,7 +132,6 @@ class Image:
                 if (setOut[i][j] == 1):
                     for k in range(0, self.hRec * antiscall):
                         for l in range(0, self.lRec * antiscall):
-                            print(self.img[i*self.hRec*antiscall+k][j*self.lRec*antiscall+l])
                             if (self.img[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] > 25):
                                 mask[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] = 1
                             else :
