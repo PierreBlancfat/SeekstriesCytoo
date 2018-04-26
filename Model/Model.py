@@ -7,6 +7,10 @@ class Model():
         self.repSource = repSource
         self.repDestination = repDestination
 
+
+    ############################
+    # PARTIE VINCENT (à enlever)
+    ############################
     #return the next direction by clockwise
     def next(self, direction):
         #right return down

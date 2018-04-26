@@ -1,24 +1,17 @@
-from Model.Model import *
+from pylint.testutils import INFO_TEST_RGX
 from View.View import *
-from PIL import Image
-from Model import EvaluationSegmentation
-import os
+from Model.Segmentation import Segmentation
 
 
-class Controler():
+frame = Tk()
 
-    def __init__(self):
-        frame = Tk()
-        self.model = Model("a", "b")
 
-        #Test Vincent Yara entourage
+def initFenetre():
+    label = Label(frame, text="Hello World")
+    interface = Interface(frame)
+    interface.mainloop()
 
-        image = Image.open('../Data/training_masks/Stries_C2  (6)_p.tif')
-        matrix = EvaluationSegmentation.conversionBinaire(image)
-        areas = self.model.getCoordStriedArea(matrix)
-        for i in range(0,len(areas)):
-            print(i)
-            print(str(areas[i].xTopLeft) + " " + str(areas[i].yTopLeft) + " " + str(areas[i].xBotRight) + " " + str(areas[i].yBotRight))
 
-        self.interface = Interface(frame)
-        self.interface.mainloop()
+
+if __name__ == '__main__':
+    initFenetre()

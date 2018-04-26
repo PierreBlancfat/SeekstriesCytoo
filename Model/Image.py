@@ -7,16 +7,17 @@ Created on Fri Apr 13 10:20:57 2018
 from skimage.feature import local_binary_pattern
 from skimage.transform import resize
 from skimage import io
-from skimage.viewer import ImageViewer
+# from skimage.viewer import ImageViewer
 import numpy as np
 
 class Image:
 
-    def __init__(self, path, **keys):
+    def __init__(self, **keys):
         '''
         Parametres :
             
-            - path (obligatoire) : chemin
+            - path : chemin (pas compatible avec le parametre matrix)
+            - matrix : numpy matrice représentant l'image (pas compatible avec le parametre path)
             - resize : booleen, si false l'image n'est pas redimensionnee
             (par defaut, resize = true)
             - hauteur : hauteur de l'image (avant resize)
@@ -24,10 +25,10 @@ class Image:
             - scall : ratio de redimensionnement de l'image
                 
         Exemples :
-            
+            - image(matrix):
+                image par défaut ((1024*0.5)*(1344*0.5))
             - image(path) : 
                 image par défaut ((1024*0.5)*(1344*0.5))
-            
             - image(path, resize) : 
                 image par défaut non redimensionnée si
                 resize est false ((1024)*(1344))
@@ -70,7 +71,14 @@ class Image:
         self.hRec = int(self.hImg/self.nbRecH)
         self.lRec = int(self.lImg/self.nbRecL)
         
-        self.img = io.imread(path)
+        if ('path' in keys) and ('matrix' in keys) :
+            print("ERREUR : les parametres path et matrix sont incompatibles")
+        elif (not 'path' in keys) and (not 'matrix' in keys) :
+            print("ERREUR : l'un des parametres suivant est necessaire : path, matrix")
+        elif ('path' in keys) :
+            self.img = io.imread(keys['path'])
+        else :
+            self.img = keys['matrix']
         
         if(len(self.img.shape)==3):
             self.img = self.img[:,:,0]
@@ -103,11 +111,34 @@ class Image:
                             if(self.img[i*self.hRec*antiscall+k][j*self.lRec*antiscall+l]>6000):
                                 self.img[i*self.hRec*antiscall+k][j*self.lRec*antiscall+l] += 8000
 
-      
-        
+    def returnMask(self, setOut, scall):
+        '''
+        code pour renvoyer le masque des sous rectangles striés.
+        '''
+        mask = np.zeros(self.img.shape)
+        x = np.shape(setOut)[1]
+        y = np.shape(setOut)[0]
+
+        if (self.scall == 1):
+            antiscall = 1
+        else:
+            antiscall = int(1 / scall)
+
+        for i in range(y):
+            for j in range(x):
+                if (setOut[i][j] == 1):
+                    for k in range(0, self.hRec * antiscall):
+                        for l in range(0, self.lRec * antiscall):
+                            print(self.img[i*self.hRec*antiscall+k][j*self.lRec*antiscall+l])
+                            if (self.img[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] > 25):
+                                mask[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] = 1
+                            else :
+                                mask[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] = 0
+        return mask
+    '''
     def display(self):
         return ImageViewer(self.img)
-
+    '''
 
 
 
