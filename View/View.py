@@ -53,8 +53,7 @@ class Interface(Frame):
         self.T.insert(END, self.directory)
 
     def cliquer(self,cheminScr=None,cheminDest=None):
-        seg = Segmentation(cheminScr,cheminDest)
-        seg.segmenterDesImages()
+        self.controler.segmentation()
 
     def yaraPerformed(self):
         self.controler.testEntourage()

@@ -1,5 +1,4 @@
 from View.View import *
-from Model.SegmentationGabor import *
 from Model.Model import *
 
 class Controler():
@@ -11,12 +10,11 @@ class Controler():
         self.interface = Interface(frame, self)
         self.interface.mainloop()
 
+    def segmentation(self):
+        self.model.runSegmentation()
 
     def testEntourage(self):
-        image = Image.open('../Data/training_masks/Stries_C2  (6)_p.tif')
-        s = SegmentationGabor(image)
-        matrix = s.conversionBinaire(image)
-        areas = self.model.getCoordStriedArea(matrix)
+        self.model.entourage()
 
 if __name__ == '__main__':
     Controler()

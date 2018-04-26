@@ -1,5 +1,6 @@
 from numpy import *
 from Model.Area import *
+from cv2 import *
 
 # return the next direction by clockwise
 def next(direction):
@@ -112,3 +113,43 @@ def seekBorderStries (matrix, i, j):
         currentArea.move(-1, -1)
         return currentArea
     return None
+
+# return the list of all areas
+def getCoordStriedArea(matrixBase):
+
+    matrix = rebuildMatrix(matrixBase)
+    areas = []
+    coordonneInit = [0, 0]
+    coordonneNext = coordonneInit
+
+    while coordonneInit[0] < len(matrix) and coordonneInit[1] < len(matrix[0]):
+        coordonneNext = seekPixel(matrix, coordonneInit[0], coordonneInit[1])
+        if coordonneNext != [-1, -1]:
+            coordonneInit = coordonneNext
+            area = seekBorderStries(matrix, coordonneInit[0], coordonneInit[1])
+            if area is not None:
+                k = 0
+                while k < len(areas) and not area.equals(areas[k]):
+                    k += 1
+                if k == len(areas):
+                    areas.append(area)
+
+        if coordonneInit[1]+1 == len(matrix[0]) and coordonneInit[0]+1 < len(matrix):
+            coordonneInit[1] = 0
+            coordonneInit[0] = coordonneInit[0]+1
+        else:
+            coordonneInit[1] = coordonneInit[1]+1
+
+    return areas
+
+def dessinerEntourage(image, mask):
+    """
+    Dessine l'entourage sur l'image à partir du mask
+    :param image: Une image matricielle (niveau de gris)
+    :param mask: un masque binaire
+    :return:  matrice RGB
+    """
+
+    areas = getCoordStriedArea(mask)
+    #for i in range(0, len(areas)):
+    #    cv2.rectangle(image, (areas[i].xTopLeft, areas[i].yTopLeft), (areas[i].xBotRight, areas[i].xBotRight), 3)
