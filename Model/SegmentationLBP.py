@@ -58,11 +58,11 @@ class SegmentationLBP:
         self.testSet = np.zeros((self.nbRecH, self.nbRecL, self.vecSize+1))
         # si testSet[i][j] est une strie, testSetOut[i][j]=1, 0 sinon.
         # au départ, on initialise tout à 0.
-        self.testSetOut = np.zeros((self.nbRecH, self.nbRecL))
+        self.testSetOut = np.ones((self.nbRecH, self.nbRecL))
         
         self.imageAffichee = Image(matrix = matrixImg, resize = False, nbRecH = self.nbRecH, nbRecL = self.nbRecL)
         imageTest = Image(matrix = matrixImg, nbRecH = self.nbRecH, nbRecL = self.nbRecL)
-        self.lbpTest = imageTest.LBP(n_points, radius)
+        self.lbpImg = imageTest.LBP(n_points, radius)
 
 
 
@@ -103,7 +103,7 @@ class SegmentationLBP:
         
         
         
-    def caracterisation(self, set, lbp):
+    def caracterisation(self, set):
         """
         Caracterise les sous rectangles de lbp par les histogrammes
         de ces sous rectangles, et place ces caractéristiques dans la
@@ -113,33 +113,41 @@ class SegmentationLBP:
             for j in range(0,self.nbRecH) :
                 h0 = j*self.hRec
                 l0 = i*self.lRec
-                subRect = lbp[h0:h0+self.hRec, l0:l0+self.lRec]
-                subRect = exposure.equalize_hist(subRect)
-        #            subRect = exposure.adjust_sigmoid(subRect)
-        #            subRect = exposure.adjust_log(subRect)
-        
-                hist = np.histogram(subRect, bins=self.vecSize)
-                # on caracterise le carreau avec son histogramme :
-                for k in range(0,self.vecSize):
-                    set[j][i][k] = hist[0][k]
+                subRect = self.lbpImg[h0:h0+self.hRec, l0:l0+self.lRec]
+                
+                # on verifie que le sous rectangle n'est pas noir (car il n'y a pas de 
+                # stries dans un sous-rectangle noir) :
+                blackArea = 0
+                for line in subRect:
+                    for col in line:
+                        if(subRect[line][col]>25):
+                            blackArea = blackArea + 1
+                if (blackArea/(self.hRec*self.lRec) < 0.75): # si le rectangle est <75% noir               
+                    subRect = exposure.equalize_hist(subRect)
+
+                    hist = np.histogram(subRect, bins=self.vecSize)
+                    # on caracterise le carreau avec son histogramme :
+                    for k in range(0,self.vecSize):
+                        set[j][i][k] = hist[0][k]
+                else: # si le rectangle est >75% noir, on ne le traite pas
+                    self.testSetOut[i][j] = 0 
 
 
 
-
-        
         
     def segmenterStriesLBP(self):
         # chemin vers le fichier ou enregistrer la caracterisation :
         filePath = "../Data/caracTrainingSet.csv"
-        self.caracterisation(self.testSet, self.lbpTest)
+        self.caracterisation(self.testSet)
         k = 2
         for i in range(self.nbRecH) :
             for j in range(self.nbRecL) :
-                (reader, file) = self._initReader(filePath)
-                neighbors = Knn.getNeighbors(reader, self.testSet[i][j], k)
-                result = Knn.getResponse(neighbors)            
-                self._close(file)
-                self.testSetOut[i][j] = result
+                if(self.testSetOut[i][j] != 0):
+                    (reader, file) = self._initReader(filePath)
+                    neighbors = Knn.getNeighbors(reader, self.testSet[i][j], k)
+                    result = Knn.getResponse(neighbors)            
+                    self._close(file)
+                    self.testSetOut[i][j] = result
         return self.imageAffichee.returnMask(self.testSetOut, self.scall)
 
 

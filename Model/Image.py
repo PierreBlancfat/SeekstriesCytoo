@@ -132,7 +132,6 @@ class Image:
                 if (setOut[i][j] == 1):
                     for k in range(0, self.hRec * antiscall):
                         for l in range(0, self.lRec * antiscall):
-                            print(self.img[i*self.hRec*antiscall+k][j*self.lRec*antiscall+l])
                             if (self.img[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] > 25):
                                 mask[i * self.hRec * antiscall + k][j * self.lRec * antiscall + l] = 1
                             else :
