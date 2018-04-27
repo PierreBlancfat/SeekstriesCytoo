@@ -3,6 +3,8 @@ import os
 import numpy as np
 from PIL import Image
 import scipy
+from Model.SegmentationLBP import SegmentationLBP
+import time
 
 
 class EvaluationSegmentation:
@@ -16,21 +18,23 @@ class EvaluationSegmentation:
         self.srcDossierImageRef = srcDossierImageRef
         self.srcDossiertest = srcDossiertest
 
-    def evalUneImage(self,imgRef,nomImgTest):
+    def evalUneImage(self,imgRef,imgTest):
         """
         Evaluation de la qualité d'une segmentation 
         :param imgRef: une matrice binaire
         :param nomImgTest: une matrice binaire
         :return: [precision,prevalence,PPV,FDR,FOR,NPV,TPR,FPR,FNR,TNR,LRplus,LRmoins,vraivrai]
         """
-        if len(imgRef.shape)== 3: # si l'image à plusieurs composantes
+        if len(imgRef.shape) == 3: # si l'image à plusieurs composantes
           imgRef = imgRef[:,:,0]
+        if len(imgTest.shape) == 3: # si l'image à plusieurs composantes
+            imgTest = imgTest[:,:,0]
         nbTotal = imgRef.size
-        vraiPositifMat = (imgRef & nomImgTest)
+        vraiPositifMat = (imgRef & imgTest)
         inverseRefMat = self.inverseMatBin(imgRef)
-        fauxPositifMat = inverseRefMat & nomImgTest
+        fauxPositifMat = inverseRefMat & imgTest
         vraiNegatifMat = imgRef & self.inverseMatBin(vraiPositifMat)
-        fauxNegatifMat= self.inverseMatBin(nomImgTest | imgRef)
+        fauxNegatifMat= self.inverseMatBin(imgTest | imgRef)
         vraiPositif = np.sum(vraiPositifMat)
         fauxPositif =np.sum(fauxPositifMat)
         vraiNegatif =  np.sum(vraiNegatifMat)
@@ -85,14 +89,33 @@ class EvaluationSegmentation:
         for nomImgTest in nomsImagesTest: # pour chaque image à tester
             nomImgTest = nomImgTest[:-4]
             if any(nomImgTest in s for s in nomsImagesRef): #si le masque existe
-                indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.TIF") #recupérer l'index du masque dand la liste
-                indexMasqueP = nomsImagesRef.index(nomImgTest + "_p.TIF")  # recupérer l'index du masque dand la liste
-                cheminImageTest = self.srcDossiertest+"/"+nomImgTest+".TIF"        # construit le chemin de l'image à tester
+                indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.tif") #recupérer l'index du masque dand la liste
+                indexMasqueP = nomsImagesRef.index(nomImgTest + "_p.tif")  # recupérer l'index du masque dand la liste
+                cheminImageTest = self.srcDossiertest+"/"+nomImgTest+".tif"        # construit le chemin de l'image à tester
                 cheminImageRef1 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueS] #construit le chemin du masque1
                 cheminImageRef2 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueP] #construit le chemin du masque2
-                nomImgTest = cv2.imread(cheminImageTest)   #lecture de l'image
-                algoSegmentation.matImg = nomImgTest      #donne la matrice à l'algo Segmentation.py
-                imgTestSeg = self.inverseMatBin(algoSegmentation.segmentation())
+                imgTest = cv2.imread(cheminImageTest)   #lecture de l'image
+                #Segmentation
+                algoSegmentation.matImg = imgTest      #donne la matrice à l'algo Segmentation.py
+                # segLBP = SegmentationLBP(imgTest)
+                maskTestSegGab = self.inverseMatBin(algoSegmentation.segmentation())
+                # maskTestSegLBP = segLBP.segmenterStriesLBP()
+                #combinaison de la segmenation
+                # maskTestSegEt =  maskTestSegLBP.astype(int) &  maskTestSegGab
+                # maskTestSegOu = maskTestSegLBP.astype(int) | maskTestSegGab
+                # imgTestEt = imgTest
+                imgTestOu = imgTest
+                # imgTestGab = imgTest
+                # print(maskTestSegGab.shape)
+                # imgTestLBP = imgTest
+                # imgTestEt[:,:,2] = maskTestSegGab*50
+                # imgTestOu[:,:,0] = maskTestSegLBP*50
+                imgTest[:,:,2] = maskTestSegGab*100
+                Image.fromarray(imgTest).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/seg/"+str(time.time())+"_"+nomImgTest+".tif")
+                # Image.fromarray(imgTestOu).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/Ou/" + str(time.time())+ "_" + nomImgTest + ".tif")
+                # Image.fromarray(imgTestGab).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/Gab/" + str(time.time())+ "_" + nomImgTest + ".tif")
+                # imgTestLBP[:,:,2] = maskTestSegLBP*100
+                # Image.fromarray(imgTestLBP).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/LBP/" + str(time.time())+ "_" + nomImgTest + ".tif")
                 imgRef = self.conversionBinaire(np.array(Image.open(cheminImageRef1))) |  self.conversionBinaire(np.array(Image.open(cheminImageRef2)))
                 # if len(imgRef.shape) == 3:  # si l'image à plusieurs composantes
                 #      imgRefS = imgRef[:, :, 0]
@@ -101,7 +124,8 @@ class EvaluationSegmentation:
                 # else:
                 #     Image.fromarray(imgRef * 100 + imgTestSeg * 200).show()
                 #     Image.fromarray((imgTestSeg)).show()
-                result[indice] = self.evalUneImage(imgRef,imgTestSeg)
+                result[indice] = self.evalUneImage(imgRef,maskTestSegGab)
+                Image.fromarray(imgTest).show()
                 indice+=1
         return np.sum(result,axis=0)/indice
 
@@ -127,4 +151,5 @@ class EvaluationSegmentation:
         :return: (masque1 & masque2)
         """
         return masque1 & masque2
+
 

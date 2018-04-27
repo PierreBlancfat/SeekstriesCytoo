@@ -15,10 +15,11 @@ class SegmentationFibre:
 
     def __init__(self, matImg):
 
-        self.matImg = matImg
+
+        self.matImg = cv2.cvtColor(matImg,cv2.COLOR_RGB2GRAY)
         self.maskFibre = 0
 
-    def segmenter(self, img):
+    def segmenter(self):
         """
         Applique la methode des k-means sur une image pour la segmenter
         @param img: image a traiter (creer precedemment grace a "imread()")
@@ -29,7 +30,7 @@ class SegmentationFibre:
         k = 5
 
         # convert to np.float32
-        res = img.reshape((-1, 3))
+        res = self.matImg.reshape((-1, 3))
         res = np.float32(res)
 
         # define criteria, number of clusters(K) and apply kmeans()
@@ -41,13 +42,13 @@ class SegmentationFibre:
         res = center[label.flatten()]
         res = (res/np.min(res))-1 # normaliser a 0
         res = scipy.sign(res)
-        maskFibre = res.reshape((img.shape))
+        maskFibre = res.reshape((self.matImg.shape))
         self.maskFibre = maskFibre
         return maskFibre
 
 
 def main(): # Fonction de test
-    img = cv2.imread('../Data/images/Stries_C2  (44).TIF', 0)  #  Image de test
+    img = cv2.imread('../Data/images/Stries_C2  (22).TIF', 0)  #  Image de test
     seg = SegmentationFibre(img)
     res = seg.segmenter(img)
     plt.imshow(res*255)
