@@ -108,8 +108,6 @@ class SegmentationGabor:
         matImg2 = self.matImg[:,:,0]
         matImg2 = exposure.equalize_adapthist(matImg2)*255
         imgSeg = self.gabor(matImg2,self.csize,self.lsize,self.thetaMin,self.thetaMax,self.pasTheta,self.sigma,self.gamma,self.lambdaMin,self.lambdaMax,self.pasLambda,self.psi)
-
-
         ret, imgSeg = cv2.threshold(imgSeg, 254, 255, cv2.THRESH_BINARY)
         self.matImg[:,:,2] = imgSeg
         if ( self.dossierSaveImgSeg != None):
@@ -117,8 +115,5 @@ class SegmentationGabor:
         #application de flou
         imgSeg = cv2.blur(imgSeg, (20, 20), 5)
         return self.conversionBinaire(imgSeg)
-
-    def inverseMatBin(self, mat):
-        return (abs(mat - np.ones(mat.shape))).astype(int)
 
 
