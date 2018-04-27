@@ -20,7 +20,7 @@ class EvaluationSegmentation:
 
     def evalUneImage(self,imgRef,imgTest):
         """
-        Evaluation de la qualité d'une segmentation 
+        Evaluation de la qualité d'une segmentation
         :param imgRef: une matrice binaire
         :param nomImgTest: une matrice binaire
         :return: [precision,prevalence,PPV,FDR,FOR,NPV,TPR,FPR,FNR,TNR,LRplus,LRmoins,vraivrai]
@@ -74,7 +74,8 @@ class EvaluationSegmentation:
         return [precision,prevalence,PPV,FDR,FOR,NPV,TPR,FPR,FNR,TNR,LRplus,LRmoins,vraivrai]
 
 
-
+    def inverseMatBin(self, mat):
+        return (abs(mat - np.ones(mat.shape))).astype(int)
 
     def evalDesImages(self,algoSegmentation):
         """
@@ -89,9 +90,9 @@ class EvaluationSegmentation:
         for nomImgTest in nomsImagesTest: # pour chaque image à tester
             nomImgTest = nomImgTest[:-4]
             if any(nomImgTest in s for s in nomsImagesRef): #si le masque existe
-                indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.tif") #recupérer l'index du masque dand la liste
-                indexMasqueP = nomsImagesRef.index(nomImgTest + "_p.tif")  # recupérer l'index du masque dand la liste
-                cheminImageTest = self.srcDossiertest+"/"+nomImgTest+".tif"        # construit le chemin de l'image à tester
+                indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.TIF") #recupérer l'index du masque dand la liste
+                indexMasqueP = nomsImagesRef.index(nomImgTest + "_p.TIF")  # recupérer l'index du masque dand la liste
+                cheminImageTest = self.srcDossiertest+"/"+nomImgTest+".TIF"        # construit le chemin de l'image à tester
                 cheminImageRef1 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueS] #construit le chemin du masque1
                 cheminImageRef2 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueP] #construit le chemin du masque2
                 imgTest = cv2.imread(cheminImageTest)   #lecture de l'image
@@ -111,7 +112,7 @@ class EvaluationSegmentation:
                 # imgTestEt[:,:,2] = maskTestSegGab*50
                 # imgTestOu[:,:,0] = maskTestSegLBP*50
                 imgTest[:,:,2] = maskTestSegGab*100
-                Image.fromarray(imgTest).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/seg/"+str(time.time())+"_"+nomImgTest+".tif")
+                Image.fromarray(imgTest).save("../Data/testSegGabor/seg/"+str(time.time())+"_"+nomImgTest+".tif")
                 # Image.fromarray(imgTestOu).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/Ou/" + str(time.time())+ "_" + nomImgTest + ".tif")
                 # Image.fromarray(imgTestGab).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/Gab/" + str(time.time())+ "_" + nomImgTest + ".tif")
                 # imgTestLBP[:,:,2] = maskTestSegLBP*100
@@ -125,14 +126,14 @@ class EvaluationSegmentation:
                 #     Image.fromarray(imgRef * 100 + imgTestSeg * 200).show()
                 #     Image.fromarray((imgTestSeg)).show()
                 result[indice] = self.evalUneImage(imgRef,maskTestSegGab)
-                Image.fromarray(imgTest).show()
+
                 indice+=1
         return np.sum(result,axis=0)/indice
 
     def conversionBinaire(self,img):
          """
          Convertie une image en binaire
-         :param srcImageRef: Le chemin de l'image 
+         :param srcImageRef: Le chemin de l'image
          :return: Une matrice binaire de même taille que l'image source. Les 1 représentent le "noir" ( zone positive), le 0 le "blanc" ( zone négative)
          """
          imarray = np.array(img) # image to np array
@@ -152,4 +153,15 @@ class EvaluationSegmentation:
         """
         return masque1 & masque2
 
+    def propStries(self, masqueFibre, masqueStries):
+        """
+        Calcul la proportion de stries dans une fibre
+        :param masqueFibre: une matrice binaire
+        :param masqueStries: une matrice binaire
+        :return: proportion des stries dans la fibre
+        """
 
+        perimFibre = np.sum(masqueFibre)
+        masqueStries = np.logical_and(masqueFibre,masqueStries)
+        perimStriesFi=np.sum(masqueStries)
+        return perimStriesFi/perimFibre
