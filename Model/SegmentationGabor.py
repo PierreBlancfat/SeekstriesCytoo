@@ -110,7 +110,7 @@ class SegmentationGabor:
         imgSeg = self.gabor(matImg2,self.csize,self.lsize,self.thetaMin,self.thetaMax,self.pasTheta,self.sigma,self.gamma,self.lambdaMin,self.lambdaMax,self.pasLambda,self.psi)
         ret, imgSeg = cv2.threshold(imgSeg, 230, 255, cv2.THRESH_BINARY)
         # Image.fromarray(imgSeg*7000).show()
-        self.matImg[:,:,2] = imgSeg
+        #self.matImg[:,:,2] = imgSeg
         # if ( self.dossierSaveImgSeg != None):
         #     Image.fromarray(self.matImg).save(self.dossierSaveImgSeg+str(time.time())+".png")
         #application de flou
