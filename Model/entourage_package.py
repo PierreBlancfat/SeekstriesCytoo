@@ -25,21 +25,21 @@ def next(direction):
 # return the next border point and the next primary direction to check
 def movment(matrix, x, y, dx, dy):
     # first direction is in the area
-    if matrix[y+dy][x+dx][0]==1:
+    if matrix[y+dy][x+dx]==1:
         x += dx
         y += dy
         [dx, dy] = next(next(next([dx, dy])))
     # second direction is in the area
-    elif matrix[y+next([dx, dy])[1]][x+next([dx, dy])[0]][0]==1:
+    elif matrix[y+next([dx, dy])[1]][x+next([dx, dy])[0]]==1:
         x+= next([dx, dy])[0]
         y+= next([dx, dy])[1]
     # third direction is in the area
-    elif matrix[y+next(next([dx, dy]))[1]][x+next(next([dx, dy]))[0]][0]==1 :
+    elif matrix[y+next(next([dx, dy]))[1]][x+next(next([dx, dy]))[0]]==1 :
         x+= next(next([dx, dy]))[0]
         y+= next(next([dx, dy]))[1]
         [dx, dy]=next([dx, dy])
     # fourth direction is in the area
-    elif matrix[y+next(next(next([dx, dy])))[1]][x+next(next(next([dx, dy])))[0]][0]==1:
+    elif matrix[y+next(next(next([dx, dy])))[1]][x+next(next(next([dx, dy])))[0]]==1:
         x += next(next(next([dx, dy])))[0]
         y += next(next(next([dx, dy])))[1]
         [dx, dy] = next(next([dx, dy]))
@@ -52,7 +52,7 @@ def movment(matrix, x, y, dx, dy):
 
 # find the first not null pixel of the images/matrix
 def seekPixel(matrix, i, j):
-    while i < len(matrix) and j < len(matrix[0]) and (matrix[i][j][0] != 1 or not leftHighPixel(matrix, i, j)):
+    while i < len(matrix) and j < len(matrix[0]) and (matrix[i][j]!= 1 or not leftHighPixel(matrix, i, j)):
         j += 1
         if j == len(matrix[0]):
             i += 1
@@ -70,16 +70,16 @@ def seekPixel(matrix, i, j):
 
 # make a matrix with a empty row and column around the main matrix
 def rebuildMatrix (matrixBase):
-    matrix = zeros([len(matrixBase)+2, len(matrixBase[0])+2, 2])
+    matrix = zeros([len(matrixBase)+2, len(matrixBase[0])+2])
 
     for i in range(0, len(matrixBase)):
         for j in range(0, len(matrixBase[0])):
-            matrix[i+1][j+1][0] = matrixBase[i][j][0]
+            matrix[i+1][j+1] = matrixBase[i][j]
     return matrix
 
 
 def leftHighPixel(matrix, i, j):
-    return matrix[i-1][j][0]==0 and matrix[i][j-1][0]==0
+    return matrix[i-1][j]==0 and matrix[i][j-1]==0
 
 # seeking the border of a stries begging at position i,j in main matrix
 def seekBorderStries (matrix, i, j):
@@ -151,5 +151,7 @@ def dessinerEntourage(image, mask):
     """
 
     areas = getCoordStriedArea(mask)
-    #for i in range(0, len(areas)):
-    #    cv2.rectangle(image, (areas[i].xTopLeft, areas[i].yTopLeft), (areas[i].xBotRight, areas[i].xBotRight), 3)
+    for i in range(0, len(areas)):
+        print(str(areas[i].xTopLeft) + " " + str(areas[i].yTopLeft) + " " + str(areas[i].xBotRight) + " " + str(areas[i].yBotRight))
+        cv2.rectangle(image, (areas[i].xTopLeft, areas[i].yTopLeft), (areas[i].xBotRight, areas[i].yBotRight), (0, 255, 0), 3)
+    return image

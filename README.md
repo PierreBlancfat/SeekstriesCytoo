@@ -2,7 +2,7 @@
 Introduction to SeekStries
 
 ### Authors
-Quentin Rospars
+Quentin Rospars and Vincent Ribot <3
 
 ## Installation
 

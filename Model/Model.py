@@ -9,9 +9,12 @@ class Model():
 
 
     def entourage(self):
-        image = Image.open('../Data/training_masks/Stries_C2  (6)_p.tif')
+        image = cv2.imread('../Data/images/Stries_C2  (78).TIF')
         s = SegmentationGabor(image)
-        mask = s.conversionBinaire(image)
-        e.dessinerEntourage(image, mask)
+        maskBinaire = s.segmentation()
+        maskBinaire = s.conversionBinaire(maskBinaire)
+        Image.fromarray(maskBinaire*255).show()
+        image = e.dessinerEntourage(image, maskBinaire)
+        cv2.imshow('entourage', image)
 
 

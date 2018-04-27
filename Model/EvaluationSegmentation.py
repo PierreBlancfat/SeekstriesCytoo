@@ -70,8 +70,7 @@ class EvaluationSegmentation:
         return [precision,prevalence,PPV,FDR,FOR,NPV,TPR,FPR,FNR,TNR,LRplus,LRmoins,vraivrai]
 
 
-    def inverseMatBin(self, mat):
-        return (abs(mat - np.ones(mat.shape))).astype(int)
+
 
     def evalDesImages(self,algoSegmentation):
         """
