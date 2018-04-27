@@ -27,6 +27,7 @@ class SegmentationGabor:
         self.psi = psi
         self.dossierSaveImgSeg = dossierSaveImgSeg
         self.dossierSaveKernel = dossierSaveKernel
+        self.filters = None
 
     def build_filters(self,csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
         filters = []
@@ -36,21 +37,20 @@ class SegmentationGabor:
                 filters.append(kern/1.5)
                 if theta == thetaMin and self.dossierSaveKernel != None:
                     Image.fromarray(kern).save(self.dossierSaveKernel+str(time.time())+" "+str([sigma, theta, lambd, gamma, psi]).replace(".","-")+".tif")
-        return filters
+        self.filters = filters
 
 
-    def process(self,img, filters):
-        accum = np.zeros_like(img)
+    def process(self,img,filters):
         for kern in filters:
             fimg = cv2.filter2D(img, cv2.CV_8UC3, kern)
-        np.maximum(accum, fimg, accum)
-        return accum
+        return fimg
 
 
 
     def gabor(self,imgG,csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
-        filters = self.build_filters(csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
-        res1 = self.process(imgG, filters)
+        if self.filters == None:
+            self.build_filters(csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
+        res1 = self.process(imgG,self.filters)
         return res1
 
 
@@ -108,12 +108,16 @@ class SegmentationGabor:
         matImg2 = self.matImg[:,:,0]
         matImg2 = exposure.equalize_adapthist(matImg2)*255
         imgSeg = self.gabor(matImg2,self.csize,self.lsize,self.thetaMin,self.thetaMax,self.pasTheta,self.sigma,self.gamma,self.lambdaMin,self.lambdaMax,self.pasLambda,self.psi)
-        ret, imgSeg = cv2.threshold(imgSeg, 254, 255, cv2.THRESH_BINARY)
+        ret, imgSeg = cv2.threshold(imgSeg, 230, 255, cv2.THRESH_BINARY)
+        # Image.fromarray(imgSeg*7000).show()
         self.matImg[:,:,2] = imgSeg
         # if ( self.dossierSaveImgSeg != None):
         #     Image.fromarray(self.matImg).save(self.dossierSaveImgSeg+str(time.time())+".png")
         #application de flou
-        imgSeg = cv2.blur(imgSeg, (20, 20), 5)
+        imgSeg = cv2.blur(imgSeg, (27, 30), 5)
+        #open
+        kernel = np.ones((31, 51), np.uint8)
+        imgSeg = cv2.morphologyEx(imgSeg, cv2.MORPH_OPEN, kernel)
         return self.conversionBinaire(imgSeg)
 
 
