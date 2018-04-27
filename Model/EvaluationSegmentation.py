@@ -129,3 +129,15 @@ class EvaluationSegmentation:
         """
         return masque1 & masque2
 
+    def propStries(self, masqueFibre, masqueStries):
+        """
+        Calcul la proportion de stries dans une fibre
+        :param masqueFibre: une matrice binaire
+        :param masqueStries: une matrice binaire
+        :return: proportion des stries dans la fibre
+        """
+
+        perimFibre = np.sum(masqueFibre)
+        masqueStries = np.logical_and(masqueFibre,masqueStries)
+        perimStriesFi=np.sum(masqueStries)
+        return perimStriesFi/perimFibre

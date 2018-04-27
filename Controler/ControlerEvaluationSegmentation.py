@@ -1,8 +1,10 @@
 from Model.EvaluationSegmentation import EvaluationSegmentation
 from Model.SegmentationGabor import SegmentationGabor
-from Model.SegmentationLBP import SegmentationLBP
+from Model.SegmentationFibre import SegmentationFibre
 import numpy as np
+import cv2
 import time
+
 # Amélioration possible :
     # pour chaque angle à une fréquence donné, taille fixé assez grande, faire varier la largeur
     # avec la frequence trouvé, faire varier la taille
@@ -45,12 +47,11 @@ def evaluationParametreGabor(self):
     psiMax = 1
     pasPsi = 2
 
+    dossierSaveImgSeg = "../Data/testSegGabor/seg/"
+    dossierSaveKernel = "../Data/testSegGabor/kern/"
 
-    dossierSaveImgSeg = "D:/L3MI/2nd_Annee/Cytoo/testSegGabor/seg/"
-    dossierSaveKernel = "D:/L3MI/2nd_Annee/Cytoo/testSegGabor/kern/"
-
-    srcDossierImageRef = "D:/L3MI/2nd_Annee/Cytoo/Stries"
-    srcDossiertest = "D:/L3MI/2nd_Annee/Cytoo/StriesTest"
+    srcDossierImageRef = "../Data/training_masks"
+    srcDossiertest = "../Data/images"
 
     """
     Evalue une plage de paramètres données à la fonction de segmentation de Gabor
@@ -69,6 +70,15 @@ def evaluationParametreGabor(self):
                 print(reslt)
                 stat.append(listReturn)
     print(time.time() - timer)
+    # Test proportion
+    imgchemin = "../Data/images/Stries_C2  (44).TIF"
+    img = cv2.imread(imgchemin)
+    objctimgGab = SegmentationGabor(img)
+    masque1 = objctimgGab.segmentation()
+    objctimgFib = SegmentationFibre(img)
+    masque2 = objctimgFib.segmenter()
+    prop = evaluateur.propStries(masque2, masque1)
+    print(prop)
     return stat
 
 
