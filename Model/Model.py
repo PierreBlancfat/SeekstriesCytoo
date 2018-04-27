@@ -8,13 +8,9 @@ class Model():
         self.repDestination = repDestination
 
 
-    def entourage(self):
-        image = cv2.imread('../Data/images/Stries_C2  (78).TIF')
-        s = SegmentationGabor(image)
-        maskBinaire = s.segmentation()
-        maskBinaire = s.conversionBinaire(maskBinaire)
-        Image.fromarray(maskBinaire*255).show()
-        image = e.dessinerEntourage(image, maskBinaire)
-        cv2.imshow('entourage', image)
+    def saveEntourage(self, image, maskBinaire):
+        #Save to do for Vincent Yara
+        return e.dessinerEntourage(image, maskBinaire)
+
 
 

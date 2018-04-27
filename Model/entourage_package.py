@@ -152,6 +152,5 @@ def dessinerEntourage(image, mask):
 
     areas = getCoordStriedArea(mask)
     for i in range(0, len(areas)):
-        print(str(areas[i].xTopLeft) + " " + str(areas[i].yTopLeft) + " " + str(areas[i].xBotRight) + " " + str(areas[i].yBotRight))
-        cv2.rectangle(image, (areas[i].xTopLeft, areas[i].yTopLeft), (areas[i].xBotRight, areas[i].yBotRight), (0, 255, 0), 3)
+        cv2.rectangle(image, (areas[i].xTopLeft, areas[i].yTopLeft), (areas[i].xBotRight, areas[i].yBotRight), (255, 0, 0), 3)
     return image

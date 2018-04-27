@@ -14,7 +14,8 @@ class Controler():
         self.model.runSegmentation()
 
     def testEntourage(self):
-        self.model.entourage()
+        print("a faire depuis le Model direcrement")
+        #self.model.saveEntourage() call this function in the model object
 
 if __name__ == '__main__':
     Controler()
