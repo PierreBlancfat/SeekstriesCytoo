@@ -115,4 +115,7 @@ class SegmentationGabor:
         #open
         kernel = np.ones((31, 51), np.uint8)
         imgSeg = cv2.morphologyEx(imgSeg, cv2.MORPH_OPEN, kernel)
-        return self.conversionBinaire(imgSeg)
+        return self.inverseMatBin(self.conversionBinaire(imgSeg))
+
+    def inverseMatBin(self,mat):
+        return (abs(mat - np.ones(mat.shape))).astype(int)
