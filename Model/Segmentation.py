@@ -19,7 +19,6 @@ class Segmentation:
         maskFibre = segFibre.segmenter() #TODO utiliser maskFibre pour économiser la segmentation des stries
         segGabor = SegmentationGabor(matImg)
         maskGabor = segGabor.segmentation()
-        Image.fromarray(maskFibre*255).show()
         maskGabor = maskGabor & maskFibre.astype(int)
         return maskGabor
 
