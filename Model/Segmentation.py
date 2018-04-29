@@ -2,6 +2,8 @@ import cv2
 import os
 from PIL import Image
 from Model.SegmentationGabor import SegmentationGabor
+from Model.SegmentationFibre import SegmentationFibre
+import numpy as np
 
 class Segmentation:
 
@@ -12,20 +14,13 @@ class Segmentation:
         self.image = None
 
 
-    def segmenterUneImage(self,srcImage,):
-        matImg = cv2.imread(srcImage)
-        segFibre = SegmentationFibre()
-        segGabor = SegmentationGabor()
-        #maskFibre = segFibre.Segmenter(matImg) #TODO utiliser maskFibre pour économiser la segmentation des stries
-        maskGabor = segGabor.segmentation(matImg)
-        imageEntoure = Entourage.dessinerEntourage(matImg,maskGabor)
-        return imageEntoure
-
-    def segmenterDesImages(self):
-        nomsImages = os.listdir(self.cheminSrc)
-        for img in nomsImages:  # pour chaque image à segmenter
-             cheminImage = self.cheminSrc + "/" + str(img) + ".tif"
-             imgEntouree = self.segmenterUneImage(cheminImage)
-             Image.fromarray(imgEntouree).save(self.cheminDest)
+    def segmenterUneImage(matImg):
+        segFibre = SegmentationFibre(matImg)
+        maskFibre = segFibre.segmenter() #TODO utiliser maskFibre pour économiser la segmentation des stries
+        segGabor = SegmentationGabor(matImg)
+        maskGabor = segGabor.segmentation()
+        Image.fromarray(maskFibre*255).show()
+        maskGabor = maskGabor & maskFibre.astype(int)
+        return maskGabor
 
 

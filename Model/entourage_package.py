@@ -1,6 +1,6 @@
 from numpy import *
 from Model.Area import *
-from cv2 import *
+import cv2
 
 # return the next direction by clockwise
 def next(direction):
