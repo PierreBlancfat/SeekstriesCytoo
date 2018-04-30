@@ -31,29 +31,33 @@ class Interface(Tk):
         self.menuBar.add_cascade(label="File", menu=self.helpmenu)
         self.config(menu=self.menuBar)
 
-
-
+        #ProgressBar
+        pb = ttk.Progressbar(self, orient="horizontal", length=200, mode="determinate")
+        pb.pack()
+        pb.start()
 
         #Row 0
         row = 0
-        self.message = ttk.Label(self.panel, text="Sélectionnez le répértoire source:")
-        self.message.grid(row=0, column=0)
+        self.labelSource = ttk.Label(self.panel, text="Sélectionnez le répértoire source:")
+        self.labelSource.grid(row=0, column=0)
 
-        self.T = ttk.Entry(self.panel)
-        self.T.grid(row=0, column=1)
+        self.champsRepSource = ttk.Entry(self.panel)
+        self.champsRepSource.grid(row=0, column=1)
+        self.champsRepSource.insert(END, "../Data/images/")
 
-        self.bouton_browse = ttk.Button(self.panel, text="Browse", command=self.browse)
-        self.bouton_browse.grid(row=0, column=2)
+        self.browseRepSource = ttk.Button(self.panel, text="Browse", command=self.browse)
+        self.browseRepSource.grid(row=0, column=2)
 
         #Row 1
-        self.message = ttk.Label(self.panel, text="Sélectionnez le répértoire dest:")
-        self.message.grid(row=1, column=0)
+        self.labelDest = ttk.Label(self.panel, text="Sélectionnez le répértoire dest:")
+        self.labelDest.grid(row=1, column=0)
 
-        self.T = ttk.Entry(self.panel)
-        self.T.grid(row=1, column=1)
+        self.champsRepDest = ttk.Entry(self.panel)
+        self.champsRepDest.grid(row=1, column=1)
+        self.champsRepDest.insert(END, "../Data/testSegGabor/seg/")
 
-        self.bouton_browse = ttk.Button(self.panel, text="Browse", command=self.browse)
-        self.bouton_browse.grid(row=1, column=2)
+        self.browseRepDest = ttk.Button(self.panel, text="Browse", command=self.browse)
+        self.browseRepDest.grid(row=1, column=2)
 
         self.bouton_cliquer = ttk.Button(self, text="Start",command=self.cliquer)
         self.bouton_cliquer.pack()
@@ -70,7 +74,8 @@ class Interface(Tk):
         self.T.delete(0, END)
         self.T.insert(END, self.directory)
 
-    def cliquer(self,cheminScr=None,cheminDest=None):
+    def cliquer(self):
+        self.controler.giveRepPath(self.champsRepSource.get(), self.champsRepDest.get())
         self.controler.segmentation()
 
     def yaraPerformed(self):

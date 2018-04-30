@@ -9,12 +9,18 @@ import time
 class Model():
 
     def __init__(self, repSource, repDestination):
-        self.repSource = "../Data/images/" #repSource
-        self.repDestination = "../Data/testSegGabor/seg/"#repDestination
+        self.repSource = ""
+        self.repDestination = ""
 
+    def setRepSource(self, repSource):
+        self.repSource = repSource
+        print(self.repSource)
+
+    def setRepDestination(self, repDestination):
+        self.repDestination = repDestination
+        print(self.repDestination)
 
     def saveEntourage(self, image, maskBinaire):
-        #Save to do for Vincent Yara
         return e.dessinerEntourage(image, maskBinaire)
 
     def runSegmentation(self):
