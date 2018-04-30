@@ -22,7 +22,7 @@ class Model():
         for nomImg in nomsImages:  # pour chaque image à segmenter
              cheminImage = self.repSource  + str(nomImg)
              img = cv2.imread(cheminImage)
-             imgSeg = Segmentation.segmenterUneImage(img)
+             imgSeg,maskfibre = Segmentation.segmenterUneImage(img)
              imgEntouree = self.saveEntourage(img,imgSeg)
              Image.fromarray(imgEntouree).save(self.repDestination+str(time.time())+nomImg)
 

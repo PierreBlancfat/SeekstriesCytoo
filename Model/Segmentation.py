@@ -20,6 +20,6 @@ class Segmentation:
         segGabor = SegmentationGabor(matImg)
         maskGabor = segGabor.segmentation()
         maskGabor = maskGabor & maskFibre.astype(int)
-        return maskGabor
+        return maskGabor,maskFibre
 
 
