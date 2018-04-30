@@ -15,8 +15,10 @@ class SegmentationFibre:
 
     def __init__(self, matImg):
 
-
-        self.matImg = cv2.cvtColor(matImg,cv2.COLOR_RGB2GRAY)
+        if (np.shape(np.shape(matImg))[0] > 2):
+            self.matImg = cv2.cvtColor(matImg,cv2.COLOR_RGB2GRAY)
+        else:
+            self.matImg = matImg
         self.maskFibre = 0
 
     def segmenter(self):
@@ -43,15 +45,21 @@ class SegmentationFibre:
         res = (res/np.min(res))-1 # normaliser a 0
         res = scipy.sign(res)
         maskFibre = res.reshape((self.matImg.shape))
-        self.maskFibre = maskFibre
+        kernel = np.ones((20, 20), np.uint8)
+        maskFibre = cv2.morphologyEx(maskFibre, cv2.MORPH_OPEN, kernel)
+        self.maskFibre = maskFibre.astype(int)
         return maskFibre
 
-
+'''
 def main(): # Fonction de test
-    img = cv2.imread('../Data/images/Stries_C2  (22).TIF', 0)  #  Image de test
-    seg = SegmentationFibre(img)
-    res = seg.segmenter(img)
-    plt.imshow(res*255)
-    print(res)
+    plt.figure(1)
+    img = cv2.imread('../Data/images/Stries_C2  (22).TIF')  #  Image de test
+    plt.imshow(img)
+    plt.figure(2)
+    imgObj = SegmentationFibre(img)
+    seg = imgObj.segmenter()
+    plt.imshow(seg*255)
+    plt.show()
 
-#main()
+main()
+'''
