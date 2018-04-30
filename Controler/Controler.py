@@ -17,5 +17,10 @@ class Controler():
         print("a faire depuis le Model direcrement")
         #self.model.saveEntourage() call this function in the model object
 
+    def giveRepPath (self, repSource, repDest) :
+        self.model.setRepSource(repSource)
+        self.model.setRepDestination(repDest)
+
+
 if __name__ == '__main__':
     Controler()
