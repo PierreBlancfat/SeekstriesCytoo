@@ -5,9 +5,8 @@ from tkinter import ttk
 class Controler():
 
     def __init__(self):
-        frame = Tk()
         self.model = Model("a", "b")
-        self.interface = Interface(frame, self)
+        self.interface = Interface(self)
         self.interface.configure(background='#323232')
         self.interface.mainloop()
 
