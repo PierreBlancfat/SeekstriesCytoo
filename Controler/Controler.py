@@ -1,13 +1,13 @@
 from View.View import *
 from Model.Model import *
+from tkinter import ttk
 
 class Controler():
 
     def __init__(self):
-        frame = Tk()
-        Label(frame, text="Hello World") #test
         self.model = Model("a", "b")
-        self.interface = Interface(frame, self)
+        self.interface = Interface(self)
+        self.interface.configure(background='#323232')
         self.interface.mainloop()
 
     def segmentation(self):

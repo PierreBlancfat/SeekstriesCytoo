@@ -1,49 +1,67 @@
 from tkinter import filedialog
 from tkinter import *
+from tkinter import ttk
 from Model.Segmentation import Segmentation
 
 
-class Interface(Frame):
+class Interface(Tk):
 
-    def __init__(self, fenetre, controler, **kwargs):
-        Frame.__init__(self, fenetre, width=768, height=576, **kwargs)
+    def __init__(self, controler, **kwargs):
+
+        Tk.__init__(self)
+        # Frame configurations
         self.controler = controler
-        self.pack(fill=BOTH)
-
 
         self.panel = PanedWindow()
-        self.panel.config(bd=15, relief=RIDGE)
         self.panel.pack(side=TOP)
+
+        self.winfo_toplevel().title("SeekStries") # change Title Bar
+        self.s = ttk.Style()
+        self.s.theme_use('clam')
+        self.s.configure("BW.TLabel", foreground="white", background="#323232") # Create a style for labels
+
+        # Menu
+        self.menuBar = Menu(master=self)
+        self.filemenu = Menu(self.menuBar, tearoff=0)
+        self.filemenu.add_command(label="Hello!")
+        self.filemenu.add_command(label="Quit!")
+        self.menuBar.add_cascade(label="File", menu=self.filemenu)
+        self.helpmenu = Menu(self.menuBar, tearoff=0)
+        self.helpmenu.add_command(label="Hello!")
+        self.menuBar.add_cascade(label="File", menu=self.helpmenu)
+        self.config(menu=self.menuBar)
+
+
+
 
         #Row 0
         row = 0
-        self.message = Label(self.panel, text="Sélectionnez le répértoire source:")
+        self.message = ttk.Label(self.panel, text="Sélectionnez le répértoire source:")
         self.message.grid(row=0, column=0)
 
-        self.T = Entry(self.panel)
+        self.T = ttk.Entry(self.panel)
         self.T.grid(row=0, column=1)
 
-        self.bouton_browse = Button(self.panel, text="Browse", fg="red", command=self.browse)
+        self.bouton_browse = ttk.Button(self.panel, text="Browse", command=self.browse)
         self.bouton_browse.grid(row=0, column=2)
 
         #Row 1
-        self.message = Label(self.panel, text="Sélectionnez le répértoire dest:")
+        self.message = ttk.Label(self.panel, text="Sélectionnez le répértoire dest:")
         self.message.grid(row=1, column=0)
 
-        self.T = Entry(self.panel)
+        self.T = ttk.Entry(self.panel)
         self.T.grid(row=1, column=1)
 
-        self.bouton_browse = Button(self.panel, text="Browse", fg="red", command=self.browse)
+        self.bouton_browse = ttk.Button(self.panel, text="Browse", command=self.browse)
         self.bouton_browse.grid(row=1, column=2)
 
-
-        self.bouton_cliquer = Button(self, text="Start", fg="red",command=self.cliquer)
+        self.bouton_cliquer = ttk.Button(self, text="Start",command=self.cliquer)
         self.bouton_cliquer.pack()
 
-        self.bouton_cliquer = Button(self, text="YaraBG", fg="red",command=self.yaraPerformed)
+        self.bouton_cliquer = ttk.Button(self, text="YaraBG",command=self.yaraPerformed)
         self.bouton_cliquer.pack()
 
-        self.bouton_quitter = Button(self, text="Quitter", command=self.quit)
+        self.bouton_quitter = ttk.Button(self, text="Quitter", command=self.quit)
         self.bouton_quitter.pack()
 
 
