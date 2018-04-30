@@ -51,7 +51,7 @@ def evaluationParametreGabor(self):
     dossierSaveKernel = "../Data/testSegGabor/kern/"
 
     srcDossierImageRef = "../Data/training_masks"
-    srcDossiertest = "../Data/images"
+    srcDossiertest = "../Data/imagesTest/"
 
     """
     Evalue une plage de paramètres données à la fonction de segmentation de Gabor
@@ -70,16 +70,19 @@ def evaluationParametreGabor(self):
                 print(reslt)
                 stat.append(listReturn)
     print(time.time() - timer)
-    # Test proportion
-    imgchemin = "../Data/images/Stries_C2  (44).TIF"
-    img = cv2.imread(imgchemin)
-    objctimgGab = SegmentationGabor(img)
-    masque1 = objctimgGab.segmentation()
-    objctimgFib = SegmentationFibre(img)
-    masque2 = objctimgFib.segmenter()
-    prop = evaluateur.propStries(masque2, masque1)
-    print(prop)
-    return stat
+
+
+    #
+    # # Test proportion
+    # imgchemin = "../Data/images/Stries_C2  (44).TIF"
+    # img = cv2.imread(imgchemin)
+    # objctimgGab = SegmentationGabor(img)
+    # masque1 = objctimgGab.segmentation()
+    # objctimgFib = SegmentationFibre(img)
+    # masque2 = objctimgFib.segmenter()
+    # prop = evaluateur.propStries(masque2, masque1)
+    # print(prop)
+    # return stat
 
 
 
