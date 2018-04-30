@@ -1,6 +1,7 @@
 from numpy import *
 from Model.Area import *
 import cv2
+import time
 
 # return the next direction by clockwise
 def next(direction):
@@ -129,8 +130,10 @@ def getCoordStriedArea(matrixBase):
             area = seekBorderStries(matrix, coordonneInit[0], coordonneInit[1])
             if area is not None:
                 k = 0
+                timer = time.time()
                 while k < len(areas) and not area.equals(areas[k]):
                     k += 1
+                print(time.time()-timer)
                 if k == len(areas):
                     areas.append(area)
 
@@ -149,7 +152,6 @@ def dessinerEntourage(image, mask):
     :param mask: un masque binaire
     :return:  matrice RGB
     """
-
     areas = getCoordStriedArea(mask)
     for i in range(0, len(areas)):
         cv2.rectangle(image, (areas[i].xTopLeft, areas[i].yTopLeft), (areas[i].xBotRight, areas[i].yBotRight), (255, 0, 0), 3)
