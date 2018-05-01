@@ -5,12 +5,12 @@ from Model.Segmentation import Segmentation
 import os
 import cv2
 import time
-
 class Model():
 
     def __init__(self, repSource, repDestination):
         self.repSource = ""
         self.repDestination = ""
+        self.mat=[]
 
     def setRepSource(self, repSource):
         self.repSource = repSource
@@ -30,6 +30,8 @@ class Model():
              img = cv2.imread(cheminImage)
              imgSeg,maskfibre = Segmentation.segmenterUneImage(img)
              imgEntouree = self.saveEntourage(img,imgSeg)
+             prop=Segmentation.propStries(maskfibre,imgSeg)*100
+             self.mat.append(round(prop,1))
              Image.fromarray(imgEntouree).save(self.repDestination+str(time.time())+nomImg)
 
 
