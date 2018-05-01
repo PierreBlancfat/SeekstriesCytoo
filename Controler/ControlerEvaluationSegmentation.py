@@ -79,7 +79,7 @@ def evaluationParametreGabor(self):
                 img[:,:,2] = masque1*255
                 img[:,:,1] = masque2*255
                 Image.fromarray(img).show()
-                prop = evaluateur.propStries(masque2, masque1)
+                prop = Segmentation.propStries(masque2, masque1)
                 print(prop)
     print(time.time() - timer)
 
