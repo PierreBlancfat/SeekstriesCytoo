@@ -1,9 +1,11 @@
 from Model.EvaluationSegmentation import EvaluationSegmentation
 from Model.SegmentationGabor import SegmentationGabor
 from Model.SegmentationFibre import SegmentationFibre
+from Model.Segmentation import Segmentation
 import numpy as np
 import cv2
 import time
+from PIL import Image
 
 # Amélioration possible :
     # pour chaque angle à une fréquence donné, taille fixé assez grande, faire varier la largeur
@@ -51,7 +53,7 @@ def evaluationParametreGabor(self):
     dossierSaveKernel = "../Data/testSegGabor/kern/"
 
     srcDossierImageRef = "../Data/training_masks"
-    srcDossiertest = "../Data/imagesTest/"
+    srcDossiertest = "../Data/images/"
 
     """
     Evalue une plage de paramètres données à la fonction de segmentation de Gabor
@@ -63,17 +65,27 @@ def evaluationParametreGabor(self):
         for psi in np.arange(psiMin,psiMax,pasPsi):
             for gamma in np.arange(gamaMin,GamaMax,pasGama):
                 segGabor = SegmentationGabor(None,csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin,lambdaMax,pasLambda, psi,dossierSaveImgSeg,dossierSaveKernel)
-                print(segGabor.paramToString())
+                #print(segGabor.paramToString())
                 evaluateur = EvaluationSegmentation(srcDossierImageRef,srcDossiertest,segGabor)
-                reslt = evaluateur.evalDesImages(segGabor)
-                listReturn = [csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin,lambdaMax,pasLambda, psi,reslt.tolist()]
-                print(reslt)
-                stat.append(listReturn)
+                #reslt = evaluateur.evalDesImages(segGabor)
+                #listReturn = [csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin,lambdaMax,pasLambda, psi,reslt.tolist()]
+                #print(reslt)
+                #stat.append(listReturn)
+                imgchemin = "../Data/images/Stries_C2  (8).TIF"
+                img = cv2.imread(imgchemin)
+                masque=Segmentation.segmenterUneImage(img)
+                masque1 = masque[0]
+                masque2 = masque[1]
+                img[:,:,2] = masque1*255
+                img[:,:,1] = masque2*255
+                Image.fromarray(img).show()
+                prop = Segmentation.propStries(masque2, masque1)
+                print(prop)
     print(time.time() - timer)
 
 
-    #
-    # # Test proportion
+
+    # Test proportion
     # imgchemin = "../Data/images/Stries_C2  (44).TIF"
     # img = cv2.imread(imgchemin)
     # objctimgGab = SegmentationGabor(img)

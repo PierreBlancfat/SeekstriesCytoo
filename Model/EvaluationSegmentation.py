@@ -90,8 +90,8 @@ class EvaluationSegmentation:
         for nomImgTest in nomsImagesTest: # pour chaque image à tester
             nomImgTest = nomImgTest[:-4]
             if any(nomImgTest in s for s in nomsImagesRef): #si le masque existe
-                indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.tif")   #recupérer l'index du masque dand la liste
-                indexMasqueP = nomsImagesRef.index(nomImgTest + "_p.tif")  # recupérer l'index du masque dand la liste
+                indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.TIF")   #recupérer l'index du masque dand la liste
+                indexMasqueP = nomsImagesRef.index(nomImgTest + "_p.TIF")  # recupérer l'index du masque dand la liste
                 cheminImageTest = self.srcDossiertest+"/"+nomImgTest+".TIF"        # construit le chemin de l'image à tester
                 cheminImageRef1 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueS] #construit le chemin du masque1
                 cheminImageRef2 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueP] #construit le chemin du masque2
@@ -132,14 +132,3 @@ class EvaluationSegmentation:
         """
         return masque1 & masque2
 
-    def propStries(self, masqueFibre, masqueStries):
-        """
-        Calcul la proportion de stries dans une fibre
-        :param masqueFibre: une matrice binaire
-        :param masqueStries: une matrice binaire
-        :return: proportion des stries dans la fibre
-        """
-        perimFibre = np.sum(masqueFibre)
-        masqueStries = np.logical_and(masqueFibre,masqueStries)
-        perimStriesFi=np.sum(masqueStries)
-        return perimStriesFi/perimFibre

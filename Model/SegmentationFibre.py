@@ -50,10 +50,10 @@ class SegmentationFibre:
         self.maskFibre = maskFibre.astype(int)
         return maskFibre
 
-'''
+
 def main(): # Fonction de test
     plt.figure(1)
-    img = cv2.imread('../Data/images/Stries_C2  (22).TIF')  #  Image de test
+    img = cv2.imread('../Data/images/Stries_C2  (44).TIF')  #  Image de test
     plt.imshow(img)
     plt.figure(2)
     imgObj = SegmentationFibre(img)
@@ -61,5 +61,4 @@ def main(): # Fonction de test
     plt.imshow(seg*255)
     plt.show()
 
-main()
-'''
+#main()
