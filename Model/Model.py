@@ -17,11 +17,10 @@ class Model():
         self.otherRep = 1
 
     def setRepSource(self, repSource):
-        self.repSource = repSource
+        self.repSource = self.normalizePath(repSource)
         print(self.repSource)
-
     def setRepDestination(self, repDestination):
-        self.repDestination = repDestination
+        self.repDestination =self.normalizePath(repDestination)
         print(self.repDestination)
 
     def saveEntourage(self, image, maskBinaire):
@@ -38,6 +37,8 @@ class Model():
         print(self.cbEntourage)
         if self.cbEntourage == 1:
             imgEntouree = self.saveEntourage(img, imgSeg)
+            print(nomImg)
+            Image.fromarray(imgEntouree).show()
             Image.fromarray(imgEntouree).save(self.repDestination + nomImg)
 
     def runSegmentation(self,cbEntourage,otherRep):
@@ -74,6 +75,12 @@ class Model():
     def multipleImage(self,nomsImages):
         for nomImg in nomsImages:  # pour chaque image à segmenter
                 self.SegmentationUneImage(nomImg)
+
+    def normalizePath(self,s):
+        s = s.replace("\\","/")
+        if not s.endswith("/"):
+            s=s+"/"
+        return s
 
 
 
