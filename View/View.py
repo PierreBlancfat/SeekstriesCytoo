@@ -24,11 +24,11 @@ class Interface(Tk):
         self.s = ttk.Style() # Overall style
         self.s.theme_use('clam')
 
-        self.panel = PanedWindow() # Panel for paths
-        self.panel.pack(fill="both", expand=True)
-
         self.panelCheckbox = PanedWindow(orient=VERTICAL) # Panel for checkboxes
         self.panelCheckbox.pack(expand=True, fill=BOTH)
+
+        self.panel = PanedWindow()  #  Panel for paths
+        self.panel.pack(fill="both", expand=True)
 
         self.panelCommands = PanedWindow()  #  Panel for main commands
         self.panelCommands.pack(side=BOTTOM, fill="both", expand=True)
@@ -56,7 +56,7 @@ class Interface(Tk):
 
         # CheckBoxes
         self.entourage = IntVar(value=1)
-        self.checkbuttonEntourage = ttk.Checkbutton(self.panelCheckbox,text='Entourage', style="TCheckbutton", takefocus=0, variable=self.entourage)
+        self.checkbuttonEntourage = ttk.Checkbutton(self.panelCheckbox,text='Entourage', style="TCheckbutton", takefocus=0, variable=self.entourage, command=self.changeCheckboxState)
         self.checkbuttonEntourage.grid(row=0, column=0, sticky=W, pady=15,padx=15,)
 
         self.otherRep = IntVar(value=0)
@@ -99,6 +99,18 @@ class Interface(Tk):
         self.bouton_quitter = ttk.Button(self.panelCommands, text="Quitter", command=self.quit)
         self.bouton_quitter.grid(row=0, column=3, pady=30,padx=15)
 
+    def changeCheckboxState(self):
+        '''
+        Disable dest reposiory if we uncheck the box "Entourage"
+        :return:
+        '''
+        entourage = self.entourage.get()
+        if (entourage == 0):
+            self.champsRepDest.configure(state='disabled')
+            self.browseRepDest.configure(state='disabled')
+        else:
+            self.champsRepDest.configure(state='normal')
+            self.browseRepDest.configure(state='normal')
 
     def browseRepSrc(self):
         '''
@@ -137,6 +149,7 @@ class Interface(Tk):
         Allows to unlock Stats tab after the execution
         '''
         self.bouton_cliquer.config(state="normal")
+
 
     def displayImage(self, imageName):
         '''
