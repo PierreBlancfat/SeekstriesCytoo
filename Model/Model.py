@@ -22,17 +22,37 @@ class Model():
 
     def saveEntourage(self, image, maskBinaire):
         return e.dessinerEntourage(image, maskBinaire)
+    
+  
+    def SegmentationUneImage(self,nomImg):
+        cheminImage = self.repSource + str(nomImg)
+        img = cv2.imread(cheminImage)
+        imgSeg = Segmentation.segmenterUneImage(img)
+        imgEntouree = self.saveEntourage(img, imgSeg)
+        Image.fromarray(imgEntouree).save(self.repDestination + str(time.time()) + nomImg)
 
     def runSegmentation(self):
+        nbCore = multiprocessing.cpu_count()
+        it = 0
+        p = {}
+        nomsImagesPartitionne = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         nomsImages = os.listdir(self.repSource)
+        nbImage = len(nomsImages)
+        j = -1
+        for i in np.arange(0,nbImage):
+            if(i%(nbImage/nbCore) <1):
+                j += 1
+            nomsImagesPartitionne[j].append(nomsImages[i])
+            print(nomsImagesPartitionne)
+        print(nomsImagesPartitionne)
+        while it < nbCore:
+            p[it] = threading.Thread(target=self.multipleImage, args=(nomsImagesPartitionne[it],))
+            p[it].start()
+            it += 1
+
+    def multipleImage(self,nomsImages):
         for nomImg in nomsImages:  # pour chaque image à segmenter
-             cheminImage = self.repSource  + str(nomImg)
-             img = cv2.imread(cheminImage)
-             imgSeg,maskfibre = Segmentation.segmenterUneImage(img)
-             imgEntouree = self.saveEntourage(img,imgSeg)
-             prop=Segmentation.propStries(maskfibre,imgSeg)*100
-             self.mat.append(round(prop,1))
-             Image.fromarray(imgEntouree).save(self.repDestination+str(time.time())+nomImg)
+                self.SegmentationUneImage(nomImg)
 
 
 
