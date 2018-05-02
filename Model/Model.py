@@ -1,10 +1,8 @@
-import Model.entourage_package as e
-from Model import SegmentationGabor
+import Model.entourage_package as entourage
 from PIL import Image
 from Model.Segmentation import Segmentation
 import os
 import cv2
-import time
 import threading
 import multiprocessing
 import numpy as np
@@ -25,7 +23,7 @@ class Model():
         print(self.repDestination)
 
     def saveEntourage(self, image, maskBinaire):
-        return e.dessinerEntourage(image, maskBinaire)
+        return entourage.dessinerEntourage(image, maskBinaire)
     
   
     def SegmentationUneImage(self,nomImg):
@@ -35,7 +33,6 @@ class Model():
         imgEntouree = self.saveEntourage(img, imgSeg)
         prop = Segmentation.propStries(maskFibre, imgSeg) * 100
         self.mat.update({nomImg:round(prop,1)})
-        #self.mat.append(round(prop, 1))
 
         Image.fromarray(imgEntouree).save(self.repDestination + nomImg)
 

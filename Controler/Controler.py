@@ -1,6 +1,5 @@
 from View.View import *
 from Model.Model import *
-from tkinter import ttk
 
 class Controler():
 

@@ -1,6 +1,3 @@
-import cv2
-import os
-from PIL import Image
 from Model.SegmentationGabor import SegmentationGabor
 from Model.SegmentationFibre import SegmentationFibre
 import numpy as np

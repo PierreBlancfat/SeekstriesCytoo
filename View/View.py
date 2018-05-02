@@ -1,7 +1,6 @@
 from tkinter import filedialog
 from tkinter import *
 from tkinter import ttk
-from Model.Segmentation import Segmentation
 import os
 from PIL import ImageTk, Image
 import csv
