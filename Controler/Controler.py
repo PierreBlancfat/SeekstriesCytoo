@@ -1,6 +1,5 @@
 from View.View import *
 from Model.Model import *
-from tkinter import ttk
 
 class Controler():
 
@@ -11,11 +10,19 @@ class Controler():
         self.interface.minsize(550,350)
         self.interface.mainloop()
 
-    def segmentation(self):
+    def segmentation(self, entourage, otherRep):
+        '''
+        Main function which execute the whole code
+        :param entourage: 0 or 1 if the user wants a contouring or not
+        :param otherRep: 0 or 1 if the user wants to separate image  with striations
+        :return:
+        '''
         valueReturned = self.model.runSegmentation()
+        if (valueReturned == 0):
+            self.interface.changeState()
 
     def testEntourage(self):
-        print("a faire depuis le Model direcrement")
+        print("a faire depuis le Model directement")
         #self.model.saveEntourage() call this function in the model object
 
     def giveRepPath (self, repSource, repDest) :
