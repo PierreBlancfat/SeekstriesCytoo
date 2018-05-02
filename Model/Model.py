@@ -14,7 +14,7 @@ class Model():
     def __init__(self, repSource, repDestination):
         self.repSource = ""
         self.repDestination = ""
-        self.mat=[]
+        self.mat={}
 
     def setRepSource(self, repSource):
         self.repSource = repSource
@@ -25,8 +25,6 @@ class Model():
         print(self.repDestination)
 
     def saveEntourage(self, image, maskBinaire):
-        if (np.shape(np.shape(image))[0] > 2):
-            image = cv2.cvtColor(image,cv2.COLOR_RGB2GRAY)
         return e.dessinerEntourage(image, maskBinaire)
     
   
@@ -35,7 +33,11 @@ class Model():
         img = cv2.imread(cheminImage)
         imgSeg,maskFibre = Segmentation.segmenterUneImage(img)
         imgEntouree = self.saveEntourage(img, imgSeg)
-        Image.fromarray(imgEntouree).save(self.repDestination + str(time.time()) + nomImg)
+        prop = Segmentation.propStries(maskFibre, imgSeg) * 100
+        self.mat.update({nomImg:round(prop,1)})
+        #self.mat.append(round(prop, 1))
+
+        Image.fromarray(imgEntouree).save(self.repDestination + nomImg)
 
     def runSegmentation(self):
         nbCore = multiprocessing.cpu_count()
@@ -43,9 +45,12 @@ class Model():
         p = {}
         nomsImagesPartitionne = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         nomsImages = os.listdir(self.repSource)
+        nomsImages = np.sort(nomsImages)
+        nomsImages = np.flip(nomsImages, 0)
+        print(nomsImages)
         nbImage = len(nomsImages)
         j = -1
-        for i in np.arange(0,nbImage):
+        for i in range(nbImage):
             if(i%(nbImage/nbCore) <1):
                 j += 1
             nomsImagesPartitionne[j].append(nomsImages[i])
