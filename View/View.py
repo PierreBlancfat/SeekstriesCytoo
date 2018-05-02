@@ -8,8 +8,15 @@ import csv
 import numpy as np
 
 class Interface(Tk):
+    '''
+    Class holding the whole user interface of the application
+    '''
     def __init__(self, controler, **kwargs):
-
+        '''
+        Initialization of the interface and all its components
+        :param controler: to which controler this view is linked (see Model - View - Controller to learn more about it)
+        :param kwargs: init arguments (python)
+        '''
         Tk.__init__(self)
         # Frame configurations
         self.controler = controler
@@ -95,26 +102,47 @@ class Interface(Tk):
 
 
     def browseRepSrc(self):
+        '''
+        Allows to change the source repository
+        :return: none
+        '''
         self.directory = filedialog.askdirectory()
         self.champsRepSource.delete(0, END)
         self.champsRepSource.insert(END, self.directory)
 
     def browseRepDest(self):
+        '''
+        Allow to change the destination repository
+        :return: none
+        '''
         self.directory = filedialog.askdirectory()
         self.champsRepDest.delete(0, END)
         self.champsRepDest.insert(END, self.directory)
 
     def cliquer(self):
+        '''
+        Launch the program itself
+        '''
         self.controler.giveRepPath(self.champsRepSource.get(), self.champsRepDest.get())
         self.controler.segmentation(self.entourage.get(), self.otherRep)
 
     def pause(self):
-        self.controler.testEntourage()
+        '''
+        Pause the program during its execution
+        '''
+        print("TODO")
 
     def changeState(self):
+        '''
+        Allows to unlock Stats tab after the execution
+        '''
         self.bouton_cliquer.config(state="normal")
 
     def displayImage(self, imageName):
+        '''
+        Display an image in its own size in a different window (on top level)
+        :param imageName: String that contains the imageName
+        '''
         windowImage = Toplevel(self.windowStats)
         windowImage.winfo_toplevel().title("Image : " + imageName)  # change Title Bar
         img = Image.open(self.controler.model.repDestination + imageName)
@@ -125,6 +153,9 @@ class Interface(Tk):
         imageLabel.pack(side="bottom", fill="both", expand="yes")
 
     def createWindowStats(self):
+        '''
+        Function linked to the Statistiques Window. It creates a whole new window on top of the main one. With details on the results, etc...
+        '''
         self.windowStats = Toplevel(self)
         self.windowStats.winfo_toplevel().title("Statistiques")  # change Title Bar
 
@@ -181,6 +212,9 @@ class Interface(Tk):
 
 
     def saveCSV(self):
+        '''
+        A function that save the results in a CSV file at the root of the program
+        '''
         with open('../Resultats.csv', 'w') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             n = len(os.listdir(self.controler.model.repSource))

@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 class SegmentationFibre:
     """
-    Classe permettant de segment la fibre
+    Classe permettant de segmenter la fibre
     """
 
     def __init__(self, matImg):
