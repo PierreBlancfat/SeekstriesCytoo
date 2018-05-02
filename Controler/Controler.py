@@ -8,10 +8,11 @@ class Controler():
         self.model = Model("a", "b")
         self.interface = Interface(self)
         self.interface.configure(background='#323232')
+        self.interface.minsize(550,350)
         self.interface.mainloop()
 
     def segmentation(self):
-        self.model.runSegmentation()
+        valueReturned = self.model.runSegmentation()
 
     def testEntourage(self):
         print("a faire depuis le Model direcrement")

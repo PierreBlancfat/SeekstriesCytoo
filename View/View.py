@@ -31,8 +31,7 @@ class Interface(Tk):
         # Menu
         self.menuBar = Menu(master=self)
         self.filemenu = Menu(self.menuBar, tearoff=0)
-        self.filemenu.add_command(label="Hello!")
-        self.filemenu.add_command(label="Quit!")
+        self.filemenu.add_command(label="Paramètres")
         self.menuBar.add_cascade(label="Fichier", menu=self.filemenu)
 
         self.helpmenu = Menu(self.menuBar, tearoff=0)
@@ -42,9 +41,11 @@ class Interface(Tk):
         self.config(menu=self.menuBar)
 
         #ProgressBar
-        pb = ttk.Progressbar(self, orient="horizontal", length=200, mode="determinate")
-        pb.pack()
+        self.s.configure("TProgressbar", thickness=50)  # Create a style for labels
+        pb = ttk.Progressbar(self, orient="horizontal", length=200, mode="determinate", style="TProgressbar")
+        pb.pack(fill=BOTH)
         pb.start()
+
         # CheckBoxes
         self.checkbutton = ttk.Checkbutton(self.panelCheckbox,text='Entourage', style="TCheckbutton", takefocus=0)
         self.checkbutton.grid(row=0, column=0, sticky=W, pady=15,padx=15,)
@@ -53,7 +54,6 @@ class Interface(Tk):
         self.checkbutton.grid(row=1, column=0,padx=15,pady=15)
 
         # Source repository
-        row = 0
         self.labelSource = ttk.Label(self.panel, text="Sélectionnez le répértoire source:")
         self.labelSource.grid(row=0, column=0)
 
@@ -61,7 +61,7 @@ class Interface(Tk):
         self.champsRepSource.grid(row=0, column=1)
         self.champsRepSource.insert(END, "../Data/images/")
 
-        self.browseRepSource = ttk.Button(self.panel, text="Browse", command=self.browse)
+        self.browseRepSource = ttk.Button(self.panel, text="Browse", command=self.browseRepSrc)
         self.browseRepSource.grid(row=0, column=2)
 
         # Dest repository
@@ -72,7 +72,7 @@ class Interface(Tk):
         self.champsRepDest.grid(row=1, column=1)
         self.champsRepDest.insert(END, "../Data/testSegGabor/seg/")
 
-        self.browseRepDest = ttk.Button(self.panel, text="Browse", command=self.browse)
+        self.browseRepDest = ttk.Button(self.panel, text="Browse", command=self.browseRepDest)
         self.browseRepDest.grid(row=1, column=2)
 
         # Main commands
@@ -82,17 +82,23 @@ class Interface(Tk):
         self.bouton_cliquer = ttk.Button(self.panelCommands, text="Pause",command=self.pause)
         self.bouton_cliquer.grid(row=0, column=1, pady=30,padx=15)
 
-        self.bouton_cliquer = ttk.Button(self.panelCommands, text="Stats", command=self.createWindowStats)
+        # Stat button, use self.bouton_cliquer.config(state="normal") to reactivate it
+        self.bouton_cliquer = ttk.Button(self.panelCommands, text="Stats", state=DISABLED, command=self.createWindowStats)
         self.bouton_cliquer.grid(row=0, column=2, pady=30,padx=15)
 
         self.bouton_quitter = ttk.Button(self.panelCommands, text="Quitter", command=self.quit)
         self.bouton_quitter.grid(row=0, column=3, pady=30,padx=15)
 
 
-    def browse(self):
+    def browseRepSrc(self):
         self.directory = filedialog.askdirectory()
-        self.T.delete(0, END)
-        self.T.insert(END, self.directory)
+        self.champsRepSource.delete(0, END)
+        self.champsRepSource.insert(END, self.directory)
+
+    def browseRepDest(self):
+        self.directory = filedialog.askdirectory()
+        self.champsRepDest.delete(0, END)
+        self.champsRepDest.insert(END, self.directory)
 
     def cliquer(self):
         self.controler.giveRepPath(self.champsRepSource.get(), self.champsRepDest.get())
