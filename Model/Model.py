@@ -13,7 +13,7 @@ class Model():
         self.repSource = ""
         self.repDestination = ""
         self.mat={}
-        self.cbcbEntourage = 1
+        self.cbEntourage = 1
         self.otherRep = 1
 
     def setRepSource(self, repSource):
@@ -35,13 +35,14 @@ class Model():
         #Statistique sur les images
         prop = Segmentation.propStries(maskFibre, imgSeg) * 100
         self.mat.update({nomImg:round(prop,1)})
-        if self.cbcbEntourage == 1:
+        print(self.cbEntourage)
+        if self.cbEntourage == 1:
             imgEntouree = self.saveEntourage(img, imgSeg)
             Image.fromarray(imgEntouree).save(self.repDestination + nomImg)
 
     def runSegmentation(self,cbEntourage,otherRep):
-        self.cbcbEntourage = cbEntourage
-        self.otherRep = otherRep
+        self.cbEntourage = cbEntourage.get()
+        self.otherRep = otherRep.get()
         nbCore = multiprocessing.cpu_count()
         it = 0
         p = {}
