@@ -37,8 +37,6 @@ class Model():
         print(self.cbEntourage)
         if self.cbEntourage == 1:
             imgEntouree = self.saveEntourage(img, imgSeg)
-            print(nomImg)
-            Image.fromarray(imgEntouree).show()
             Image.fromarray(imgEntouree).save(self.repDestination + nomImg)
 
     def runSegmentation(self,cbEntourage,otherRep):
