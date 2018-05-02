@@ -129,6 +129,7 @@ class Interface(Tk):
         '''
         Pause the program during its execution
         '''
+        self.displayError("LA BASE VIRALE VPN A ETE MISE A JOUR!")
         print("TODO")
 
     def changeState(self):
@@ -226,3 +227,13 @@ class Interface(Tk):
                     strRes ='Non'
                 spamwriter.writerow([nomsImagesSrc[i], str(self.controler.model.mat[sortedValues[i]]), strRes])
 
+
+    def displayError(self, message):
+        '''
+            Display an error in a different window (on top level)
+            :param message: String that contains the error message
+        '''
+        windowError = Toplevel(self)
+        windowError.winfo_toplevel().title("Error")
+        errorLabel = ttk.Label(windowError, text=message)
+        errorLabel.pack(fill="both", expand="yes", pady=50,padx=50)
