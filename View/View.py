@@ -2,7 +2,7 @@ from tkinter import filedialog
 from tkinter import *
 from tkinter import ttk
 from Model.Segmentation import Segmentation
-
+import os
 
 class Interface(Tk):
 
@@ -132,13 +132,13 @@ class Interface(Tk):
         ### Data Panel
         #windowStatsPanelData = PanedWindow(windowStats)
         #windowStatsPanelData.pack()
-        n = 10
+        n = len(os.listdir(self.controler.model.repSource))
         for i in range (n): # Display path
-            windowStatsMessage = ttk.Label(windowStatsPanel, text="Stries_C2  (8).TIF")
+            windowStatsMessage = ttk.Label(windowStatsPanel, text=os.listdir(self.controler.model.repSource)[i])
             windowStatsMessage.grid(row=i+1,column=0, sticky=N+S+E+W)
 
         for i in range(n): # Display percentages
-            windowStatsMessage = ttk.Label(windowStatsPanel, text="90%", anchor="center")
+            windowStatsMessage = ttk.Label(windowStatsPanel, text=self.controler.model.mat[i], anchor="center")
             windowStatsMessage.grid(row=i+1, column=1, sticky=N+S+E+W)
         for i in range(n): # Striations or not ?
             windowStatsMessage = ttk.Label(windowStatsPanel, text="Oui")
