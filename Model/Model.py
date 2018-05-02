@@ -13,6 +13,8 @@ class Model():
         self.repSource = ""
         self.repDestination = ""
         self.mat={}
+        self.cbcbEntourage = 1
+        self.otherRep = 1
 
     def setRepSource(self, repSource):
         self.repSource = repSource
@@ -28,15 +30,18 @@ class Model():
   
     def SegmentationUneImage(self,nomImg):
         cheminImage = self.repSource + str(nomImg)
-        img = cv2.imread(cheminImage)
+        img = cv2.imread(cheminImage) #TODO exeption n'est pas une image, chemin faux; pas d'image dans le dossier
         imgSeg,maskFibre = Segmentation.segmenterUneImage(img)
-        imgEntouree = self.saveEntourage(img, imgSeg)
+        #Statistique sur les images
         prop = Segmentation.propStries(maskFibre, imgSeg) * 100
         self.mat.update({nomImg:round(prop,1)})
+        if self.cbcbEntourage == 1:
+            imgEntouree = self.saveEntourage(img, imgSeg)
+            Image.fromarray(imgEntouree).save(self.repDestination + nomImg)
 
-        Image.fromarray(imgEntouree).save(self.repDestination + nomImg)
-
-    def runSegmentation(self):
+    def runSegmentation(self,cbEntourage,otherRep):
+        self.cbcbEntourage = cbEntourage
+        self.otherRep = otherRep
         nbCore = multiprocessing.cpu_count()
         it = 0
         p = {}
