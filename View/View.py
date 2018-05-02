@@ -123,7 +123,7 @@ class Interface(Tk):
         Launch the program itself
         '''
         self.controler.giveRepPath(self.champsRepSource.get(), self.champsRepDest.get())
-        self.controler.segmentation(self.entourage.get(), self.otherRep)
+        self.controler.segmentation()
 
     def pause(self):
         '''
