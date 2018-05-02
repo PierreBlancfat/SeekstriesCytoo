@@ -25,6 +25,8 @@ class Model():
         print(self.repDestination)
 
     def saveEntourage(self, image, maskBinaire):
+        if (np.shape(np.shape(image))[0] > 2):
+            image = cv2.cvtColor(image,cv2.COLOR_RGB2GRAY)
         return e.dessinerEntourage(image, maskBinaire)
     
   
@@ -52,6 +54,14 @@ class Model():
             p[it] = threading.Thread(target=self.multipleImage, args=(nomsImagesPartitionne[it],))
             p[it].start()
             it += 1
+
+        it=0
+        while it<nbCore: # Wait end threads
+            p[it].join()
+            print("finished")
+            it+=1
+
+        return 0
 
     def multipleImage(self,nomsImages):
         for nomImg in nomsImages:  # pour chaque image à segmenter

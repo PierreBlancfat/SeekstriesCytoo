@@ -13,6 +13,8 @@ class Controler():
 
     def segmentation(self):
         valueReturned = self.model.runSegmentation()
+        if (valueReturned == 0):
+            self.interface.changeState()
 
     def testEntourage(self):
         print("a faire depuis le Model direcrement")

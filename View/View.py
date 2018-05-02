@@ -107,6 +107,9 @@ class Interface(Tk):
     def pause(self):
         self.controler.testEntourage()
 
+    def changeState(self):
+        self.bouton_cliquer.config(state="normal")
+
     def createWindowStats(self):
         windowStats = Toplevel(self)
         windowStats.winfo_toplevel().title("Statistiques")  # change Title Bar
