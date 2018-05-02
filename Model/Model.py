@@ -5,6 +5,10 @@ from Model.Segmentation import Segmentation
 import os
 import cv2
 import time
+import threading
+import multiprocessing
+import numpy as np
+
 class Model():
 
     def __init__(self, repSource, repDestination):
