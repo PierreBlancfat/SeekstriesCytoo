@@ -26,19 +26,21 @@ class SegmentationGabor:
         self.dossierSaveKernel = dossierSaveKernel
         self.filters = None
 
+    def gabor(self, imgG, csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin, lambdaMax, pasLambda,
+              psi):
+        """
+        Main fonction, call buildfilter anc process
+        :return: 
+        """
+        if self.filters == None:
+            self.build_filters(csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin, lambdaMax,
+                               pasLambda, psi)
+        res1 = self.process(imgG, self.filters)
+        return res1
+
     def build_filters(self,csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
         """
-        :param csize: 
-        :param lsize: 
-        :param thetaMin: 
-        :param thetaMax: 
-        :param pasTheta: 
-        :param sigma: 
-        :param gamma: 
-        :param lambdaMin: 
-        :param lambdaMax: 
-        :param pasLambda: 
-        :param psi: 
+        Builds gabor filter
         :return: A list with the gabor filter
         """
         filters = []
@@ -47,7 +49,7 @@ class SegmentationGabor:
             for theta in np.arange(thetaMin, thetaMax, pasTheta):
                 kern = cv2.getGaborKernel((lsize, csize), sigma*(lambd/3), theta, lambd, gamma, psi, ktype=cv2.CV_64F)
                 filters.append(kern/1.5)
-                Image.fromarray(kern).save(self.dossierSaveKernel+str(time.time())+" "+str([sigma, theta, lambd, gamma, psi]).replace(".","-")+".tif")
+                # Image.fromarray(kern).save(self.dossierSaveKernel+str(time.time())+" "+str([sigma, theta, lambd, gamma, psi]).replace(".","-")+".tif")
         self.filters = filters
 
 
@@ -61,30 +63,6 @@ class SegmentationGabor:
         for kern in filters:
             fimg = cv2.filter2D(img, cv2.CV_8UC3, kern)
         return fimg
-
-
-
-    def gabor(self,imgG,csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
-        """
-        Main fonction, call buildfilter anc process
-        :param imgG: 
-        :param csize: 
-        :param lsize: 
-        :param thetaMin: 
-        :param thetaMax: 
-        :param pasTheta: 
-        :param sigma: 
-        :param gamma: 
-        :param lambdaMin: 
-        :param lambdaMax: 
-        :param pasLambda: 
-        :param psi: 
-        :return: 
-        """
-        if self.filters == None:
-            self.build_filters(csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
-        res1 = self.process(imgG,self.filters)
-        return res1
 
 
     def kMeans(img,k):
