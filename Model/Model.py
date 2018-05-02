@@ -31,7 +31,7 @@ class Model():
     def SegmentationUneImage(self,nomImg):
         cheminImage = self.repSource + str(nomImg)
         img = cv2.imread(cheminImage)
-        imgSeg = Segmentation.segmenterUneImage(img)
+        imgSeg,maskFibre = Segmentation.segmenterUneImage(img)
         imgEntouree = self.saveEntourage(img, imgSeg)
         Image.fromarray(imgEntouree).save(self.repDestination + str(time.time()) + nomImg)
 
@@ -47,7 +47,6 @@ class Model():
             if(i%(nbImage/nbCore) <1):
                 j += 1
             nomsImagesPartitionne[j].append(nomsImages[i])
-            print(nomsImagesPartitionne)
         print(nomsImagesPartitionne)
         while it < nbCore:
             p[it] = threading.Thread(target=self.multipleImage, args=(nomsImagesPartitionne[it],))
