@@ -27,17 +27,37 @@ class SegmentationGabor:
         self.filters = None
 
     def build_filters(self,csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
+        """
+        :param csize: 
+        :param lsize: 
+        :param thetaMin: 
+        :param thetaMax: 
+        :param pasTheta: 
+        :param sigma: 
+        :param gamma: 
+        :param lambdaMin: 
+        :param lambdaMax: 
+        :param pasLambda: 
+        :param psi: 
+        :return: A list with the gabor filter
+        """
         filters = []
         for lambd in np.arange(lambdaMin,lambdaMax,pasLambda):
+            print(lambd)
             for theta in np.arange(thetaMin, thetaMax, pasTheta):
                 kern = cv2.getGaborKernel((lsize, csize), sigma*(lambd/3), theta, lambd, gamma, psi, ktype=cv2.CV_64F)
                 filters.append(kern/1.5)
-                #if theta == thetaMin and self.dossierSaveKernel != None:
-                #    Image.fromarray(kern).save(self.dossierSaveKernel+str(time.time())+" "+str([sigma, theta, lambd, gamma, psi]).replace(".","-")+".tif")
+                Image.fromarray(kern).save(self.dossierSaveKernel+str(time.time())+" "+str([sigma, theta, lambd, gamma, psi]).replace(".","-")+".tif")
         self.filters = filters
 
 
     def process(self,img,filters):
+        """
+        Convolution of each gabor filter
+        :param img: a matrix which represents a picture
+        :param filters: a list of matrix which represents gabor filters
+        :return: The response of the convolution 
+        """
         for kern in filters:
             fimg = cv2.filter2D(img, cv2.CV_8UC3, kern)
         return fimg
@@ -45,6 +65,22 @@ class SegmentationGabor:
 
 
     def gabor(self,imgG,csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi):
+        """
+        Main fonction, call buildfilter anc process
+        :param imgG: 
+        :param csize: 
+        :param lsize: 
+        :param thetaMin: 
+        :param thetaMax: 
+        :param pasTheta: 
+        :param sigma: 
+        :param gamma: 
+        :param lambdaMin: 
+        :param lambdaMax: 
+        :param pasLambda: 
+        :param psi: 
+        :return: 
+        """
         if self.filters == None:
             self.build_filters(csize,lsize,thetaMin,thetaMax,pasTheta,sigma,gamma,lambdaMin,lambdaMax,pasLambda,psi)
         res1 = self.process(imgG,self.filters)
@@ -76,19 +112,17 @@ class SegmentationGabor:
         return res2
 
 
-
-    def conversionBinaire(selg,img):
-        """
-        Convertie une image en binaire
-        :param srcImageRef: Le chemin de l'image
-        :return: Une matrice binaire de même taille que l'image source. Les 1 représentent le "noir" ( zone positive), le 0 le "blanc" ( zone négative)
-        """
-        imarray = np.array(img) # image to nparray
-        imarray = scipy.sign(imarray)  # binarise
-        imarray = np.floor(abs(imarray - np.ones(imarray.shape))) #inversion 1 -> 0, 0-> 1
-        imarray = imarray.astype(int) # converti en int
-        return  imarray
-
+    def conversionBinaire(self,img):
+         """
+        Convert a matrix into a binary matrix
+         :param img: a int matrix 
+         :return: a binary matrix
+         """
+         imarray = np.array(img) # image to np array
+         imarray = scipy.sign(imarray)  # binarize
+         imarray = np.floor(abs(imarray - np.ones(imarray.shape))) #inversion 1 -> 0, 0-> 1
+         imarray = imarray.astype(int) # convertie en int
+         return  imarray
 
 
     def paramToString(self):
@@ -97,9 +131,9 @@ class SegmentationGabor:
     #Segmentation.py
     def segmentation(self):
         """
-        Segmente une image avec les filtres de Gabor
-        :param matImg: un emtrice représentant une image
-        :return: Le masque représentant la segmentation 
+        Segmentation of a image
+        :param matImg: a matrix which reresents an image
+        :return: a mask which represent the segmentation. 1 means the algorithm detect a striation, 
         """
         #gabor segmentation
         matImg2 = self.matImg[:,:,0]
@@ -118,4 +152,9 @@ class SegmentationGabor:
         return self.inverseMatBin(self.conversionBinaire(imgSeg))
 
     def inverseMatBin(self,mat):
+        """
+        Create the inverse of a binary matrix, 0 become 1, 1 become 0
+        :param mat: a binary matrix
+        :return: a binary matrix
+        """
         return (abs(mat - np.ones(mat.shape))).astype(int)
