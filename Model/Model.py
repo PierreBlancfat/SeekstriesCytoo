@@ -47,6 +47,7 @@ class Model():
         p = {}
         nomsImagesPartitionne = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         nomsImages = os.listdir(self.repSource)
+
         nomsImages = np.sort(nomsImages)
         nomsImages = np.flip(nomsImages, 0)
         print(nomsImages)

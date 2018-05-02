@@ -10,16 +10,27 @@ class Controler():
         self.interface.minsize(550,350)
         self.interface.mainloop()
 
+
     def segmentation(self):
-        '''
+        """"
         Main function which execute the whole code
         :param entourage: 0 or 1 if the user wants a contouring or not
         :param otherRep: 0 or 1 if the user wants to separate image  with striations
         :return:
-        '''
-        valueReturned = self.model.runSegmentation(self.interface.entourage,self.interface.otherRep)
-        if (valueReturned == 0):
-            self.interface.changeState()
+        """
+        #Gestion des erreur
+        print(self.interface.champsRepDest.get())
+        if self.interface.champsRepDest.get() == "" and self.interface.entourage.get() == 1:
+            self.interface.displayError("Le chemin de destination est vide")
+        elif (self.interface.champsRepSource.get() == ""):
+            self.interface.displayError("Le chemin source est vide")
+        else:
+            try:
+                valueReturned = self.model.runSegmentation(self.interface.entourage,self.interface.otherRep)
+            except FileNotFoundError as errCheminIntrouvble:
+                self.interface.displayError("Chemin introuvable : "+errCheminIntrouvble.filename)
+            if (valueReturned == 0):
+                self.interface.changeState()
 
     def testEntourage(self):
         print("a faire depuis le Model directement")
