@@ -38,11 +38,25 @@ class Area():
         return self.xTopLeft==area.xTopLeft and self.yTopLeft==area.yTopLeft and self.xBotRight==area.xBotRight and self.yBotRight==area.yBotRight
     
     def notContainedIn(self, area):
-        """ indicate if the current area is contained in the area in parameter.
+        """ indicate if the current area is not contained in the area in parameter.
     
         :param area: the area which may contain the current area
         :type area: list
-        :return: True if the current area is contained in the area in parameter, false else.
+        :return: True if the current area is not contained in the area in parameter, false else.
         :rtype: bool
         """
         return self.xTopLeft<area.xTopLeft or self.yTopLeft<area.yTopLeft or self.xBotRight>area.xBotRight or self.yBotRight>area.yBotRight
+
+    def notToSmall(self, minWidth, minHeight):
+        """ indicate if the current area isn't to small.
+    
+        :param minWidth: the minimal width for an area to be considered.
+        :type minWidth: int
+        :param minHeight: the minimal height for an area to be considered.
+        :type minHeight: int
+        :return: True if the current area isn't to small, false else.
+        :rtype: bool
+        """
+        return self.xBotRight-self.xTopLeft>minWidth or self.yBotRight-self.yTopLeft>minHeight
+
+    
