@@ -56,12 +56,12 @@ class Interface(Tk):
 
         # CheckBoxes
         self.entourage = IntVar(value=1)
-        self.checkbuttonEntourage = ttk.Checkbutton(self.panelCheckbox,text='Entourage', style="TCheckbutton", takefocus=0, variable=self.entourage, command=self.changeCheckboxState)
-        self.checkbuttonEntourage.grid(row=0, column=0, sticky=W, pady=15,padx=15,)
+        self.checkbuttonEntourage = ttk.Checkbutton(self.panelCheckbox, text='Entourage', style="TCheckbutton", takefocus=0, variable=self.entourage, command=self.changeCheckboxEntourage)
+        self.checkbuttonEntourage.grid(row=1, column=0, sticky=W, pady=15,padx=15,)
 
-        self.otherRep = IntVar(value=0)
-        self.checkbuttonOtherRep = ttk.Checkbutton(self.panelCheckbox,text='Enregistrer dans un autre dossier les images striées', takefocus=0, variable = self.otherRep)
-        self.checkbuttonOtherRep.grid(row=1, column=0,padx=15,pady=15)
+        self.otherRep = IntVar(value=1)
+        self.checkbuttonOtherRep = ttk.Checkbutton(self.panelCheckbox,text='Enregistrer les images (Dossiers séparés)', takefocus=0, variable = self.otherRep, command=self.changeCheckboxOtherRep)
+        self.checkbuttonOtherRep.grid(row=0, column=0,padx=15,pady=15)
 
         # Source repository
         self.labelSource = ttk.Label(self.panel, text="Sélectionnez le répértoire source:")
@@ -93,13 +93,15 @@ class Interface(Tk):
         self.bouton_cliquer.grid(row=0, column=1, pady=30,padx=15)
 
         # Stat button, use self.bouton_cliquer.config(state="normal") to reactivate it
-        self.bouton_cliquer = ttk.Button(self.panelCommands, text="Stats", state=DISABLED, command=self.createWindowStats)
+        x=0
+        y=0
+        self.bouton_cliquer = ttk.Button(self.panelCommands, text="Stats", state=DISABLED, command=lambda x=x,y=y : self.createWindowStats(x,y))
         self.bouton_cliquer.grid(row=0, column=2, pady=30,padx=15)
 
         self.bouton_quitter = ttk.Button(self.panelCommands, text="Quitter", command=self.quit)
         self.bouton_quitter.grid(row=0, column=3, pady=30,padx=15)
 
-    def changeCheckboxState(self):
+    def changeCheckboxEntourage(self):
         '''
         Disable dest reposiory if we uncheck the box "Entourage"
         :return:
@@ -111,6 +113,17 @@ class Interface(Tk):
         else:
             self.champsRepDest.configure(state='normal')
             self.browseRepDest.configure(state='normal')
+    def changeCheckboxOtherRep(self):
+        otherRep = self.otherRep.get()
+        if(otherRep == 0):
+            self.champsRepDest.configure(state='disabled')
+            self.browseRepDest.configure(state='disabled')
+            self.checkbuttonEntourage.configure(state='disabled')
+        else:
+            self.champsRepDest.configure(state='normal')
+            self.browseRepDest.configure(state='normal')
+            self.checkbuttonEntourage.configure(state='normal')
+
 
     def browseRepSrc(self):
         '''
@@ -151,26 +164,37 @@ class Interface(Tk):
         self.bouton_cliquer.config(state="normal")
 
 
-    def displayImage(self, imageName):
+    def displayImage(self, imageName, strie):
         '''
         Display an image in its own size in a different window (on top level)
         :param imageName: String that contains the imageName
         '''
         windowImage = Toplevel(self.windowStats)
         windowImage.winfo_toplevel().title("Image : " + imageName)  # change Title Bar
-        img = Image.open(self.controler.model.repDestination + imageName)
+        if (strie==0):
+            img = Image.open(self.controler.model.repDestinationNonStrie+ imageName)
+        else:
+            img = Image.open(self.controler.model.repDestinationStrie+ imageName)
+
         windowImage.geometry(str(np.shape(img)[0]) + "x" + str(np.shape(img)[1]))
         img = ImageTk.PhotoImage(img)
         imageLabel = Label(windowImage, image=img)
         imageLabel.image = img
         imageLabel.pack(side="bottom", fill="both", expand="yes")
 
-    def createWindowStats(self):
+    def createWindowStats(self, clear, start):
         '''
         Function linked to the Statistiques Window. It creates a whole new window on top of the main one. With details on the results, etc...
+        :param clear: Tells if we need to clean the window first
+        :param start: where to start in the list of images
         '''
-        self.windowStats = Toplevel(self)
-        self.windowStats.winfo_toplevel().title("Statistiques")  # change Title Bar
+
+        if (clear==1): # Clear window
+            for widget in self.windowStats.winfo_children():
+                widget.destroy()
+        else:
+            self.windowStats = Toplevel(self)
+            self.windowStats.winfo_toplevel().title("Statistiques")  # change Title Bar
 
         style = ttk.Style() # Global style
         style.configure("BW.TLabel", foreground="white", background="#323232")  # Create a style for TITLES
@@ -193,42 +217,92 @@ class Interface(Tk):
         ### Data Panel
         #windowStatsPanelData = PanedWindow(self.windowStats)
         #windowStatsPanelData.pack()
+        self.sizePage = 20
         n = len(os.listdir(self.controler.model.repSource))
         nomsImagesSrc = os.listdir(self.controler.model.repSource)
-        nomsImagesDest = os.listdir(self.controler.model.repDestination)
         sortedValues = sorted(self.controler.model.mat)
         list.sort(nomsImagesSrc)
-        list.sort(nomsImagesDest)
-        for i in range (n): # Display path
-            windowStatsMessage = ttk.Label(windowStatsPanel, text=nomsImagesSrc[i])
-            windowStatsMessage.grid(row=i+1,column=0, sticky=N+S+E+W)
+        print(start)
+        for i in range (start,start+self.sizePage): # Display path
+            if(0<=i and i<n):
+                windowStatsMessage = ttk.Label(windowStatsPanel, text=nomsImagesSrc[i])
+                windowStatsMessage.grid(row=i+1,column=0, sticky=N+S+E+W)
 
-        for i in range(n): # Display percentages
-            windowStatsMessage = ttk.Label(windowStatsPanel, text=self.controler.model.mat[sortedValues[i]], anchor="center")
-            windowStatsMessage.grid(row=i+1, column=1, sticky=N+S+E+W)
-        for i in range(n): # Striations or not ?
-            if (self.controler.model.mat[sortedValues[i]]>0):
-                windowStatsMessage = ttk.Label(windowStatsPanel, text="Oui", anchor="center")
-                windowStatsMessage.grid(row=i+1, column=2, sticky=N+S+E+W)
-            else:
-                windowStatsMessage = ttk.Label(windowStatsPanel, text="Non", anchor="center")
-                windowStatsMessage.grid(row=i + 1, column=2, sticky=N + S + E + W)
+        for i in range (start,start+self.sizePage): # Display path
+            if(0<=i and i<n):
+                windowStatsMessage = ttk.Label(windowStatsPanel, text=self.controler.model.mat[sortedValues[i]], anchor="center")
+                windowStatsMessage.grid(row=i+1, column=1, sticky=N+S+E+W)
+        for i in range (start,start+self.sizePage): # Display path
+            if(0<=i and i<n):
+                if (self.controler.model.mat[sortedValues[i]]>0):
+                    windowStatsMessage = ttk.Label(windowStatsPanel, text="Oui", anchor="center")
+                    windowStatsMessage.grid(row=i+1, column=2, sticky=N+S+E+W)
+                else:
+                    windowStatsMessage = ttk.Label(windowStatsPanel, text="Non", anchor="center")
+                    windowStatsMessage.grid(row=i + 1, column=2, sticky=N + S + E + W)
 
         windowStatsButtons = []
-        for i in range(n): # Display images
-            windowStatsButtons.append(ttk.Button(windowStatsPanel,text="↗", command=lambda i=i: self.displayImage(nomsImagesDest[i])))
-            windowStatsButtons[i].grid(row=i+1, column=3, sticky=N+S+E+W)
+        stop = start
+        cptBut=0
+        j=0
+        for i in range (start,start+self.sizePage): # Display path
+            if(0<=i and i<n):
+                if (self.controler.model.mat[sortedValues[i]] > 0):
+                    j=1
+                else:
+                    j=0
+                windowStatsButtons.append(ttk.Button(windowStatsPanel,text="↗", command=lambda i=i,j=j: self.displayImage(nomsImagesSrc[i], j)))
+                windowStatsButtons[cptBut].grid(row=i+1, column=3, sticky=N+S+E+W)
+                stop += 1
+                cptBut+=1
+
+        if(start+self.sizePage>=n and start-self.sizePage>=0): # no next
+            x = 1
+            i = 0
+            y = start
+            while(y>0 and i<self.sizePage):
+                y -= 1
+                i+=1
+            windowStatsPrevious = ttk.Button(windowStatsPanel, text="Précédent", command=lambda x=x,y=y : self.createWindowStats(x,y))
+            windowStatsPrevious.grid(row=stop+1, column=1, sticky=N+S+E+W)
+        elif(start-self.sizePage<0 and start+self.sizePage<n): # no previous
+            x=1
+            i=0
+            y=start
+            while(y<n and i<self.sizePage):
+                y += 1
+                i+=1
+            windowStatsNext = ttk.Button(windowStatsPanel, text="Suivant", command=lambda x=x, y=y: self.createWindowStats(x, y))
+            windowStatsNext.grid(row=stop + 1, column=2, sticky=N + S + E + W)
+        elif(start+self.sizePage<n and start-self.sizePage>=0):
+            x=1
+            i = 0
+            y = start
+            while (y > 0 and i < self.sizePage):
+                y -= 1
+                i+=1
+            windowStatsPrevious = ttk.Button(windowStatsPanel, text="Précédent", command=lambda x=x, y=y: self.createWindowStats(x, y))
+            windowStatsPrevious.grid(row=stop + 1, column=1, sticky=N + S + E + W)
+
+            i = 0
+            y = start
+            while (start < n and i < self.sizePage):
+                y += 1
+                i+=1
+            windowStatsNext = ttk.Button(windowStatsPanel, text="Suivant", command=lambda x=x, y=y: self.createWindowStats(x, y))
+            windowStatsNext.grid(row=stop + 1, column=2, sticky=N + S + E + W)
 
         # Save button
-        windowStatsButton = ttk.Button(windowStatsPanel, text="Sauvegarder", command=self.saveCSV)
-        windowStatsButton.grid(row=11, column=3, sticky=N + S + E + W)
+        windowStatsSave = ttk.Button(windowStatsPanel, text="Sauvegarder (*.csv)", command=self.saveCSV)
+        windowStatsSave.grid(row=start+self.sizePage, column=3, sticky=N + S + E + W)
 
 
     def saveCSV(self):
         '''
         A function that save the results in a CSV file at the root of the program
         '''
-        with open('../Resultats.csv', 'w') as csvfile:
+        saveDirectory = filedialog.askdirectory()
+        with open((saveDirectory + '/Resultats.csv'), 'w') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             n = len(os.listdir(self.controler.model.repSource))
             nomsImagesSrc = os.listdir(self.controler.model.repSource)

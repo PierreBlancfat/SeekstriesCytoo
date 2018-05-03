@@ -21,7 +21,14 @@ class Model():
         print(self.repSource)
     def setRepDestination(self, repDestination):
         self.repDestination =self.normalizePath(repDestination)
-        print(self.repDestination)
+        if not os.path.exists(self.repDestination+'Strie/'):
+            os.makedirs(self.repDestination+'Strie/')
+        self.repDestinationStrie = self.repDestination+'Strie/'
+        if not os.path.exists(self.repDestination+'nonStrie/'):
+            os.makedirs(self.repDestination+'nonStrie/')
+        self.repDestinationNonStrie = self.repDestination+'nonStrie/'
+        print(self.repDestinationStrie)
+        print(self.repDestinationNonStrie)
 
     def saveEntourage(self, image, maskBinaire):
         return entourage.dessinerEntourage(image, maskBinaire)
@@ -34,10 +41,18 @@ class Model():
         #Statistique sur les images
         prop = Segmentation.propStries(maskFibre, imgSeg) * 100
         self.mat.update({nomImg:round(prop,1)})
-        print(self.cbEntourage)
         if self.cbEntourage == 1:
             imgEntouree = self.saveEntourage(img, imgSeg)
-            Image.fromarray(imgEntouree).save(self.repDestination + nomImg)
+            if(self.mat[nomImg]>0):
+                Image.fromarray(imgEntouree).save(self.repDestinationStrie + nomImg)
+            else:
+                Image.fromarray(imgEntouree).save(self.repDestinationNonStrie + nomImg)
+        else: # No contouring
+            if (self.mat[nomImg] > 0):
+                Image.fromarray(img).save(self.repDestinationStrie + nomImg)
+            else:
+                Image.fromarray(img).save(self.repDestinationNonStrie + nomImg)
+
 
     def runSegmentation(self,cbEntourage,otherRep):
         self.cbEntourage = cbEntourage.get()
@@ -47,9 +62,12 @@ class Model():
         p = {}
         nomsImagesPartitionne = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         nomsImages = os.listdir(self.repSource)
-
+        for nomImage in nomsImages:
+            if(os.path.isdir(self.repSource+"/"+nomImage) or not nomImage.lower().endswith(('.tif', '.tiff', '.png', '.jpg', '.jpeg','.bmp'))):
+                nomsImages.remove(nomImage)
         nomsImages = np.sort(nomsImages)
         nomsImages = np.flip(nomsImages, 0)
+
         print(nomsImages)
         nbImage = len(nomsImages)
         j = -1
