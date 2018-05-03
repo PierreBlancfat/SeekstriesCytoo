@@ -27,7 +27,6 @@ class Model():
         :return: 
         """
         self.repSource = self.normalizePath(repSource)
-        print(self.repSource)
 
 
     def setRepDestination(self, repDestination):
@@ -43,8 +42,6 @@ class Model():
         if not os.path.exists(self.repDestination+'nonStrie/'):
             os.makedirs(self.repDestination+'nonStrie/')
         self.repDestinationNonStrie = self.repDestination+'nonStrie/'
-        print(self.repDestinationStrie)
-        print(self.repDestinationNonStrie)
 
     def saveEntourage(self, image, maskBinaire):
         return entourage.dessinerEntourage(image, maskBinaire)
@@ -63,7 +60,6 @@ class Model():
         #Statistique sur les images
         prop = Segmentation.propStries(maskFibre, imgSeg) * 100
         self.mat.update({nomImg:round(prop,1)})
-        print(self.cbEntourage)
         if self.cbEntourage == 1:
             imgEntouree = self.saveEntourage(img, imgSeg)
             if(self.mat[nomImg]>0):
@@ -106,7 +102,6 @@ class Model():
             if(i%(nbImage/nbCore) <1):
                 j += 1
             nomsImagesPartitionne[j].append(nomsImages[i])
-        print(nomsImagesPartitionne)
         while it < nbCore:
             p[it] = threading.Thread(target=self.multipleImage, args=(nomsImagesPartitionne[it],))
             p[it].start()

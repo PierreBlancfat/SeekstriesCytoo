@@ -1,5 +1,5 @@
 from tkinter import filedialog
-from tkinter import *
+from tkinter import *   
 from tkinter import ttk
 import os
 from PIL import ImageTk, Image
@@ -220,12 +220,11 @@ class Interface(Tk):
         ### Data Panel
         #windowStatsPanelData = PanedWindow(self.windowStats)
         #windowStatsPanelData.pack()
-        self.sizePage = 3
+        self.sizePage = 20
         n = len(os.listdir(self.controler.model.repSource))
         nomsImagesSrc = os.listdir(self.controler.model.repSource)
         sortedValues = sorted(self.controler.model.mat)
         list.sort(nomsImagesSrc)
-        print(start)
         for i in range (start,start+self.sizePage): # Display path
             if(0<=i and i<n):
                 windowStatsMessage = ttk.Label(windowStatsPanel, text=nomsImagesSrc[i])

@@ -19,7 +19,6 @@ class Controler():
         :return:
         """
         #Gestion des erreur
-        print(self.interface.champsRepDest.get())
         if self.interface.champsRepDest.get() == "" and self.interface.entourage.get() == 1:
             self.interface.displayError("Le chemin de destination est vide")
         elif (self.interface.champsRepSource.get() == ""):
@@ -30,10 +29,6 @@ class Controler():
                 valueReturned = self.model.runSegmentation(self.interface.entourage,self.interface.otherRep)
             except FileNotFoundError as errCheminIntrouvble:
                 self.interface.displayError("Chemin introuvable : "+errCheminIntrouvble.filename)
-
-    def testEntourage(self):
-        print("a faire depuis le Model directement")
-        #self.model.saveEntourage() call this function in the model object
 
     def giveRepPath (self, repSource, repDest) :
         '''
