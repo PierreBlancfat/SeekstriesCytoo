@@ -7,7 +7,6 @@ site_name: "SeekStries Documentation"
 generate:
 - Model.md:
     - Area.Area++ # (+ to include members)
-    - EvaluationSegmentation.EvaluationSegmentation++
     - Model.Model++
     - Segmentation.Segmentation++
     - SegmentationFibre.SegmentationFibre++

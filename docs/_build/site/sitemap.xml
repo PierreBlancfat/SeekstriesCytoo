@@ -4,15 +4,31 @@
     
     <url>
      <loc>/</loc>
-     <lastmod>2018-04-26</lastmod>
+     <lastmod>2018-05-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>/SegmentationFibre/</loc>
-     <lastmod>2018-04-26</lastmod>
+     <loc>/Model/</loc>
+     <lastmod>2018-05-03</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>/View/</loc>
+     <lastmod>2018-05-03</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>/Controler/</loc>
+     <lastmod>2018-05-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
     

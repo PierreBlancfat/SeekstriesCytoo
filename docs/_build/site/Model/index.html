@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Model - SeekStries Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Model";
+    var mkdocs_page_input_path = "Model.md";
+    var mkdocs_page_url = "/Model/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> SeekStries Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Model</a>
+    <ul class="subnav">
+            
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../View/">View</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Controler/">Controler</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">SeekStries Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Model</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="Area.Area">Area</h1>
+
+<pre><code class="python">Area(self, xTopLeft, yTopLeft, xBotRight, yBotRight)
+</code></pre>
+
+<h2 id="Area.Area.border">border</h2>
+
+<p>list() -&gt; new empty list
+list(iterable) -&gt; new list initialized from iterable's items
+<h2 id="Area.Area.expend">expend</h2></p>
+<pre><code class="python">Area.expend(self, x, y)
+</code></pre>
+
+<p>expend the current area if the position of the pixel is out of the area
+:param x: abscissa coordinate of the pixel
+:param y: ordinate coordonate of the pixel
+:return: None</p>
+<h2 id="Area.Area.equals">equals</h2>
+
+<pre><code class="python">Area.equals(self, area)
+</code></pre>
+
+<p>indicate if the current area is equal to the area in parameter.</p>
+<p>:param area: the area which may be equal to the current area
+:type area: list
+:return: True if the current area is equal to the area in parameter, false else.
+:rtype: bool</p>
+<h2 id="Area.Area.notContainedIn">notContainedIn</h2>
+
+<pre><code class="python">Area.notContainedIn(self, area)
+</code></pre>
+
+<p>indicate if the current area is not contained in the area in parameter.</p>
+<p>:param area: the area which may contain the current area
+:type area: list
+:return: True if the current area is not contained in the area in parameter, false else.
+:rtype: bool</p>
+<h2 id="Area.Area.notToSmall">notToSmall</h2>
+
+<pre><code class="python">Area.notToSmall(self, minWidth, minHeight)
+</code></pre>
+
+<p>indicate if the current area isn't to small.</p>
+<p>:param minWidth: the minimal width for an area to be considered.
+:type minWidth: int
+:param minHeight: the minimal height for an area to be considered.
+:type minHeight: int
+:return: True if the current area isn't to small, false else.
+:rtype: bool</p>
+<h1 id="Model.Model">Model</h1>
+
+<pre><code class="python">Model(self, repSource, repDestination, controler)
+</code></pre>
+
+<h2 id="Model.Model.setRepSource">setRepSource</h2>
+
+<pre><code class="python">Model.setRepSource(self, repSource)
+</code></pre>
+
+<p>set the source directory
+:param repSource: the path of the source repertory
+:type str
+:return:</p>
+<h2 id="Model.Model.setRepDestination">setRepDestination</h2>
+
+<pre><code class="python">Model.setRepDestination(self, repDestination)
+</code></pre>
+
+<p>Set the destination directory. Create a directory if it doesn't exist
+:param repDestination: path of the destination directory
+:return:</p>
+<h2 id="Model.Model.SegmentationUneImage">SegmentationUneImage</h2>
+
+<pre><code class="python">Model.SegmentationUneImage(self, nomImg)
+</code></pre>
+
+<p>Do the segmentation of one image, save it if users want to, put the bording boxes if the users want to.
+:param nomImg: Name of the image to segmentate
+:type a matrix which represent an image
+:return:</p>
+<h2 id="Model.Model.runSegmentation">runSegmentation</h2>
+
+<pre><code class="python">Model.runSegmentation(self, cbEntourage, otherRep)
+</code></pre>
+
+<p>Action of the start bouton, product threads in order to speed up the computation
+Product threah
+:param cbEntourage: CheckBox entourage value
+:type cbEntourage : IntVar
+:param otherRep: Checkbox save in an path
+:type otherRep : IntVar
+:return: 0 when segmentation is finished</p>
+<h2 id="Model.Model.multipleImage">multipleImage</h2>
+
+<pre><code class="python">Model.multipleImage(self, nomsImages)
+</code></pre>
+
+<p>Method run in a thread, call segmentationUneImage fonction for each in the list of images in parameter
+:param nomsImages: a list of image name
+:type str
+:return:</p>
+<h2 id="Model.Model.normalizePath">normalizePath</h2>
+
+<pre><code class="python">Model.normalizePath(self, s)
+</code></pre>
+
+<p>Normalize a path to be compatible with windows
+:param s: a path
+:type str
+:return: s normalized</p>
+<h2 id="Model.Model.finDeTraitement">finDeTraitement</h2>
+
+<pre><code class="python">Model.finDeTraitement(self)
+</code></pre>
+
+<p>Executed when a segmentation is finished, unlock stat bouton
+:return:</p>
+<h1 id="Segmentation.Segmentation">Segmentation</h1>
+
+<pre><code class="python">Segmentation(self, cheminSrc, cheminDest)
+</code></pre>
+
+<p>Classe qui permet d'appeler les deux segmentations et calcul la proportion de stries dans une image</p>
+<h2 id="Segmentation.Segmentation.segmenterUneImage">segmenterUneImage</h2>
+
+<pre><code class="python">Segmentation.segmenterUneImage(matImg)
+</code></pre>
+
+<p>Segmente une image (fibre et stries)
+:param matImg: une image sous forme de matrice
+:return: les deux masques des segmentations</p>
+<h2 id="Segmentation.Segmentation.propStries">propStries</h2>
+
+<pre><code class="python">Segmentation.propStries(masqueFibre, masqueStries)
+</code></pre>
+
+<p>Calcul la proportion de stries dans une fibre
+:param masqueFibre: une matrice binaire
+:param masqueStries: une matrice binaire
+:return: proportion des stries dans la fibre</p>
+<h1 id="SegmentationFibre.SegmentationFibre">SegmentationFibre</h1>
+
+<pre><code class="python">SegmentationFibre(self, matImg)
+</code></pre>
+
+<p>Classe permettant de segmenter la fibre</p>
+<h2 id="SegmentationFibre.SegmentationFibre.segmenter">segmenter</h2>
+
+<pre><code class="python">SegmentationFibre.segmenter(self)
+</code></pre>
+
+<p>Applique la methode des k-means sur une image pour la segmenter
+@param img: image a traiter (creer precedemment grace a "imread()")
+@return: l'image apres traitement</p>
+<h1 id="SegmentationGabor.SegmentationGabor">SegmentationGabor</h1>
+
+<pre><code class="python">SegmentationGabor(self, matImg, csize=50, lsize=50, thetaMin=-0.4, thetaMax=0.45, pasTheta=0.2, sigma=2, gamma=5, lambdaMin=6, lambdaMax=15, pasLambda=2, psi=0, dossierSaveImgSeg=None, dossierSaveKernel=None)
+</code></pre>
+
+<h2 id="SegmentationGabor.SegmentationGabor.gabor">gabor</h2>
+
+<pre><code class="python">SegmentationGabor.gabor(self, imgG, csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin, lambdaMax, pasLambda, psi)
+</code></pre>
+
+<p>Main fonction, call buildfilter anc process
+:return:</p>
+<h2 id="SegmentationGabor.SegmentationGabor.build_filters">build_filters</h2>
+
+<pre><code class="python">SegmentationGabor.build_filters(self, csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin, lambdaMax, pasLambda, psi)
+</code></pre>
+
+<p>Builds gabor filter
+:return: A list with the gabor filter</p>
+<h2 id="SegmentationGabor.SegmentationGabor.process">process</h2>
+
+<pre><code class="python">SegmentationGabor.process(self, img, filters)
+</code></pre>
+
+<p>Convolution of each gabor filter
+:param img: a matrix which represents a picture
+:param filters: a list of matrix which represents gabor filters
+:return: The response of the convolution</p>
+<h2 id="SegmentationGabor.SegmentationGabor.segmentation">segmentation</h2>
+
+<pre><code class="python">SegmentationGabor.segmentation(self)
+</code></pre>
+
+<p>Segmentation of a image
+:param matImg: a matrix which reresents an image
+:return: a mask which represent the segmentation. 1 means the algorithm detect a striation,</p>
+<h2 id="SegmentationGabor.SegmentationGabor.conversionBinaire">conversionBinaire</h2>
+
+<pre><code class="python">SegmentationGabor.conversionBinaire(self, img)
+</code></pre>
+
+<p>Convert a matrix into a binary matrix
+ :param img: a int matrix
+ :return: a binary matrix</p>
+<h2 id="SegmentationGabor.SegmentationGabor.inverseMatBin">inverseMatBin</h2>
+
+<pre><code class="python">SegmentationGabor.inverseMatBin(self, mat)
+</code></pre>
+
+<p>Create the inverse of a binary matrix, 0 become 1, 1 become 0
+:param mat: a binary matrix
+:return: a binary matrix</p>
+<h2 id="SegmentationGabor.SegmentationGabor.kMeans">kMeans</h2>
+
+<pre><code class="python">SegmentationGabor.kMeans(img, k)
+</code></pre>
+
+<p>Applique la méthode des k-means sur une image pour la segmenter
+@param img: image à traiter (créer précédemment grâce à "imread()")
+@param k: nombre de clusters
+@return: l'image après traitement</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../View/" class="btn btn-neutral float-right" title="View">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../View/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>
