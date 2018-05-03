@@ -160,8 +160,13 @@ class Interface(Tk):
         '''
         Allows to unlock Stats tab after the execution
         '''
-        self.bouton_cliquer.config(state="normal")
+        if (str(self.bouton_cliquer['state']) == "disabled"):
 
+            self.bouton_cliquer.config(state="normal")
+
+        else:
+
+            self.bouton_cliquer.config(state="disabled")
 
     def displayImage(self, imageName, strie):
         '''
@@ -216,7 +221,7 @@ class Interface(Tk):
         ### Data Panel
         #windowStatsPanelData = PanedWindow(self.windowStats)
         #windowStatsPanelData.pack()
-        self.sizePage = 20
+        self.sizePage = 3
         n = len(os.listdir(self.controler.model.repSource))
         nomsImagesSrc = os.listdir(self.controler.model.repSource)
         sortedValues = sorted(self.controler.model.mat)
@@ -254,7 +259,7 @@ class Interface(Tk):
                 windowStatsButtons[cptBut].grid(row=i+1, column=3, sticky=N+S+E+W)
                 stop += 1
                 cptBut+=1
-
+        y = start
         if(start+self.sizePage>=n and start-self.sizePage>=0): # no next
             x = 1
             i = 0
@@ -263,7 +268,7 @@ class Interface(Tk):
                 y -= 1
                 i+=1
             windowStatsPrevious = ttk.Button(windowStatsPanel, text="Précédent", command=lambda x=x,y=y : self.createWindowStats(x,y))
-            windowStatsPrevious.grid(row=stop+1, column=1, sticky=N+S+E+W)
+            windowStatsPrevious.grid(row=stop + 1, column=0, sticky=N + S + E + W)
         elif(start-self.sizePage<0 and start+self.sizePage<n): # no previous
             x=1
             i=0
@@ -272,7 +277,7 @@ class Interface(Tk):
                 y += 1
                 i+=1
             windowStatsNext = ttk.Button(windowStatsPanel, text="Suivant", command=lambda x=x, y=y: self.createWindowStats(x, y))
-            windowStatsNext.grid(row=stop + 1, column=2, sticky=N + S + E + W)
+            windowStatsNext.grid(row=stop + 1, column=1, sticky=N + S + E + W)
         elif(start+self.sizePage<n and start-self.sizePage>=0):
             x=1
             i = 0
@@ -281,21 +286,29 @@ class Interface(Tk):
                 y -= 1
                 i+=1
             windowStatsPrevious = ttk.Button(windowStatsPanel, text="Précédent", command=lambda x=x, y=y: self.createWindowStats(x, y))
-            windowStatsPrevious.grid(row=stop + 1, column=1, sticky=N + S + E + W)
+            windowStatsPrevious.grid(row=stop + 1, column=0, sticky=N + S + E + W)
 
             i = 0
             y = start
-            while (start < n and i < self.sizePage):
+            while (y < n and i < self.sizePage):
                 y += 1
                 i+=1
             windowStatsNext = ttk.Button(windowStatsPanel, text="Suivant", command=lambda x=x, y=y: self.createWindowStats(x, y))
-            windowStatsNext.grid(row=stop + 1, column=2, sticky=N + S + E + W)
+            windowStatsNext.grid(row=stop + 1, column=1, sticky=N + S + E + W)
 
-        # Save butto
+        # TOTAL Stats
+        total = 0
+        totalYes = 0
+        for i in range(len(self.controler.model.mat)):
+            if (self.controler.model.mat[nomsImagesSrc[i]] > 0):
+                totalYes += 1
+            total += 1
+        windowStatsTotal = ttk.Label(windowStatsPanel, text=(' % stries : ' + str(totalYes) + ' / ' + str(total)),anchor="center")
+        windowStatsTotal.grid(row=stop + 1, column=2, sticky=N + S + E + W)
+
+        # Save button
         windowStatsSave = ttk.Button(windowStatsPanel, text="Sauvegarder (*.csv)", command=self.saveCSV)
-        windowStatsSave.grid(row=start+self.sizePage, column=3, sticky=N + S + E + W)
-
-
+        windowStatsSave.grid(row=stop + 1, column=3, sticky=N + S + E + W)
     def saveCSV(self):
         '''
         A function that save the results in a CSV file at the root of the program

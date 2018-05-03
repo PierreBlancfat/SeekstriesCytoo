@@ -30,8 +30,6 @@ class Controler():
                 valueReturned = self.model.runSegmentation(self.interface.entourage,self.interface.otherRep)
             except FileNotFoundError as errCheminIntrouvble:
                 self.interface.displayError("Chemin introuvable : "+errCheminIntrouvble.filename)
-            if (valueReturned == 0):
-                self.interface.changeState()
 
     def testEntourage(self):
         print("a faire depuis le Model directement")
