@@ -34,7 +34,6 @@ class Model():
         #Statistique sur les images
         prop = Segmentation.propStries(maskFibre, imgSeg) * 100
         self.mat.update({nomImg:round(prop,1)})
-        print(self.cbEntourage)
         if self.cbEntourage == 1:
             imgEntouree = self.saveEntourage(img, imgSeg)
             Image.fromarray(imgEntouree).save(self.repDestination + nomImg)
