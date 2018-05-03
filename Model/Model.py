@@ -21,9 +21,22 @@ class Model():
         self.controler = controler
 
     def setRepSource(self, repSource):
+        """
+        set the source directory
+        :param repSource: the path of the source repertory
+        :type str
+        :return: 
+        """
         self.repSource = self.normalizePath(repSource)
         print(self.repSource)
+
+
     def setRepDestination(self, repDestination):
+        """
+        Set the destination directory. Create a directory if it doesn't exist
+        :param repDestination: path of the destination directory
+        :return: 
+        """
         self.repDestination =self.normalizePath(repDestination)
         if not os.path.exists(self.repDestination+'Strie/'):
             os.makedirs(self.repDestination+'Strie/')
@@ -39,6 +52,12 @@ class Model():
     
   
     def SegmentationUneImage(self,nomImg):
+        """
+        Do the segmentation of one image, save it if users want to, put the bording boxes if the users want to.
+        :param nomImg: Name of the image to segmentate
+        :type a matrix which represent an image
+        :return: 
+        """
         cheminImage = self.repSource + str(nomImg)
         img = cv2.imread(cheminImage)
         imgSeg,maskFibre = Segmentation.segmenterUneImage(img)
@@ -60,6 +79,15 @@ class Model():
 
 
     def runSegmentation(self,cbEntourage,otherRep):
+        """
+        Action of the start bouton, product threads in order to speed up the computation
+        Product threah 
+        :param cbEntourage: CheckBox entourage value
+        :type cbEntourage : IntVar
+        :param otherRep: Checkbox save in an path 
+        :type otherRep : IntVar
+        :return: 0 when segmentation is finished
+        """
         self.cbEntourage = cbEntourage.get()
         self.otherRep = otherRep.get()
         nbCore = multiprocessing.cpu_count() - 2
@@ -87,6 +115,12 @@ class Model():
         return 0
 
     def multipleImage(self,nomsImages):
+        """
+        Method run in a thread, call segmentationUneImage fonction for each in the list of images in parameter
+        :param nomsImages: a list of image name
+        :type str
+        :return: 
+        """
         for nomImg in nomsImages:  # pour chaque image à segmenter
                 self.SegmentationUneImage(nomImg)
         self.nbThreadFini += 1
@@ -94,12 +128,22 @@ class Model():
             self.finDeTraitement()
 
     def normalizePath(self,s):
+        """
+        Normalize a path to be compatible with windows
+        :param s: a path
+        :type str
+        :return: s normalized
+        """
         s = s.replace("\\","/")
         if not s.endswith("/"):
             s=s+"/"
         return s
 
     def finDeTraitement(self):
+        """
+        Executed when a segmentation is finished, unlock stat bouton
+        :return: 
+        """
         self.nbTheadLance = 0
         self.nbThreadFini = 0
         self.controler.deverouilleBoutonStat()
