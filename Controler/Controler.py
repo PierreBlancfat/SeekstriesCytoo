@@ -31,6 +31,10 @@ class Controler():
             except FileNotFoundError as errCheminIntrouvble:
                 self.interface.displayError("Chemin introuvable : "+errCheminIntrouvble.filename)
 
+    def testEntourage(self):
+        print("a faire depuis le Model directement")
+        #self.model.saveEntourage() call this function in the model object
+
     def giveRepPath (self, repSource, repDest) :
         '''
         Sets the repertories
@@ -52,6 +56,6 @@ class Controler():
         Tells to the View when to stop the progress bar
         '''
         self.interface.stopProgressBar()
-        
+
 if __name__ == '__main__':
     Controler()
