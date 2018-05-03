@@ -43,7 +43,8 @@ class Area():
         :rtype: bool
         """
         return self.xTopLeft==area.xTopLeft and self.yTopLeft==area.yTopLeft and self.xBotRight==area.xBotRight and self.yBotRight==area.yBotRight
-    
+
+
     def notContainedIn(self, area):
         """ indicate if the current area is not contained in the area in parameter.
     

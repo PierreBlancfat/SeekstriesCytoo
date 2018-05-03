@@ -6,7 +6,6 @@ import cv2
 import threading
 import multiprocessing
 import numpy as np
-from Controler import Controler
 
 class Model():
 
@@ -146,6 +145,7 @@ class Model():
         """
         self.nbTheadLance = 0
         self.nbThreadFini = 0
+        self.controler.stopProgressBar()
         self.controler.deverouilleBoutonStat()
 
 
