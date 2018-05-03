@@ -11,7 +11,14 @@ class Area():
         self.yBotRight = yBotRight
 
     #expend the area if the new point is out of it
+
     def expend(self, x, y):
+        """
+        expend the current area if the position of the pixel is out of the area
+        :param x: abscissa coordinate of the pixel
+        :param y: ordinate coordonate of the pixel
+        :return: None
+        """
         if(x < self.xTopLeft):
             self.xTopLeft = x
         elif(x > self.xBotRight):
