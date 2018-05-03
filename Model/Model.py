@@ -6,7 +6,6 @@ import cv2
 import threading
 import multiprocessing
 import numpy as np
-from Controler import Controler
 
 class Model():
 

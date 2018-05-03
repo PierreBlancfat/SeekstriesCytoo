@@ -2,9 +2,7 @@ import numpy as np
 import cv2
 from PIL import Image
 import scipy
-import time
 import skimage.exposure as exposure
-from Model.preTraitementImg import HPF
 
 
 class SegmentationGabor:
@@ -79,7 +77,7 @@ class SegmentationGabor:
         # Image.fromarray(imgSeg*7000).show()
         #self.matImg[:,:,2] = imgSeg
         if ( self.dossierSaveImgSeg != None):
-            Image.fromarray(self.matImg).save(self.dossierSaveImgSeg+str(time.time())+".png")
+            Image.fromarray(self.matImg).save(self.dossierSaveImgSeg+".png")
         #application de flou
         imgSeg = cv2.blur(imgSeg, (27, 30), 5)
         #open
