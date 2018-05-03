@@ -291,7 +291,7 @@ class Interface(Tk):
             windowStatsNext = ttk.Button(windowStatsPanel, text="Suivant", command=lambda x=x, y=y: self.createWindowStats(x, y))
             windowStatsNext.grid(row=stop + 1, column=2, sticky=N + S + E + W)
 
-        # Save button
+        # Save butto
         windowStatsSave = ttk.Button(windowStatsPanel, text="Sauvegarder (*.csv)", command=self.saveCSV)
         windowStatsSave.grid(row=start+self.sizePage, column=3, sticky=N + S + E + W)
 
