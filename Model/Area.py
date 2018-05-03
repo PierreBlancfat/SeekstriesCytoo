@@ -3,6 +3,7 @@ class Area():
 
     border = []
 
+
     def __init__(self, xTopLeft, yTopLeft, xBotRight, yBotRight):
         self.xTopLeft = xTopLeft
         self.yTopLeft = yTopLeft
@@ -27,4 +28,21 @@ class Area():
         self.yBotRight += dy
 
     def equals(self, area):
+        """ indicate if the current area is equal to the area in parameter.
+    
+        :param area: the area which may be equal to the current area
+        :type area: list
+        :return: True if the current area is equal to the area in parameter, false else.
+        :rtype: bool
+        """
         return self.xTopLeft==area.xTopLeft and self.yTopLeft==area.yTopLeft and self.xBotRight==area.xBotRight and self.yBotRight==area.yBotRight
+    
+    def containedIn(self, area):
+        """ indicate if the current area is contained in the area in parameter.
+    
+        :param area: the area which may contain the current area
+        :type area: list
+        :return: True if the current area is contained in the area in parameter, false else.
+        :rtype: bool
+        """
+        return self.xTopLeft>area.xTopLeft and self.yTopLeft<area.yTopLeft and self.xBotRight<area.xBotRight and self.yBotRight>area.yBotRight
