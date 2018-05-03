@@ -48,7 +48,7 @@ class Model():
         nomsImagesPartitionne = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         nomsImages = os.listdir(self.repSource)
         for nomImage in nomsImages:
-            if(os.path.isdir(self.repSource+"/"+nomImage) or not nomImage.lower().endswith(('.tif', '.tiff', '.png', '.jpg', '.jpeg'))):
+            if(os.path.isdir(self.repSource+"/"+nomImage) or not nomImage.lower().endswith(('.tif', '.tiff', '.png', '.jpg', '.jpeg','.bmp'))):
                 nomsImages.remove(nomImage)
         nomsImages = np.sort(nomsImages)
         nomsImages = np.flip(nomsImages, 0)
