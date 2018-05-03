@@ -67,9 +67,11 @@ class Interface(Tk):
         self.labelSource = ttk.Label(self.panel, text="Sélectionnez le répértoire source:")
         self.labelSource.grid(row=0, column=0, pady=30,padx=15)
 
-        self.champsRepSource = ttk.Entry(self.panel)
+        self.champsRepSource = ttk.Entry(self.panel,state=DISABLED)
         self.champsRepSource.grid(row=0, column=1, pady=30,padx=15)
+        self.champsRepSource.configure(state='normal')
         self.champsRepSource.insert(END, "../Data/images/")
+        self.champsRepSource.configure(state='disabled')
 
         self.browseRepSource = ttk.Button(self.panel, text="Browse", command=self.browseRepSrc)
         self.browseRepSource.grid(row=0, column=2)
@@ -78,9 +80,11 @@ class Interface(Tk):
         self.labelDest = ttk.Label(self.panel, text="Sélectionnez le répértoire dest:")
         self.labelDest.grid(row=1, column=0, pady=30,padx=15)
 
-        self.champsRepDest = ttk.Entry(self.panel)
+        self.champsRepDest = ttk.Entry(self.panel,state='disabled')
         self.champsRepDest.grid(row=1, column=1, pady=30,padx=15)
+        self.champsRepDest.configure(state='normal')
         self.champsRepDest.insert(END, "../Data/testSegGabor/seg/")
+        self.champsRepDest.configure(state='disabled')
 
         self.browseRepDest = ttk.Button(self.panel, text="Browse", command=self.browseRepDest)
         self.browseRepDest.grid(row=1, column=2)
@@ -131,8 +135,10 @@ class Interface(Tk):
         :return: none
         '''
         self.directory = filedialog.askdirectory()
+        self.champsRepSource.configure(state='normal')
         self.champsRepSource.delete(0, END)
         self.champsRepSource.insert(END, self.directory)
+        self.champsRepSource.configure(state='disabled')
 
     def browseRepDest(self):
         '''
@@ -140,8 +146,10 @@ class Interface(Tk):
         :return: none
         '''
         self.directory = filedialog.askdirectory()
+        self.champsRepDest.configure(state='normal')
         self.champsRepDest.delete(0, END)
         self.champsRepDest.insert(END, self.directory)
+        self.champsRepDest.configure(state='disabled')
 
     def cliquer(self):
         '''
