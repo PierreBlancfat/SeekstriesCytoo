@@ -100,9 +100,9 @@ class SegmentationLBP:
 
 
 
-        
-        
-        
+
+
+
     def caracterisation(self, set):
         """
         Caracterise les sous rectangles de lbp par les histogrammes
@@ -114,15 +114,15 @@ class SegmentationLBP:
                 h0 = j*self.hRec
                 l0 = i*self.lRec
                 subRect = self.lbpImg[h0:h0+self.hRec, l0:l0+self.lRec]
-                
-                # on verifie que le sous rectangle n'est pas noir (car il n'y a pas de 
+
+                # on verifie que le sous rectangle n'est pas noir (car il n'y a pas de
                 # stries dans un sous-rectangle noir) :
                 blackArea = 0
-                for line in subRect:
-                    for col in line:
+                for line in range(self.hRec):
+                    for col in range(self.lRec):
                         if(subRect[line][col]>25):
                             blackArea = blackArea + 1
-                if (blackArea/(self.hRec*self.lRec) < 0.75): # si le rectangle est <75% noir               
+                if (blackArea/(self.hRec*self.lRec) < 0.75): # si le rectangle est <75% noir
                     subRect = exposure.equalize_hist(subRect)
 
                     hist = np.histogram(subRect, bins=self.vecSize)
@@ -130,11 +130,10 @@ class SegmentationLBP:
                     for k in range(0,self.vecSize):
                         set[j][i][k] = hist[0][k]
                 else: # si le rectangle est >75% noir, on ne le traite pas
-                    self.testSetOut[i][j] = 0 
+                    self.testSetOut[i][j] = 0
 
 
 
-        
     def segmenterStriesLBP(self):
         # chemin vers le fichier ou enregistrer la caracterisation :
         filePath = "../Data/caracTrainingSet.csv"

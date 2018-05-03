@@ -8,7 +8,7 @@ Algorithme qui :
 
 
 import numpy as np
-from Image import Image
+from Model.Image import Image
 import os
 '''
 Pour chaque image, on affiche le quadrillage et on propose à l'utilisateur de

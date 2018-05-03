@@ -2,8 +2,15 @@ from numpy import *
 from Model.Area import *
 import cv2
 
-# return the next direction by clockwise
+
 def next(direction):
+    """ return the next direction by clockwise
+    
+    :param direction: current direction
+    :type direction: list
+    :return: next direction
+    :rtype: list
+    """
     # right return down
     if direction[0] == 1 and direction[1] == 0:
         x = 0
@@ -22,8 +29,23 @@ def next(direction):
         y = 0
     return [x, y]
 
-# return the next border point and the next primary direction to check
+
 def movment(matrix, x, y, dx, dy):
+    """ return the next border point and the next primary direction to check
+    
+    :param matrix: the matrix of pixels of the image
+    :param x: current border x-axis point
+    :param y: current border y-axis point
+    :param dx: current x-axis primary direction
+    :param dy: current y-axis primary direction
+    :type matrix: list
+    :type x: int
+    :type y: int
+    :type dx: int
+    :type dy: int
+    :return: the next border point and the next primary direction to check
+    :rtype: list
+    """
     # first direction is in the area
     if matrix[y+dy][x+dx]==1:
         x += dx
@@ -50,26 +72,51 @@ def movment(matrix, x, y, dx, dy):
     # return [newt border point, next primary direction]
     return [[x, y], [dx, dy]]
 
-# find the first not null pixel of the images/matrix
+
 def seekPixel(matrix, i, j):
-    while i < len(matrix) and j < len(matrix[0]) and (matrix[i][j]!= 1 or not leftHighPixel(matrix, i, j)):
+    """ find the first not null pixel of the image/matrix,
+    from the pixel of cordinates [i, j].
+    
+    :param matrix: the matrix of pixels of the image
+    :param i: the x-axis of the current pixel in the matrix.
+    :param j: the y-axis of the current pixel in the matrix.
+    :type matrix: list
+    :type i: int
+    :type j: int
+    :return: the coordinates of the first not null pixel of the 
+    image/matrix, or [-1,-1] if it doesn't exist.
+    :rtype: list
+    """
+    lineLength = len(matrix) # taille d'une ligne de la matrice
+    colLength = len(matrix[0]) # taille d'une colonne de la matrice
+    AreaBorderLength = len(Area.border)
+    
+    while i < lineLength and j < colLength and (matrix[i][j]!= 1 or not leftHighPixel(matrix, i, j)):
         j += 1
-        if j == len(matrix[0]):
+        if j == colLength:
             i += 1
             j=0
 
-    if i != len(matrix) and j != len(matrix[0]):
+    if i != lineLength and j != colLength:
         k = 0
-        while k<len(Area.border) and [i, j] != Area.border[k]:
+        while k<AreaBorderLength and [i, j] != Area.border[k]:
             k += 1
 
-        if k !=len(Area.border):
+        if k != AreaBorderLength:
             return [-1, -1]
 
     return [i, j]
 
-# make a matrix with a empty row and column around the main matrix
+
 def rebuildMatrix (matrixBase):
+    """ make a matrix with an empty row and column around the main matrix
+    
+    :param matrixBase: the matrix of pixels of the image
+    :type matrixBase: list
+    :return: the matrix of pixels of the image, with a new empty row 
+    and column.
+    :rtype: list
+    """
     matrix = zeros([len(matrixBase)+2, len(matrixBase[0])+2])
 
     for i in range(0, len(matrixBase)):
@@ -79,10 +126,33 @@ def rebuildMatrix (matrixBase):
 
 
 def leftHighPixel(matrix, i, j):
+    """ indicate if the pixel [i, j] has a black pixel above him and 
+    to his left.
+
+    :param matrix: the matrix of pixels of the image
+    :param i: the x-axis of the current pixel in the matrix.
+    :param j: the y-axis of the current pixel in the matrix.
+    :type matrix: list
+    :type i: int
+    :type j: int
+    :return: true if the pixel [i, j] has a black pixel above him and 
+    to his left, false else.
+    :rtype: bool
+    """
     return matrix[i-1][j]==0 and matrix[i][j-1]==0
 
-# seeking the border of a stries begging at position i,j in main matrix
 def seekBorderStries (matrix, i, j):
+    """ seek the border of a striation beginning at position i,j in main matrix
+    
+    :param matrix: the matrix of pixels of the image
+    :param i: the x-axis of the current pixel in the matrix.
+    :param j: the y-axis of the current pixel in the matrix.
+    :type matrix: list
+    :type i: int
+    :type j: int
+    :return: the 2 coordinates of the area if it exist, or none.
+    :rtype: list
+    """
     if i < len(matrix) :
         # point and direction initialisation
         initialPoint = [j, i]
@@ -95,7 +165,7 @@ def seekBorderStries (matrix, i, j):
         # get the first next border point
         [currentPoint, primaryDirection] = movment(matrix, currentPoint[0], currentPoint[1], primaryDirection[0], primaryDirection[1])
         if leftHighPixel(matrix, currentPoint[1], currentPoint[0]):
-            Area.border.append(currentPoint)  # check next pixel is a top left pixel of the stries
+            Area.border.append(currentPoint)  # check next pixel is a top left pixel of the striation
 
         # expend the area if the new point is out of the actual area
         currentArea.expend(currentPoint[0], currentPoint[1])
@@ -105,7 +175,7 @@ def seekBorderStries (matrix, i, j):
             # get the first next border point
             [currentPoint, primaryDirection] = movment(matrix, currentPoint[0], currentPoint[1], primaryDirection[0], primaryDirection[1])
             if leftHighPixel(matrix, currentPoint[1], currentPoint[0]):
-                Area.border.append(currentPoint)  # check next pixel is a top left pixel of the stries
+                Area.border.append(currentPoint)  # check next pixel is a top left pixel of the striation
             # expend the area if the new point is out of the actual area
             currentArea.expend(currentPoint[0], currentPoint[1])
 
@@ -114,31 +184,53 @@ def seekBorderStries (matrix, i, j):
         return currentArea
     return None
 
-# return the list of all areas
-def getCoordStriedArea(matrixBase):
 
+def getCoordStriedArea(matrixBase):
+    """ return the list of all areas which contains a striation.
+    
+    :param matrixBase: the matrix of pixels of the image
+    :type matrixBase: list
+    :return: the list of all areas
+    :rtype: list
+    """
     matrix = rebuildMatrix(matrixBase)
     areas = []
-    coordonneInit = [0, 0]
-    coordonneNext = coordonneInit
+    coordInit = [0, 0] # coordonnees initiales
+    coordNext = coordInit
+    lineLength = len(matrix) # taille d'une ligne de la matrice
+    colLength = len(matrix[0]) # taille d'une colonne de la matrice
 
-    while coordonneInit[0] < len(matrix) and coordonneInit[1] < len(matrix[0]):
-        coordonneNext = seekPixel(matrix, coordonneInit[0], coordonneInit[1])
-        if coordonneNext != [-1, -1]:
-            coordonneInit = coordonneNext
-            area = seekBorderStries(matrix, coordonneInit[0], coordonneInit[1])
+    # on parcours toute la matrice pour trouver les zones a entourer :
+    while coordInit[0] < lineLength and coordInit[1] < colLength:
+        # on cherche le prochain pixel de la matrice faisant
+        # partie d'une zone a entourer :
+        coordNext = seekPixel(matrix, coordInit[0], coordInit[1])
+        
+        # si on a trouve un pixel faisant partie d'une zone a entourer :
+        if coordNext != [-1, -1]:
+            # on se place sur ce pixel :
+            coordInit = coordNext
+            # on detecte l'aire de la zone a entourer
+            area = seekBorderStries(matrix, coordInit[0], coordInit[1])
+            # si cette aire n'est pas nulle :
             if area is not None:
+                areasLength = len(areas)
                 k = 0
-                while k < len(areas) and not area.equals(areas[k]):
+                # on verifie que cette aire n'est pas deja detectee, ou dans une aire deja detectee
+                # ou trop petite.
+                # si elle ne l'est pas, on l'ajoute a la liste des aires detectees :
+                while k < areasLength and not area.equals(areas[k]) and area.notContainedIn(areas[k]) \
+                and area.notToSmall(int(lineLength*0.025), int(colLength*0.025)):
                     k += 1
-                if k == len(areas):
+                if k == areasLength:
                     areas.append(area)
-
-        if coordonneInit[1]+1 == len(matrix[0]) and coordonneInit[0]+1 < len(matrix):
-            coordonneInit[1] = 0
-            coordonneInit[0] = coordonneInit[0]+1
+        # si on atteint la fin d'une ligne, retour en debut de ligne  :
+        if coordInit[1]+1 == colLength and coordInit[0]+1 < lineLength:
+            coordInit[1] = 0
+            coordInit[0] = coordInit[0]+1
+        # sinon, on avance dans la ligne courante :
         else:
-            coordonneInit[1] = coordonneInit[1]+1
+            coordInit[1] = coordInit[1]+1
 
     return areas
 
@@ -149,8 +241,10 @@ def dessinerEntourage(image, mask):
     :param mask: un masque binaire
     :return:  matrice RGB
     """
-
+    # on recupere les coordonees des zones a entourer :
     areas = getCoordStriedArea(mask)
+    # puis on affiche cet entourage sur l'image passee en parametres :
     for i in range(0, len(areas)):
         cv2.rectangle(image, (areas[i].xTopLeft, areas[i].yTopLeft), (areas[i].xBotRight, areas[i].yBotRight), (255, 0, 0), 3)
+    # et on retourne cette image :
     return image

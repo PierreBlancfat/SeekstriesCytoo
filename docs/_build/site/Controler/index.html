@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>SegmentationFibre - SeekStries Documentation</title>
+  <title>Controler - SeekStries Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,9 +17,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "SegmentationFibre";
-    var mkdocs_page_input_path = "SegmentationFibre.md";
-    var mkdocs_page_url = "/SegmentationFibre/";
+    var mkdocs_page_name = "Controler";
+    var mkdocs_page_input_path = "Controler.md";
+    var mkdocs_page_url = "/Controler/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -52,9 +52,19 @@
     <a class="" href="..">Home</a>
 	    </li>
           
+            <li class="toctree-l1">
+		
+    <a class="" href="../Model/">Model</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../View/">View</a>
+	    </li>
+          
             <li class="toctree-l1 current">
 		
-    <a class="current" href="./">SegmentationFibre</a>
+    <a class="current" href="./">Controler</a>
     <ul class="subnav">
             
     </ul>
@@ -82,7 +92,7 @@
     
       
     
-    <li>SegmentationFibre</li>
+    <li>Controler</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -92,20 +102,41 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="SegmentationFibre.SegmentationFibre">SegmentationFibre</h1>
+                <h1 id="Controler.Controler">Controler</h1>
 
-<pre><code class="python">SegmentationFibre(self, matImg)
+<pre><code class="python">Controler(self)
 </code></pre>
 
-<p>Classe permettant de segment la fibre</p>
-<h2 id="SegmentationFibre.SegmentationFibre.segmenter">segmenter</h2>
+<h2 id="Controler.Controler.segmentation">segmentation</h2>
 
-<pre><code class="python">SegmentationFibre.segmenter(self, img)
+<pre><code class="python">Controler.segmentation(self)
 </code></pre>
 
-<p>Applique la methode des k-means sur une image pour la segmenter
-@param img: image a traiter (creer precedemment grace a "imread()")
-@return: l'image apres traitement</p>
+<p>"
+Main function which execute the whole code
+:param entourage: 0 or 1 if the user wants a contouring or not
+:param otherRep: 0 or 1 if the user wants to separate image  with striations
+:return:</p>
+<h2 id="Controler.Controler.giveRepPath">giveRepPath</h2>
+
+<pre><code class="python">Controler.giveRepPath(self, repSource, repDest)
+</code></pre>
+
+<p>Sets the repertories
+:param repSource: the source repertory
+:param repDest: the dest repository</p>
+<h2 id="Controler.Controler.deverouilleBoutonStat">deverouilleBoutonStat</h2>
+
+<pre><code class="python">Controler.deverouilleBoutonStat(self)
+</code></pre>
+
+<p>Change the state of the Statistics button state</p>
+<h2 id="Controler.Controler.stopProgressBar">stopProgressBar</h2>
+
+<pre><code class="python">Controler.stopProgressBar(self)
+</code></pre>
+
+<p>Tells to the View when to stop the progress bar</p>
               
             </div>
           </div>
@@ -114,7 +145,7 @@
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../View/" class="btn btn-neutral" title="View"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -140,7 +171,7 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../View/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
     </span>

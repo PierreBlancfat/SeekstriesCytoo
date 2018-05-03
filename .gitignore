@@ -2,5 +2,13 @@
 \.idea/
 
 Model/__pycache__/
-Controler/__pycache__/
+
 View/__pycache__/
+
+Data/testSegGabor/seg/
+
+Controler/__pycache__/
+
+Data/images/
+
+Data/testSegGabor/

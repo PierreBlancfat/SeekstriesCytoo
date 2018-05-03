@@ -3,7 +3,7 @@ import os
 import numpy as np
 from PIL import Image
 import scipy
-from Model.SegmentationLBP import SegmentationLBP
+from Model.SegmentationFibre import SegmentationFibre
 import time
 
 
@@ -90,7 +90,7 @@ class EvaluationSegmentation:
         for nomImgTest in nomsImagesTest: # pour chaque image à tester
             nomImgTest = nomImgTest[:-4]
             if any(nomImgTest in s for s in nomsImagesRef): #si le masque existe
-                indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.TIF") #recupérer l'index du masque dand la liste
+                indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.TIF")   #recupérer l'index du masque dand la liste
                 indexMasqueP = nomsImagesRef.index(nomImgTest + "_p.TIF")  # recupérer l'index du masque dand la liste
                 cheminImageTest = self.srcDossiertest+"/"+nomImgTest+".TIF"        # construit le chemin de l'image à tester
                 cheminImageRef1 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueS] #construit le chemin du masque1
@@ -98,34 +98,13 @@ class EvaluationSegmentation:
                 imgTest = cv2.imread(cheminImageTest)   #lecture de l'image
                 #Segmentation
                 algoSegmentation.matImg = imgTest      #donne la matrice à l'algo Segmentation.py
-                # segLBP = SegmentationLBP(imgTest)
-                maskTestSegGab = self.inverseMatBin(algoSegmentation.segmentation())
-                # maskTestSegLBP = segLBP.segmenterStriesLBP()
-                #combinaison de la segmenation
-                # maskTestSegEt =  maskTestSegLBP.astype(int) &  maskTestSegGab
-                # maskTestSegOu = maskTestSegLBP.astype(int) | maskTestSegGab
-                # imgTestEt = imgTest
-                imgTestOu = imgTest
-                # imgTestGab = imgTest
-                # print(maskTestSegGab.shape)
-                # imgTestLBP = imgTest
-                # imgTestEt[:,:,2] = maskTestSegGab*50
-                # imgTestOu[:,:,0] = maskTestSegLBP*50
+                maskTestSegGab = algoSegmentation.segmentation()
                 imgTest[:,:,2] = maskTestSegGab*100
                 Image.fromarray(imgTest).save("../Data/testSegGabor/seg/"+str(time.time())+"_"+nomImgTest+".tif")
-                # Image.fromarray(imgTestOu).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/Ou/" + str(time.time())+ "_" + nomImgTest + ".tif")
-                # Image.fromarray(imgTestGab).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/Gab/" + str(time.time())+ "_" + nomImgTest + ".tif")
-                # imgTestLBP[:,:,2] = maskTestSegLBP*100
-                # Image.fromarray(imgTestLBP).save("D:/L3MI/2nd_Annee/Cytoo/testSegGabor/LBP/" + str(time.time())+ "_" + nomImgTest + ".tif")
                 imgRef = self.conversionBinaire(np.array(Image.open(cheminImageRef1))) |  self.conversionBinaire(np.array(Image.open(cheminImageRef2)))
-                # if len(imgRef.shape) == 3:  # si l'image à plusieurs composantes
-                #      imgRefS = imgRef[:, :, 0]
-                #      Image.fromarray(imgRefS*100+imgTestSeg*200).show()
-                #     # print("hic")
-                # else:
-                #     Image.fromarray(imgRef * 100 + imgTestSeg * 200).show()
-                #     Image.fromarray((imgTestSeg)).show()
-                result[indice] = self.evalUneImage(imgRef,maskTestSegGab)
+                segFibre = SegmentationFibre(imgTest)
+                maskFibre = segFibre.segmenter()
+                result[indice] = self.evalUneImage(imgRef,maskTestSegGab&maskFibre.astype(int))
 
                 indice+=1
         return np.sum(result,axis=0)/indice
@@ -153,15 +132,3 @@ class EvaluationSegmentation:
         """
         return masque1 & masque2
 
-    def propStries(self, masqueFibre, masqueStries):
-        """
-        Calcul la proportion de stries dans une fibre
-        :param masqueFibre: une matrice binaire
-        :param masqueStries: une matrice binaire
-        :return: proportion des stries dans la fibre
-        """
-
-        perimFibre = np.sum(masqueFibre)
-        masqueStries = np.logical_and(masqueFibre,masqueStries)
-        perimStriesFi=np.sum(masqueStries)
-        return perimStriesFi/perimFibre
