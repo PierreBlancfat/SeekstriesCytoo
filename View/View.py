@@ -50,9 +50,8 @@ class Interface(Tk):
 
         #ProgressBar
         self.s.configure("TProgressbar", thickness=50)  # Create a style for labels
-        pb = ttk.Progressbar(self, orient="horizontal", length=200, mode="determinate", style="TProgressbar")
-        pb.pack(fill=BOTH)
-        pb.start()
+        self.pb = ttk.Progressbar(self, orient="horizontal", length=200, mode="determinate", style="TProgressbar")
+        self.pb.pack(fill=BOTH)
 
         # CheckBoxes
         self.entourage = IntVar(value=1)
@@ -324,3 +323,9 @@ class Interface(Tk):
         windowError.winfo_toplevel().title("Error")
         errorLabel = ttk.Label(windowError, text=message)
         errorLabel.pack(fill="both", expand="yes", pady=50,padx=50)
+
+    def runProgressBar(self):
+        self.pb.start()
+
+    def stopProgressBar(self):
+        self.pb.stop()

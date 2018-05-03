@@ -26,6 +26,7 @@ class Controler():
             self.interface.displayError("Le chemin source est vide")
         else:
             try:
+                self.interface.runProgressBar()
                 valueReturned = self.model.runSegmentation(self.interface.entourage,self.interface.otherRep)
             except FileNotFoundError as errCheminIntrouvble:
                 self.interface.displayError("Chemin introuvable : "+errCheminIntrouvble.filename)
@@ -45,6 +46,8 @@ class Controler():
         print("Gandalf le gris")
         self.interface.changeState()
 
-
+    def stopProgressBar(self):
+        self.interface.stopProgressBar()
+        
 if __name__ == '__main__':
     Controler()

@@ -102,6 +102,7 @@ class Model():
     def finDeTraitement(self):
         self.nbTheadLance = 0
         self.nbThreadFini = 0
+        self.controler.stopProgressBar()
         self.controler.deverouilleBoutonStat()
 
 
