@@ -142,7 +142,3 @@ class Model():
         self.nbThreadFini = 0
         self.controler.stopProgressBar()
         self.controler.deverouilleBoutonStat()
-
-
-
-
