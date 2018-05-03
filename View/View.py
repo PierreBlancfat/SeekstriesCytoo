@@ -5,6 +5,7 @@ import os
 from PIL import ImageTk, Image
 import csv
 import numpy as np
+import time
 
 class Interface(Tk):
     '''
@@ -312,7 +313,8 @@ class Interface(Tk):
         A function that save the results in a CSV file at the root of the program
         '''
         saveDirectory = filedialog.askdirectory()
-        with open((saveDirectory + '/Resultats.csv'), 'w') as csvfile:
+        stringRes = time.strftime("%d_%B_%Y_%H:%M:%S")
+        with open((saveDirectory + '/Resultats_'+ stringRes+'.csv'), 'w') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             n = len(os.listdir(self.controler.model.repSource))
             nomsImagesSrc = os.listdir(self.controler.model.repSource)
