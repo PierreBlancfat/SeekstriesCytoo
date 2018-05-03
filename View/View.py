@@ -153,8 +153,7 @@ class Interface(Tk):
         '''
         Pause the program during its execution
         '''
-        self.displayError("LA BASE VIRALE VPN A ETE MISE A JOUR!")
-        print("TODO")
+        self.displayError("Ne marche pas encore")
 
     def changeState(self):
         '''
@@ -338,7 +337,13 @@ class Interface(Tk):
         errorLabel.pack(fill="both", expand="yes", pady=50,padx=50)
 
     def runProgressBar(self):
+        '''
+        Start the progress bar
+        '''
         self.pb.start()
 
     def stopProgressBar(self):
+        '''
+        Stop the progressbar at the end of processing
+        '''
         self.pb.stop()

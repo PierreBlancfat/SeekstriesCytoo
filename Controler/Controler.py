@@ -31,20 +31,26 @@ class Controler():
             except FileNotFoundError as errCheminIntrouvble:
                 self.interface.displayError("Chemin introuvable : "+errCheminIntrouvble.filename)
 
-    def testEntourage(self):
-        print("a faire depuis le Model directement")
-        #self.model.saveEntourage() call this function in the model object
-
     def giveRepPath (self, repSource, repDest) :
+        '''
+        Sets the repertories
+        :param repSource: the source repertory
+        :param repDest: the dest repository
+        '''
         self.model.setRepSource(repSource)
         self.model.setRepDestination(repDest)
 
 
     def deverouilleBoutonStat(self):
-        print("Gandalf le gris")
+        '''
+        Change the state of the Statistics button state
+        '''
         self.interface.changeState()
 
     def stopProgressBar(self):
+        '''
+        Tells to the View when to stop the progress bar
+        '''
         self.interface.stopProgressBar()
         
 if __name__ == '__main__':

@@ -220,7 +220,7 @@ def getCoordStriedArea(matrixBase):
                 # ou trop petite.
                 # si elle ne l'est pas, on l'ajoute a la liste des aires detectees :
                 while k < areasLength and not area.equals(areas[k]) and area.notContainedIn(areas[k]) \
-                and area.notToSmall(int(lineLength*0.05), int(colLength*0.05)):
+                and area.notToSmall(int(lineLength*0.025), int(colLength*0.025)):
                     k += 1
                 if k == areasLength:
                     areas.append(area)
