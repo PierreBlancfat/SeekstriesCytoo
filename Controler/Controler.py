@@ -27,7 +27,9 @@ class Controler():
             try:
                 self.interface.runProgressBar()
                 valueReturned = self.model.runSegmentation(self.interface.entourage,self.interface.otherRep)
+                self.interface.runProgressBar()
             except FileNotFoundError as errCheminIntrouvble:
+                self.interface.stopProgressBar()
                 self.interface.displayError("Chemin introuvable : "+errCheminIntrouvble.filename)
 
     def giveRepPath (self, repSource, repDest) :
