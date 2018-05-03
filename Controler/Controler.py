@@ -4,7 +4,7 @@ from Model.Model import *
 class Controler():
 
     def __init__(self):
-        self.model = Model("a", "b")
+        self.model = Model("a", "b",self)
         self.interface = Interface(self)
         self.interface.configure(background='#323232')
         self.interface.minsize(550,350)
@@ -39,6 +39,11 @@ class Controler():
     def giveRepPath (self, repSource, repDest) :
         self.model.setRepSource(repSource)
         self.model.setRepDestination(repDest)
+
+
+    def deverouilleBoutonStat(self):
+        print("Gandalf le gris")
+        self.interface.changeState()
 
 
 if __name__ == '__main__':
