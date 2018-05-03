@@ -216,9 +216,11 @@ def getCoordStriedArea(matrixBase):
             if area is not None:
                 areasLength = len(areas)
                 k = 0
-                # on verifie que cette aire n'est pas deja detectee, ou dans une aire deja detectee.
+                # on verifie que cette aire n'est pas deja detectee, ou dans une aire deja detectee
+                # ou trop petite.
                 # si elle ne l'est pas, on l'ajoute a la liste des aires detectees :
-                while k < areasLength and not area.equals(areas[k]) and area.notContainedIn(areas[k]):
+                while k < areasLength and not area.equals(areas[k]) and area.notContainedIn(areas[k]) \
+                and area.notToSmall(int(lineLength*0.05), int(colLength*0.05)):
                     k += 1
                 if k == areasLength:
                     areas.append(area)
