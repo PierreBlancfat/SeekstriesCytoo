@@ -48,7 +48,6 @@ class SegmentationGabor:
             for theta in np.arange(thetaMin, thetaMax, pasTheta):
                 kern = cv2.getGaborKernel((lsize, csize), sigma*(lambd/3), theta, lambd, gamma, psi, ktype=cv2.CV_64F)
                 filters.append(kern/1.5)
-                Image.fromarray(kern).save(self.dossierSaveKernel+str(time.time())+" "+str([sigma, theta, lambd, gamma, psi]).replace(".","-")+".tif")
         self.filters = filters
 
 
