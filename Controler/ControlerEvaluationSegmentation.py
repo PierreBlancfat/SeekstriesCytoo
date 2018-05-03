@@ -71,7 +71,7 @@ def evaluationParametreGabor(self):
                 #listReturn = [csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin,lambdaMax,pasLambda, psi,reslt.tolist()]
                 #print(reslt)
                 #stat.append(listReturn)
-                imgchemin = "../Data/images/Stries_C2  (8).TIF"
+                imgchemin = "../Data/images/Stries_C2  (8   ).TIF"
                 img = cv2.imread(imgchemin)
                 masque=Segmentation.segmenterUneImage(img)
                 masque1 = masque[0]

@@ -24,7 +24,7 @@ class SegmentationGabor:
         self.pasLambda = pasLambda
         self.psi = psi
         self.dossierSaveImgSeg = dossierSaveImgSeg
-        self.dossierSaveKernel = "C:/Users/polch_000/PycharmProjects/SeekstriesCytoo5/Data/testSegGabor/kern/"
+        self.dossierSaveKernel = dossierSaveKernel
         self.filters = None
 
     def gabor(self, imgG, csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin, lambdaMax, pasLambda,
