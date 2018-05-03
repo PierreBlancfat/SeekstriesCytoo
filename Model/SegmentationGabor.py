@@ -4,6 +4,7 @@ from PIL import Image
 import scipy
 import time
 import skimage.exposure as exposure
+from Model.preTraitementImg import HPF
 
 
 class SegmentationGabor:
@@ -23,7 +24,7 @@ class SegmentationGabor:
         self.pasLambda = pasLambda
         self.psi = psi
         self.dossierSaveImgSeg = dossierSaveImgSeg
-        self.dossierSaveKernel = dossierSaveKernel
+        self.dossierSaveKernel = "C:/Users/polch_000/PycharmProjects/SeekstriesCytoo5/Data/testSegGabor/kern/"
         self.filters = None
 
     def gabor(self, imgG, csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin, lambdaMax, pasLambda,
@@ -33,8 +34,7 @@ class SegmentationGabor:
         :return: 
         """
         if self.filters == None:
-            self.build_filters(csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin, lambdaMax,
-                               pasLambda, psi)
+            self.build_filters(csize, lsize, thetaMin, thetaMax, pasTheta, sigma, gamma, lambdaMin, lambdaMax,pasLambda, psi)
         res1 = self.process(imgG, self.filters)
         return res1
 
@@ -45,11 +45,10 @@ class SegmentationGabor:
         """
         filters = []
         for lambd in np.arange(lambdaMin,lambdaMax,pasLambda):
-            print(lambd)
             for theta in np.arange(thetaMin, thetaMax, pasTheta):
                 kern = cv2.getGaborKernel((lsize, csize), sigma*(lambd/3), theta, lambd, gamma, psi, ktype=cv2.CV_64F)
                 filters.append(kern/1.5)
-                # Image.fromarray(kern).save(self.dossierSaveKernel+str(time.time())+" "+str([sigma, theta, lambd, gamma, psi]).replace(".","-")+".tif")
+                Image.fromarray(kern).save(self.dossierSaveKernel+str(time.time())+" "+str([sigma, theta, lambd, gamma, psi]).replace(".","-")+".tif")
         self.filters = filters
 
 
@@ -64,6 +63,58 @@ class SegmentationGabor:
             fimg = cv2.filter2D(img, cv2.CV_8UC3, kern)
         return fimg
 
+
+    def segmentation(self):
+        """
+        Segmentation of a image
+        :param matImg: a matrix which reresents an image
+        :return: a mask which represent the segmentation. 1 means the algorithm detect a striation, 
+        """
+        #pre-traitement
+        matImg2 = self.matImg[:,:,0]
+        matImg2 = exposure.equalize_adapthist(matImg2)*255 # egalisation local du contraste
+        # matImg2 = HPF(matImg2,2)
+        #gabor
+        imgSeg = self.gabor(matImg2,self.csize,self.lsize,self.thetaMin,self.thetaMax,self.pasTheta,self.sigma,self.gamma,self.lambdaMin,self.lambdaMax,self.pasLambda,self.psi)
+        ret, imgSeg = cv2.threshold(imgSeg, 254, 255, cv2.THRESH_BINARY)
+        # Image.fromarray(imgSeg*7000).show()
+        #self.matImg[:,:,2] = imgSeg
+        if ( self.dossierSaveImgSeg != None):
+            Image.fromarray(self.matImg).save(self.dossierSaveImgSeg+str(time.time())+".png")
+        #application de flou
+        imgSeg = cv2.blur(imgSeg, (27, 30), 5)
+        #open
+        kernel = np.ones((31, 51), np.uint8)
+        imgSeg = cv2.morphologyEx(imgSeg, cv2.MORPH_OPEN, kernel)
+        return self.inverseMatBin(self.conversionBinaire(imgSeg))
+
+
+    def conversionBinaire(self,img):
+         """
+        Convert a matrix into a binary matrix
+         :param img: a int matrix 
+         :return: a binary matrix
+         """
+         imarray = np.array(img) # image to np array
+         imarray = scipy.sign(imarray)  # binarize
+         imarray = np.floor(abs(imarray - np.ones(imarray.shape))) #inversion 1 -> 0, 0-> 1
+         imarray = imarray.astype(int) # convertie en int
+         return  imarray
+
+
+    def paramToString(self):
+        return self.thetaMin.__str__() + " " + self.thetaMax.__str__() + " " + self.pasTheta.__str__() + " " + self.sigma.__str__() + " " + self.gamma.__str__() + " " + self.lambdaMin.__str__() + " " + self.lambdaMax.__str__() + " " + self.pasLambda.__str__() + " " + self.psi.__str__()
+
+    #Segmentation.py
+
+
+    def inverseMatBin(self,mat):
+        """
+        Create the inverse of a binary matrix, 0 become 1, 1 become 0
+        :param mat: a binary matrix
+        :return: a binary matrix
+        """
+        return (abs(mat - np.ones(mat.shape))).astype(int)
 
     def kMeans(img,k):
         '''
@@ -88,51 +139,3 @@ class SegmentationGabor:
         res = res * 255 # pour afficher en noir blanc
         res2 = res.reshape((img.shape))
         return res2
-
-
-    def conversionBinaire(self,img):
-         """
-        Convert a matrix into a binary matrix
-         :param img: a int matrix 
-         :return: a binary matrix
-         """
-         imarray = np.array(img) # image to np array
-         imarray = scipy.sign(imarray)  # binarize
-         imarray = np.floor(abs(imarray - np.ones(imarray.shape))) #inversion 1 -> 0, 0-> 1
-         imarray = imarray.astype(int) # convertie en int
-         return  imarray
-
-
-    def paramToString(self):
-        return self.thetaMin.__str__() + " " + self.thetaMax.__str__() + " " + self.pasTheta.__str__() + " " + self.sigma.__str__() + " " + self.gamma.__str__() + " " + self.lambdaMin.__str__() + " " + self.lambdaMax.__str__() + " " + self.pasLambda.__str__() + " " + self.psi.__str__()
-
-    #Segmentation.py
-    def segmentation(self):
-        """
-        Segmentation of a image
-        :param matImg: a matrix which reresents an image
-        :return: a mask which represent the segmentation. 1 means the algorithm detect a striation, 
-        """
-        #gabor segmentation
-        matImg2 = self.matImg[:,:,0]
-        matImg2 = exposure.equalize_adapthist(matImg2)*255
-        imgSeg = self.gabor(matImg2,self.csize,self.lsize,self.thetaMin,self.thetaMax,self.pasTheta,self.sigma,self.gamma,self.lambdaMin,self.lambdaMax,self.pasLambda,self.psi)
-        ret, imgSeg = cv2.threshold(imgSeg, 230, 255, cv2.THRESH_BINARY)
-        # Image.fromarray(imgSeg*7000).show()
-        #self.matImg[:,:,2] = imgSeg
-        # if ( self.dossierSaveImgSeg != None):
-        #     Image.fromarray(self.matImg).save(self.dossierSaveImgSeg+str(time.time())+".png")
-        #application de flou
-        imgSeg = cv2.blur(imgSeg, (27, 30), 5)
-        #open
-        kernel = np.ones((31, 51), np.uint8)
-        imgSeg = cv2.morphologyEx(imgSeg, cv2.MORPH_OPEN, kernel)
-        return self.inverseMatBin(self.conversionBinaire(imgSeg))
-
-    def inverseMatBin(self,mat):
-        """
-        Create the inverse of a binary matrix, 0 become 1, 1 become 0
-        :param mat: a binary matrix
-        :return: a binary matrix
-        """
-        return (abs(mat - np.ones(mat.shape))).astype(int)
