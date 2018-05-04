@@ -39,7 +39,6 @@ class EvaluationSegmentation:
         fauxPositif =np.sum(fauxPositifMat)
         vraiNegatif =  np.sum(vraiNegatifMat)
         fauxNegatif = np.sum(fauxNegatifMat)
-
         CP = vraiPositif + fauxNegatif
         CN = fauxPositif + vraiNegatif
         PCP = vraiPositif + fauxPositif + 1# predicted condition positiv
