@@ -104,6 +104,7 @@ class Model():
             nomsImagesPartitionne[j].append(nomsImages[i])
         while it < nbCore:
             p[it] = threading.Thread(target=self.multipleImage, args=(nomsImagesPartitionne[it],))
+            p[it].daemon = True
             p[it].start()
             it += 1
         return 0
