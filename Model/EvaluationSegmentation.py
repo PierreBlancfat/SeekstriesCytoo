@@ -18,27 +18,28 @@ class EvaluationSegmentation:
         self.srcDossierImageRef = srcDossierImageRef
         self.srcDossiertest = srcDossiertest
 
-    def evalUneImage(self,imgRef,imgTest):
+    def evalUneImage(self,maskRef,maskTest):
         """
-        Evaluation de la qualité d'une segmentation
-        :param imgRef: une matrice binaire
-        :param nomImgTest: une matrice binaire
-        :return: [precision,prevalence,PPV,FDR,FOR,NPV,TPR,FPR,FNR,TNR,LRplus,LRmoins,vraivrai]
+        Evalutation of a segmentation on one picture
+        :param maskRef: A binary matrix which represents the segmentation by hand
+        :param maskTest: A binary matrix which represents the segmentation by the computer
+        :return:[precision,prevalence,PPV,FDR,FOR,NPV,TPR,FPR,FNR,TNR,LRplus,LRmoins,vraivrai] : Some statistics about the quality of the segmentation
         """
-        if len(imgRef.shape) == 3: # si l'image à plusieurs composantes
-          imgRef = imgRef[:,:,0]
-        if len(imgTest.shape) == 3: # si l'image à plusieurs composantes
-            imgTest = imgTest[:,:,0]
-        nbTotal = imgRef.size
-        vraiPositifMat = (imgRef & imgTest)
-        inverseRefMat = self.inverseMatBin(imgRef)
-        fauxPositifMat = inverseRefMat & imgTest
-        vraiNegatifMat = imgRef & self.inverseMatBin(vraiPositifMat)
-        fauxNegatifMat= self.inverseMatBin(imgTest | imgRef)
+        if len(maskRef.shape) == 3: # si l'image à plusieurs composantes
+            maskRef = maskRef[:,:,0]
+        if len(maskTest.shape) == 3: # si l'image à plusieurs composantes
+            maskTest = maskTest[:,:,0]
+        nbTotal = maskRef.size
+        vraiPositifMat = (maskRef & maskTest)
+        inverseRefMat = self.inverseMatBin(maskRef)
+        fauxPositifMat = inverseRefMat & maskTest
+        fauxNegatifMat = maskTest & self.inverseMatBin(vraiPositifMat)
+        vraiNegatifMat= self.inverseMatBin(maskTest | maskRef)
         vraiPositif = np.sum(vraiPositifMat)
         fauxPositif =np.sum(fauxPositifMat)
         vraiNegatif =  np.sum(vraiNegatifMat)
         fauxNegatif = np.sum(fauxNegatifMat)
+
         CP = vraiPositif + fauxNegatif
         CN = fauxPositif + vraiNegatif
         PCP = vraiPositif + fauxPositif + 1# predicted condition positiv
@@ -75,13 +76,18 @@ class EvaluationSegmentation:
 
 
     def inverseMatBin(self, mat):
+        """
+        Create the inverse of a binary matrix, 0 become 1, 1 become 0
+        :param mat: a binary matrix
+        :return: a binary matrix
+        """
         return (abs(mat - np.ones(mat.shape))).astype(int)
 
     def evalDesImages(self,algoSegmentation):
         """
-        :param srcRef: chemin du dossier reference ( masque binaire)
-        :param srcTest:v chemin du dossier des images test
-        :return: une matrice avec autant de lignes que d'images
+        Evalutate the segmentation of many pictures
+        :param algoSegmentation: the algorithm used for the segmentation 
+        :return: the mean of [precision,prevalence,PPV,FDR,FOR,NPV,TPR,FPR,FNR,TNR,LRplus,LRmoins,vraivrai] 
         """
         nomsImagesRef = os.listdir(self.srcDossierImageRef)
         nomsImagesTest = os.listdir(self.srcDossiertest)
@@ -90,30 +96,34 @@ class EvaluationSegmentation:
         for nomImgTest in nomsImagesTest: # pour chaque image à tester
             nomImgTest = nomImgTest[:-4]
             if any(nomImgTest in s for s in nomsImagesRef): #si le masque existe
-                indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.TIF")   #recupérer l'index du masque dand la liste
-                indexMasqueP = nomsImagesRef.index(nomImgTest + "_p.TIF")  # recupérer l'index du masque dand la liste
+                try:
+                    indexMasqueS = nomsImagesRef.index(nomImgTest+"_s.TIF")     #recup# érer l'index du masque dand la liste
+                    indexMasqueP = nomsImagesRef.index(nomImgTest +"_p.TIF")  # recupérer l'index du masque dand la listeindex du masque dand la liste
+                except:
+                    indexMasqueS = nomsImagesRef.index(nomImgTest + "_s.tif")  # recup# érer l'index du masque dand la liste
+                    indexMasqueP = nomsImagesRef.index(nomImgTest + "_p.tif")  # recupérer l'index du masque dand la listeindex du masque dand la liste
                 cheminImageTest = self.srcDossiertest+"/"+nomImgTest+".TIF"        # construit le chemin de l'image à tester
                 cheminImageRef1 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueS] #construit le chemin du masque1
                 cheminImageRef2 = self.srcDossierImageRef+"/"+nomsImagesRef[indexMasqueP] #construit le chemin du masque2
                 imgTest = cv2.imread(cheminImageTest)   #lecture de l'image
-                #Segmentation
-                algoSegmentation.matImg = imgTest      #donne la matrice à l'algo Segmentation.py
+                algoSegmentation.matImg = imgTest
                 maskTestSegGab = algoSegmentation.segmentation()
+                print(maskTestSegGab.shape)
                 imgTest[:,:,2] = maskTestSegGab*100
                 Image.fromarray(imgTest).save("../Data/testSegGabor/seg/"+str(time.time())+"_"+nomImgTest+".tif")
-                imgRef = self.conversionBinaire(np.array(Image.open(cheminImageRef1))) |  self.conversionBinaire(np.array(Image.open(cheminImageRef2)))
+                imgRef = self.conversionBinaire(np.array(Image.open(cheminImageRef1)))
                 segFibre = SegmentationFibre(imgTest)
                 maskFibre = segFibre.segmenter()
-                result[indice] = self.evalUneImage(imgRef,maskTestSegGab&maskFibre.astype(int))
-
+                result[indice] = self.evalUneImage(imgRef,maskTestSegGab.astype(int)&maskFibre.astype(int))
                 indice+=1
+        print(np.sum(result,axis=0)/indice)
         return np.sum(result,axis=0)/indice
 
     def conversionBinaire(self,img):
          """
-         Convertie une image en binaire
-         :param srcImageRef: Le chemin de l'image
-         :return: Une matrice binaire de même taille que l'image source. Les 1 représentent le "noir" ( zone positive), le 0 le "blanc" ( zone négative)
+         Convert a matrix into a binary matrix
+         :param img: a matrix 
+         :return: a binary matrix
          """
          imarray = np.array(img) # image to np array
          imarray = scipy.sign(imarray)  # binarize
@@ -121,14 +131,4 @@ class EvaluationSegmentation:
          imarray = imarray.astype(int) # convertie en int
          return  imarray
 
-
-
-    def concatMasque(self,masque1,masque2):
-        """
-        Concatène des masques binaires
-        :param masque1: une matrice binaire
-        :param masque2: une matrice binaire
-        :return: (masque1 & masque2)
-        """
-        return masque1 & masque2
 
