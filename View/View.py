@@ -115,7 +115,6 @@ class Interface(Tk):
             self.champsRepDest.configure(state='disabled')
             self.browseRepDest.configure(state='disabled')
         else:
-            self.champsRepDest.configure(state='normal')
             self.browseRepDest.configure(state='normal')
     def changeCheckboxOtherRep(self):
         otherRep = self.otherRep.get()
@@ -124,7 +123,6 @@ class Interface(Tk):
             self.browseRepDest.configure(state='disabled')
             self.checkbuttonEntourage.configure(state='disabled')
         else:
-            self.champsRepDest.configure(state='normal')
             self.browseRepDest.configure(state='normal')
             self.checkbuttonEntourage.configure(state='normal')
 
