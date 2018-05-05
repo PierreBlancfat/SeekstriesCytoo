@@ -6,6 +6,7 @@ from PIL import ImageTk, Image
 import csv
 import numpy as np
 import time
+import webbrowser
 
 class Interface(Tk):
     '''
@@ -28,10 +29,10 @@ class Interface(Tk):
         self.panelCheckbox = PanedWindow(orient=VERTICAL) # Panel for checkboxes
         self.panelCheckbox.pack(expand=True, fill=BOTH)
 
-        self.panel = PanedWindow()  #  Panel for paths
+        self.panel = PanedWindow()  #  Panel for paths
         self.panel.pack(fill="both", expand=True)
 
-        self.panelCommands = PanedWindow()  #  Panel for main commands
+        self.panelCommands = PanedWindow()  #  Panel for main commands
         self.panelCommands.pack(side=BOTTOM, fill="both", expand=True)
 
 
@@ -42,9 +43,11 @@ class Interface(Tk):
         self.filemenu = Menu(self.menuBar, tearoff=0)
         self.filemenu.add_command(label="Paramètres")
         self.menuBar.add_cascade(label="Fichier", menu=self.filemenu)
-
+        def OpenUrl(url):
+            webbrowser.open_new(url)
         self.helpmenu = Menu(self.menuBar, tearoff=0)
-        self.helpmenu.add_command(label="Documentation")
+        url="https://pierreblancfat.github.io/SeekstriesCytoo/"
+        self.helpmenu.add_command(label="Documentation",command = lambda url=url:OpenUrl(url))
         self.menuBar.add_cascade(label="Aide", menu=self.helpmenu)
 
         self.config(menu=self.menuBar)
@@ -70,7 +73,7 @@ class Interface(Tk):
         self.champsRepSource = ttk.Entry(self.panel,state=DISABLED)
         self.champsRepSource.grid(row=0, column=1, pady=30,padx=15)
         self.champsRepSource.configure(state='normal')
-        self.champsRepSource.insert(END, "../Data/images/")
+        self.champsRepSource.insert(END, "Entrez un chemin source")
         self.champsRepSource.configure(state='disabled')
 
         self.browseRepSource = ttk.Button(self.panel, text="Browse", command=self.browseRepSrc)
@@ -83,7 +86,7 @@ class Interface(Tk):
         self.champsRepDest = ttk.Entry(self.panel,state='disabled')
         self.champsRepDest.grid(row=1, column=1, pady=30,padx=15)
         self.champsRepDest.configure(state='normal')
-        self.champsRepDest.insert(END, "../Data/testSegGabor/seg/")
+        self.champsRepDest.insert(END, "Entrez un chemin destination")
         self.champsRepDest.configure(state='disabled')
 
         self.browseRepDest = ttk.Button(self.panel, text="Browse", command=self.browseRepDest)
@@ -228,21 +231,24 @@ class Interface(Tk):
         #windowStatsPanelData = PanedWindow(self.windowStats)
         #windowStatsPanelData.pack()
         self.sizePage = 20
-        n = len(os.listdir(self.controler.model.repSource))
-        nomsImagesSrc = os.listdir(self.controler.model.repSource)
+        self.nomsImagesSrc = os.listdir(self.controler.model.repSource)
+        for nomImage in self.nomsImagesSrc:
+            if(os.path.isdir(self.controler.model.repSource+"/"+nomImage) or not nomImage.lower().endswith(('.tif', '.tiff', '.png', '.jpg', '.jpeg','.bmp'))):
+                self.nomsImagesSrc.remove(nomImage)
+        self.n = len(self.nomsImagesSrc)
         sortedValues = sorted(self.controler.model.mat)
-        list.sort(nomsImagesSrc)
-        for i in range (start,start+self.sizePage): # Display path
-            if(0<=i and i<n):
-                windowStatsMessage = ttk.Label(windowStatsPanel, text=nomsImagesSrc[i])
+        list.sort(self.nomsImagesSrc)
+        for i in range (start,start+self.sizePage): # Display path
+            if(0<=i and i<self.n):
+                windowStatsMessage = ttk.Label(windowStatsPanel, text=self.nomsImagesSrc[i])
                 windowStatsMessage.grid(row=i+1,column=0, sticky=N+S+E+W)
 
-        for i in range (start,start+self.sizePage): # Display path
-            if(0<=i and i<n):
+        for i in range (start,start+self.sizePage): # Display path
+            if(0<=i and i<self.n):
                 windowStatsMessage = ttk.Label(windowStatsPanel, text=self.controler.model.mat[sortedValues[i]], anchor="center")
                 windowStatsMessage.grid(row=i+1, column=1, sticky=N+S+E+W)
-        for i in range (start,start+self.sizePage): # Display path
-            if(0<=i and i<n):
+        for i in range (start,start+self.sizePage): # Display path
+            if(0<=i and i<self.n):
                 if (self.controler.model.mat[sortedValues[i]]>0):
                     windowStatsMessage = ttk.Label(windowStatsPanel, text="Oui", anchor="center")
                     windowStatsMessage.grid(row=i+1, column=2, sticky=N+S+E+W)
@@ -254,18 +260,18 @@ class Interface(Tk):
         stop = start
         cptBut=0
         j=0
-        for i in range (start,start+self.sizePage): # Display path
-            if(0<=i and i<n):
+        for i in range (start,start+self.sizePage): # Display path
+            if(0<=i and i<self.n):
                 if (self.controler.model.mat[sortedValues[i]] > 0):
                     j=1
                 else:
                     j=0
-                windowStatsButtons.append(ttk.Button(windowStatsPanel,text="↗", command=lambda i=i,j=j: self.displayImage(nomsImagesSrc[i], j)))
+                windowStatsButtons.append(ttk.Button(windowStatsPanel,text="↗", command=lambda i=i,j=j: self.displayImage(self.nomsImagesSrc[i], j)))
                 windowStatsButtons[cptBut].grid(row=i+1, column=3, sticky=N+S+E+W)
                 stop += 1
                 cptBut+=1
         y = start
-        if(start+self.sizePage>=n and start-self.sizePage>=0): # no next
+        if(start+self.sizePage>=self.n and start-self.sizePage>=0): # no next
             x = 1
             i = 0
             y = start
@@ -274,16 +280,16 @@ class Interface(Tk):
                 i+=1
             windowStatsPrevious = ttk.Button(windowStatsPanel, text="Précédent", command=lambda x=x,y=y : self.createWindowStats(x,y))
             windowStatsPrevious.grid(row=stop + 1, column=0, sticky=N + S + E + W)
-        elif(start-self.sizePage<0 and start+self.sizePage<n): # no previous
+        elif(start-self.sizePage<0 and start+self.sizePage<self.n): # no previous
             x=1
             i=0
             y=start
-            while(y<n and i<self.sizePage):
+            while(y<self.n and i<self.sizePage):
                 y += 1
                 i+=1
             windowStatsNext = ttk.Button(windowStatsPanel, text="Suivant", command=lambda x=x, y=y: self.createWindowStats(x, y))
             windowStatsNext.grid(row=stop + 1, column=1, sticky=N + S + E + W)
-        elif(start+self.sizePage<n and start-self.sizePage>=0):
+        elif(start+self.sizePage<self.n and start-self.sizePage>=0):
             x=1
             i = 0
             y = start
@@ -295,7 +301,7 @@ class Interface(Tk):
 
             i = 0
             y = start
-            while (y < n and i < self.sizePage):
+            while (y < self.n and i < self.sizePage):
                 y += 1
                 i+=1
             windowStatsNext = ttk.Button(windowStatsPanel, text="Suivant", command=lambda x=x, y=y: self.createWindowStats(x, y))
@@ -305,7 +311,7 @@ class Interface(Tk):
         total = 0
         totalYes = 0
         for i in range(len(self.controler.model.mat)):
-            if (self.controler.model.mat[nomsImagesSrc[i]] > 0):
+            if (self.controler.model.mat[self.nomsImagesSrc[i]] > 0):
                 totalYes += 1
             total += 1
         windowStatsTotal = ttk.Label(windowStatsPanel, text=(' % stries : ' + str(totalYes) + ' / ' + str(total)),anchor="center")
@@ -322,15 +328,13 @@ class Interface(Tk):
         stringRes = time.strftime("%d_%B_%Y_%H_%M_%S")
         with open((saveDirectory + '/Resultats_'+ stringRes+'.csv'), 'w') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            n = len(os.listdir(self.controler.model.repSource))
-            nomsImagesSrc = os.listdir(self.controler.model.repSource)
             sortedValues = sorted(self.controler.model.mat)
-            for i in range(n):
+            for i in range(self.n):
                 if (self.controler.model.mat[sortedValues[i]] > 0):
                     strRes = 'Oui'
                 else:
                     strRes ='Non'
-                spamwriter.writerow([nomsImagesSrc[i], str(self.controler.model.mat[sortedValues[i]]), strRes])
+                spamwriter.writerow([self.nomsImagesSrc[i], str(self.controler.model.mat[sortedValues[i]]), strRes])
 
 
     def displayError(self, message):
