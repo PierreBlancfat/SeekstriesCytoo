@@ -1,3 +1,4 @@
+
 from View.View import *
 from Model.Model import *
 
@@ -26,6 +27,7 @@ class Controler():
         else:
             try:
                 self.interface.runProgressBar()
+                self.interface.bouton_cliquer.config(state="disabled")
                 valueReturned = self.model.runSegmentation(self.interface.entourage,self.interface.otherRep)
                 self.interface.runProgressBar()
             except FileNotFoundError as errCheminIntrouvble:
