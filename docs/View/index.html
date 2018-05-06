@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>View - SeekStries Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "View";
+    var mkdocs_page_input_path = "View.md";
+    var mkdocs_page_url = "/View/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> SeekStries Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Model/">Model</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">View</a>
+    <ul class="subnav">
+            
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Controler/">Controler</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">SeekStries Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>View</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="View.Interface">Interface</h1>
+
+<pre><code class="python">Interface(self, controler, **kwargs)
+</code></pre>
+
+<p>Class holding the whole user interface of the application</p>
+<h2 id="View.Interface.changeCheckboxEntourage">changeCheckboxEntourage</h2>
+
+<pre><code class="python">Interface.changeCheckboxEntourage(self)
+</code></pre>
+
+<p>Disable dest reposiory if we uncheck the box "Entourage"
+:return:</p>
+<h2 id="View.Interface.browseRepSrc">browseRepSrc</h2>
+
+<pre><code class="python">Interface.browseRepSrc(self)
+</code></pre>
+
+<p>Allows to change the source repository
+:return: none</p>
+<h2 id="View.Interface.browseRepDest">browseRepDest</h2>
+
+<pre><code class="python">Interface.browseRepDest(self)
+</code></pre>
+
+<p>Allow to change the destination repository
+:return: none</p>
+<h2 id="View.Interface.cliquer">cliquer</h2>
+
+<pre><code class="python">Interface.cliquer(self)
+</code></pre>
+
+<p>Launch the program itself</p>
+<h2 id="View.Interface.pause">pause</h2>
+
+<pre><code class="python">Interface.pause(self)
+</code></pre>
+
+<p>Pause the program during its execution</p>
+<h2 id="View.Interface.changeState">changeState</h2>
+
+<pre><code class="python">Interface.changeState(self)
+</code></pre>
+
+<p>Allows to unlock Stats tab after the execution</p>
+<h2 id="View.Interface.displayImage">displayImage</h2>
+
+<pre><code class="python">Interface.displayImage(self, imageName, strie)
+</code></pre>
+
+<p>Display an image in its own size in a different window (on top level)
+:param imageName: String that contains the imageName</p>
+<h2 id="View.Interface.createWindowStats">createWindowStats</h2>
+
+<pre><code class="python">Interface.createWindowStats(self, clear, start)
+</code></pre>
+
+<p>Function linked to the Statistiques Window. It creates a whole new window on top of the main one. With details on the results, etc...
+:param clear: Tells if we need to clean the window first
+:param start: where to start in the list of images</p>
+<h2 id="View.Interface.saveCSV">saveCSV</h2>
+
+<pre><code class="python">Interface.saveCSV(self)
+</code></pre>
+
+<p>A function that save the results in a CSV file at the root of the program</p>
+<h2 id="View.Interface.displayError">displayError</h2>
+
+<pre><code class="python">Interface.displayError(self, message)
+</code></pre>
+
+<p>Display an error in a different window (on top level)
+:param message: String that contains the error message</p>
+<h2 id="View.Interface.runProgressBar">runProgressBar</h2>
+
+<pre><code class="python">Interface.runProgressBar(self)
+</code></pre>
+
+<p>Start the progress bar</p>
+<h2 id="View.Interface.stopProgressBar">stopProgressBar</h2>
+
+<pre><code class="python">Interface.stopProgressBar(self)
+</code></pre>
+
+<p>Stop the progressbar at the end of processing</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Controler/" class="btn btn-neutral float-right" title="Controler">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../Model/" class="btn btn-neutral" title="Model"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../Model/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../Controler/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>
